@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AIO診断 — AI検索 露出スコア診断｜店舗OS (SOEL) デモ</title>
+<style>
+:root{
+  --bg:#f5f6f8;--card:#fff;--line:#e2e5ea;--ink:#1a1d24;--sub:#6b7280;--faint:#9aa3b2;
+  --teal:#14b8a6;--teal-d:#0f766e;--blue:#3b82f6;--blue-d:#1d4ed8;--amber:#f59e0b;--amber-d:#b45309;
+  --red:#ef4444;--red-d:#b91c1c;--violet:#8b5cf6;--violet-d:#6d28d9;--green:#22c55e;--green-d:#15803d;
+  --navy:#0f1f4b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.7}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px 80px}
+
+/* header */
+header{background:linear-gradient(135deg,var(--navy) 0%,#1e3a8a 60%,#0f766e 100%);color:#fff;padding:40px 20px 36px}
+.h-inner{max-width:980px;margin:0 auto}
+.h-inner .brand{font-size:12px;font-weight:700;letter-spacing:.12em;color:#7eeadb;margin-bottom:8px}
+.h-inner h1{font-size:27px;line-height:1.4}
+.h-inner h1 span{color:#7eeadb}
+.h-inner p.sub{margin-top:8px;font-size:13.5px;opacity:.85}
+.demo-tag{display:inline-block;margin-top:14px;background:rgba(245,158,11,.9);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:999px}
+
+/* panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* input form */
+.form-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;margin-top:28px;box-shadow:0 2px 8px rgba(15,31,75,.06)}
+.form-card h2{font-size:17px;margin-bottom:4px}
+.form-card .lead{font-size:12.5px;color:var(--sub);margin-bottom:18px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:720px){.fgrid{grid-template-columns:1fr}}
+label{display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:4px}
+input[type=text],select{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:#fff;color:var(--ink)}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--teal)}
+.btn{display:inline-block;border:none;cursor:pointer;border-radius:12px;font-weight:700;transition:transform .1s, box-shadow .2s}
+.btn:active{transform:scale(.98)}
+.btn-main{background:linear-gradient(135deg,var(--teal) 0%,var(--blue) 100%);color:#fff;font-size:15.5px;padding:14px 34px;margin-top:20px;box-shadow:0 4px 14px rgba(20,184,166,.35)}
+.btn-main:hover{box-shadow:0 6px 20px rgba(20,184,166,.5)}
+.presets{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.presets .pt{font-size:11.5px;color:var(--faint);margin-bottom:8px}
+.preset{display:inline-block;background:#eef6f5;border:1px solid #c9e8e3;color:var(--teal-d);font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;margin:0 6px 6px 0;cursor:pointer}
+.preset:hover{background:#dff1ee}
+.preset.kk{background:#f3effc;border-color:#ddd0f5;color:var(--violet-d)}
+.preset.kk:hover{background:#eae1fa}
+
+/* loading */
+.load-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:36px 28px;margin-top:28px;text-align:center}
+.load-card h2{font-size:17px;margin-bottom:6px}
+.load-card .target{font-size:13px;color:var(--sub);margin-bottom:24px}
+.qsteps{max-width:520px;margin:0 auto;text-align:left}
+.qstep{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);opacity:.25;transition:opacity .4s}
+.qstep.on{opacity:1}
+.qstep .ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;color:#fff;font-weight:800}
+.qstep .tx{font-size:12.5px;color:var(--sub)}
+.qstep .tx b{display:block;font-size:13px;color:var(--ink)}
+.qstep .st{margin-left:auto;font-size:12px;color:var(--faint);flex-shrink:0;padding-top:4px}
+.qstep.on .st.done{color:var(--green-d);font-weight:700}
+.bar{height:7px;background:var(--line);border-radius:99px;margin:26px auto 0;max-width:520px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:99px;transition:width .5s}
+
+/* results */
+.r-head{margin-top:30px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.r-head h2{font-size:19px}
+.r-head .shop{color:var(--teal-d)}
+.r-head .date{font-size:12px;color:var(--faint)}
+.sec-t{font-size:15.5px;margin:30px 0 10px;padding-left:11px;border-left:4px solid var(--teal)}
+.sec-note{font-size:12px;color:var(--faint);margin:-6px 0 10px 15px}
+
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.score-grid{grid-template-columns:1fr}}
+.score-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:center;position:relative}
+.score-card .ai{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+.score-card .ai .dot{width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.donut{position:relative;width:128px;height:128px;margin:0 auto}
+.donut svg{transform:rotate(-90deg)}
+.donut .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut .val b{font-size:27px;font-weight:800}
+.donut .val small{font-size:10px;color:var(--faint)}
+.score-card .verdict{margin-top:12px;font-size:11.5px;font-weight:700;border-radius:8px;padding:4px 10px;display:inline-block}
+.v-high{background:rgba(34,197,94,.12);color:var(--green-d)}
+.v-mid{background:rgba(245,158,11,.14);color:var(--amber-d)}
+.v-low{background:rgba(239,68,68,.1);color:var(--red-d)}
+
+.total-band{margin-top:14px;background:linear-gradient(135deg,var(--navy),#1e3a8a);color:#fff;border-radius:16px;padding:18px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.total-band .tnum{font-size:38px;font-weight:800;color:#7eeadb}
+.total-band .tnum small{font-size:14px;color:#fff;opacity:.7;font-weight:600}
+.total-band .tlabel{font-size:13px;font-weight:700}
+.total-band .tdesc{font-size:12px;opacity:.8;flex:1;min-width:220px}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+th{background:#fafbfc;font-size:11.5px;color:var(--sub)}
+td.pc{font-weight:800;text-align:center;width:88px}
+.c-high{color:var(--green-d)}.c-mid{color:var(--amber-d)}.c-low{color:var(--red-d)}
+.tbl-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+
+.factor{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.frow{display:flex;align-items:center;gap:12px;padding:7px 0}
+.frow .fl{width:170px;font-size:12.5px;font-weight:600;flex-shrink:0}
+.frow .fbar{flex:1;height:9px;background:#eef0f4;border-radius:99px;overflow:hidden}
+.frow .fbar i{display:block;height:100%;width:0;border-radius:99px;transition:width 1s ease}
+.frow .fv{width:38px;text-align:right;font-size:12.5px;font-weight:800}
+@media(max-width:600px){.frow .fl{width:120px}}
+
+.rec{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:12px;padding:14px 18px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.rec .pri{flex-shrink:0;font-size:10.5px;font-weight:800;color:#fff;border-radius:6px;padding:2px 9px;margin-top:3px}
+.p-high{background:var(--red)}.p-mid{background:var(--amber)}.p-low{background:var(--faint)}
+.rec b{font-size:13.5px}
+.rec p{font-size:12px;color:var(--sub)}
+.rec .link{font-size:11px;color:var(--teal-d);font-weight:700}
+
+.trend-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.trend-card .tc-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+.trend-card h4{font-size:13.5px}
+.trend-card .delta{font-size:12px;font-weight:800;color:var(--green-d)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.tgrid{grid-template-columns:1fr}}
+
+.cta{margin-top:36px;background:linear-gradient(135deg,var(--teal-d) 0%,var(--blue-d) 100%);border-radius:18px;padding:30px 28px;color:#fff;text-align:center}
+.cta h3{font-size:19px;margin-bottom:6px}
+.cta p{font-size:13px;opacity:.9;max-width:560px;margin:0 auto 18px}
+.cta .plans{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta .plan{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:12px 20px;min-width:150px}
+.cta .plan b{display:block;font-size:13px}
+.cta .plan .pp{font-size:19px;font-weight:800}
+.cta .plan small{font-size:10.5px;opacity:.8;display:block}
+.cta .plan.hot{background:rgba(255,255,255,.95);color:var(--navy);border-color:#fff}
+.cta .plan.hot small{color:var(--sub)}
+
+.again{margin-top:26px;text-align:center}
+.btn-sub{background:var(--card);border:1.5px solid var(--line);color:var(--sub);font-size:13px;padding:10px 26px}
+.btn-sub:hover{border-color:var(--teal);color:var(--teal-d)}
+
+.foot{color:var(--faint);font-size:11.5px;margin-top:48px;text-align:center}
+.fade-in{animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <div class="brand">SOEL ｜ 店舗OS ・ <a href="../index.html" style="color:#7eeadb;text-decoration:none">← 店舗OS トップ</a></div>
+    <h1>AIO診断 <span>— あなたのお店、AIに推薦されていますか？</span></h1>
+    <p class="sub">ChatGPT・Gemini・Google AIモードに「定型質問バッテリー」を投げ、AI検索でのお店の露出をスコア化します。<b>AIに選ばれる世界は&quot;これから&quot;。今のうちに備えが進んでいるかを定点で見ます。</b></p>
+    <span class="demo-tag">DEMO — モックデータで動作するプロトタイプです</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ====== 入力 ====== -->
+<div class="panel active" id="p-input">
+  <div class="form-card fade-in">
+    <h2>🔍 無料AIO診断をはじめる</h2>
+    <p class="lead">店舗情報を入力すると、AI3エンジンへの質問シミュレーションを実行します（デモのため結果はモック生成です）。</p>
+    <div class="fgrid">
+      <div><label>店舗名</label><input type="text" id="in-name" placeholder="例）炭火焼肉 ガブリ"></div>
+      <div><label>エリア（駅・地名）</label><input type="text" id="in-area" placeholder="例）大門・浜松町"></div>
+      <div><label>業種</label>
+        <select id="in-type">
+          <option value="焼肉">焼肉</option><option value="居酒屋">居酒屋</option><option value="イタリアン">イタリアン</option>
+          <option value="ラーメン">ラーメン</option><option value="カフェ">カフェ</option><option value="美容室">美容室</option>
+          <option value="クリニック">クリニック</option><option value="不動産">不動産</option><option value="その他">その他</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-main" onclick="startDiag()">⚡ AIO診断を実行する</button>
+    <div class="presets">
+      <p class="pt">▼ デモ用プリセット（クリックで自動入力 → 実行）</p>
+      <span class="preset" onclick="usePreset('gaburi')">🥩 ガブリ大門（RY・実店舗）</span>
+      <span class="preset" onclick="usePreset('cocorico')">🍶 ココリコ上野（RY・実店舗）</span>
+      <span class="preset kk" onclick="usePreset('yamagata')">📊 山形 居酒屋（口コミ365事例値）</span>
+      <span class="preset kk" onclick="usePreset('tennoji')">📊 天王寺 不動産（口コミ365事例値）</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 診断中 ====== -->
+<div class="panel" id="p-loading">
+  <div class="load-card fade-in">
+    <h2>🤖 AIに質問しています…</h2>
+    <p class="target" id="ld-target"></p>
+    <div class="qsteps" id="ld-steps"></div>
+    <div class="bar"><i id="ld-bar"></i></div>
+  </div>
+</div>
+
+<!-- ====== 結果 ====== -->
+<div class="panel" id="p-result">
+  <div class="r-head fade-in">
+    <h2>📋 診断結果：<span class="shop" id="r-shop"></span></h2>
+    <span class="date" id="r-date"></span>
+  </div>
+
+  <h3 class="sec-t">AI別 露出スコア（表示確率）</h3>
+  <p class="sec-note">各AIに10問の定型質問を投げ、回答内にお店が登場した割合。</p>
+  <div class="score-grid" id="r-scores"></div>
+  <div class="total-band">
+    <div><div class="tlabel">総合AIOスコア</div><div class="tnum" id="r-total">0<small> /100</small></div></div>
+    <p class="tdesc" id="r-total-desc"></p>
+  </div>
+
+  <h3 class="sec-t">キーワード別 表示率</h3>
+  <p class="sec-note">ユーザーがAIに聞きそうな質問パターンごとの登場率。</p>
+  <div class="tbl-card"><table id="r-kwtable"></table></div>
+
+  <h3 class="sec-t">スコアの要因分解</h3>
+  <p class="sec-note">AIはGoogleマップの口コミ・情報を最重視して推薦します。低い項目が改善ポイントです。</p>
+  <div class="factor" id="r-factors"></div>
+
+  <h3 class="sec-t">改善アクション（優先度順）</h3>
+  <div id="r-recs"></div>
+
+  <h3 class="sec-t">備えの進捗 — 月次スコアカード（イメージ）</h3>
+  <p class="sec-note">「効果が出たか」ではなく「備えが進んだか」を毎月定点観測します。</p>
+  <div class="tgrid" id="r-trends"></div>
+
+  <div class="cta">
+    <h3>AIに選ばれるお店づくりを、今日から。</h3>
+    <p>AIに選ばれる世界は&quot;登る先&quot;。<b>今やる本丸は、AIの信用ソースになる口コミを安全に増やすこと</b>です。診断はその備えが進んでいるかの定点観測。</p>
+    <div style="margin-bottom:14px"><a href="../kuchikomi-demo/index.html" style="color:#fff;font-weight:800;text-decoration:underline">▶ まずは「口コミ増加デモ」を見る（本丸）</a></div>
+    <div class="plans">
+      <div class="plan"><b>Free</b><span class="pp">¥0</span><small>口コミ蓄積＋競合モニタ3店＋AIO診断 年1回</small></div>
+      <div class="plan"><b>Standard</b><span class="pp">¥30,000<small style="display:inline">/月</small></span><small>全履歴ダッシュボード＋AIO月次診断</small></div>
+      <div class="plan hot"><b>Pro</b><span class="pp">¥60,000<small style="display:inline">/月</small></span><small>AIO対策実施＋媒体編集の代行実行</small></div>
+    </div>
+  </div>
+
+  <div class="again"><button class="btn btn-sub" onclick="resetAll()">← 別の店舗を診断する</button></div>
+</div>
+
+<p class="foot">SOEL 店舗OS — AIO診断デモ ／ 結果はすべてモックデータです（実装時は主要AIへの定型質問バッテリーで実測） ／ 2026-06-10</p>
+</div>
+
+<script>
+// ---------- データ ----------
+var AIS = [
+  {key:'chatgpt', name:'ChatGPT', color:'#10a37f', mark:'C'},
+  {key:'gemini',  name:'Gemini',  color:'#4285f4', mark:'G'},
+  {key:'aimode',  name:'Google AIモード', color:'#8b5cf6', mark:'A'}
+];
+
+var PRESETS = {
+  gaburi:   {name:'炭火焼肉 ガブリ 大門店', area:'大門・浜松町', type:'焼肉',
+             scores:{chatgpt:40, gemini:70, aimode:55}},
+  cocorico: {name:'ココリコ 上野店', area:'上野', type:'居酒屋',
+             scores:{chatgpt:30, gemini:60, aimode:50}},
+  yamagata: {name:'（事例）山形の居酒屋', area:'山形駅', type:'居酒屋',
+             scores:{chatgpt:25, gemini:95, aimode:75}},
+  tennoji:  {name:'（事例）天王寺の不動産', area:'天王寺', type:'不動産',
+             scores:{chatgpt:70, gemini:60, aimode:100}}
+};
+
+var KW_SUFFIX = {
+  '焼肉':['おすすめ','個室','安い','接待向け'],
+  '居酒屋':['おすすめ','安い','飲み放題','個室'],
+  'イタリアン':['おすすめ','デート','個室','ランチ'],
+  'ラーメン':['おすすめ','深夜','人気','こってり'],
+  'カフェ':['おすすめ','作業できる','静か','スイーツ'],
+  '美容室':['おすすめ','カラーが上手い','メンズ','安い'],
+  'クリニック':['おすすめ','評判','土日診療','女性医師'],
+  '不動産':['おすすめ','賃貸','評判','売買'],
+  'その他':['おすすめ','人気','評判','安い']
+};
+
+// ---------- ユーティリティ ----------
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function scoreClass(v){return v>=70?'c-high':(v>=40?'c-mid':'c-low');}
+function verdictOf(v){return v>=70?['v-high','AIに推薦されています']:(v>=40?['v-mid','露出はあるが不安定']:['v-low','ほぼ推薦されていません']);}
+function el(id){return document.getElementById(id);}
+
+// ---------- 入力 ----------
+var current = null;
+
+function usePreset(key){
+  var p = PRESETS[key];
+  el('in-name').value = p.name;
+  el('in-area').value = p.area;
+  el('in-type').value = p.type;
+  startDiag(key);
+}
+
+function startDiag(presetKey){
+  var name = el('in-name').value.trim();
+  var area = el('in-area').value.trim();
+  var type = el('in-type').value;
+  if(!name || !area){ alert('店舗名とエリアを入力してください'); return; }
+
+  var scores;
+  if(presetKey && PRESETS[presetKey]){
+    scores = PRESETS[presetKey].scores;
+  } else {
+    var rnd = mulberry32(hashStr(name + '|' + area + '|' + type));
+    scores = {
+      chatgpt: Math.round(clamp(rnd()*90+5, 5, 95)/5)*5,
+      gemini:  Math.round(clamp(rnd()*90+5, 5, 95)/5)*5,
+      aimode:  Math.round(clamp(rnd()*95+5, 5, 100)/5)*5
+    };
+  }
+  current = {name:name, area:area, type:type, scores:scores,
+             rnd: mulberry32(hashStr(name+area+type)+7)};
+  showPanel('p-loading');
+  runLoading();
+}
+
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  el(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ---------- 診断アニメーション ----------
+function runLoading(){
+  el('ld-target').textContent = current.name + '（' + current.area + ' / ' + current.type + '）';
+  var sx = KW_SUFFIX[current.type] || KW_SUFFIX['その他'];
+  var steps = [
+    {ico:'C', col:'#10a37f', t:'ChatGPT に質問中', q:'「' + current.area + 'で' + current.type + 'の' + sx[0] + 'は？」ほか10問'},
+    {ico:'G', col:'#4285f4', t:'Gemini に質問中', q:'「' + current.area + ' ' + current.type + ' ' + sx[1] + '」ほか10問'},
+    {ico:'A', col:'#8b5cf6', t:'Google AIモード に質問中', q:'「' + current.area + ' ' + current.type + ' ' + sx[2] + '」ほか10問'},
+    {ico:'★', col:'#f59e0b', t:'Googleマップの口コミ・情報を解析中', q:'口コミ数・地域/業種ワード含有率・返信率・最新情報'},
+    {ico:'✓', col:'#22c55e', t:'露出スコアを算出中', q:'回答内の登場率を集計しています'}
+  ];
+  var box = el('ld-steps');
+  box.innerHTML = '';
+  steps.forEach(function(s,i){
+    var d = document.createElement('div');
+    d.className = 'qstep'; d.id = 'qs'+i;
+    d.innerHTML = '<span class="ico" style="background:'+s.col+'">'+s.ico+'</span>'
+      + '<span class="tx"><b>'+s.t+'</b>'+s.q+'</span><span class="st" id="qst'+i+'">…</span>';
+    box.appendChild(d);
+  });
+  var i = 0;
+  el('ld-bar').style.width = '4%';
+  var timer = setInterval(function(){
+    if(i > 0){ el('qst'+(i-1)).textContent = '完了'; el('qst'+(i-1)).classList.add('done'); }
+    if(i >= steps.length){ clearInterval(timer); setTimeout(renderResult, 350); return; }
+    el('qs'+i).classList.add('on');
+    el('ld-bar').style.width = Math.round(((i+1)/steps.length)*100) + '%';
+    i++;
+  }, 620);
+}
+
+// ---------- 結果描画 ----------
+function donutSVG(pct, color){
+  var r=54, c=2*Math.PI*r;
+  return '<svg width="128" height="128" viewBox="0 0 128 128">'
+    + '<circle cx="64" cy="64" r="'+r+'" fill="none" stroke="#eef0f4" stroke-width="11"/>'
+    + '<circle cx="64" cy="64" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="11" stroke-linecap="round" '
+    + 'stroke-dasharray="'+c+'" stroke-dashoffset="'+c+'" data-target="'+(c*(1-pct/100))+'" class="donut-arc" style="transition:stroke-dashoffset 1.2s ease"/></svg>';
+}
+
+function renderResult(){
+  var s = current.scores;
+  var rnd = current.rnd;
+  var now = new Date();
+  el('r-shop').textContent = current.name;
+  el('r-date').textContent = '診断日: ' + now.getFullYear() + '/' + (now.getMonth()+1) + '/' + now.getDate() + '（10問×3エンジン）';
+
+  // AI別スコアカード
+  var sg = el('r-scores'); sg.innerHTML = '';
+  AIS.forEach(function(ai){
+    var v = s[ai.key], vd = verdictOf(v);
+    var d = document.createElement('div');
+    d.className = 'score-card fade-in';
+    d.innerHTML = '<div class="ai"><span class="dot" style="background:'+ai.color+'">'+ai.mark+'</span>'+ai.name+'</div>'
+      + '<div class="donut">'+donutSVG(v, ai.color)+'<div class="val"><b data-count="'+v+'">0</b><small>表示確率 %</small></div></div>'
+      + '<span class="verdict '+vd[0]+'">'+vd[1]+'</span>';
+    sg.appendChild(d);
+  });
+
+  // 総合スコア
+  var total = Math.round((s.chatgpt + s.gemini + s.aimode) / 3);
+  el('r-total').innerHTML = '<span data-count="'+total+'">0</span><small> /100</small>';
+  el('r-total-desc').textContent =
+    total >= 70 ? 'AI検索での露出は良好です。この状態を維持するには口コミの「鮮度」を保ち続けることが重要です。'
+    : total >= 40 ? 'エンジンによって露出にムラがあります。AIの信用ソースであるGoogleマップの口コミ・情報を整えることで、弱いエンジンを引き上げられます。'
+    : 'AI検索ではほぼ「存在しないお店」になっています。口コミの量と質の改善から始めましょう — 今なら競合より先に対策できます。';
+
+  // キーワードテーブル
+  var sx = KW_SUFFIX[current.type] || KW_SUFFIX['その他'];
+  var tbl = el('r-kwtable');
+  var rows = '<tr><th>質問キーワード</th><th style="text-align:center">ChatGPT</th><th style="text-align:center">Gemini</th><th style="text-align:center">Google AIモード</th></tr>';
+  sx.forEach(function(suf){
+    var kw = current.area + ' ' + current.type + ' ' + suf;
+    var cells = AIS.map(function(ai){
+      var base = s[ai.key];
+      var v = clamp(Math.round((base + (rnd()*50-25))/10)*10, 0, 100);
+      return '<td class="pc '+scoreClass(v)+'">'+v+'%</td>';
+    }).join('');
+    rows += '<tr><td>'+kw+'</td>'+cells+'</tr>';
+  });
+  tbl.innerHTML = rows;
+
+  // 要因分解
+  var factors = [
+    {l:'口コミの量',           v: clamp(Math.round(total + rnd()*30-15), 5, 98)},
+    {l:'口コミの質（地域・業種ワード）', v: clamp(Math.round(total + rnd()*30-20), 5, 98)},
+    {l:'口コミへの返信率',      v: clamp(Math.round(total + rnd()*40-25), 5, 98)},
+    {l:'写真・最新情報の鮮度',   v: clamp(Math.round(total + rnd()*40-20), 5, 98)},
+    {l:'GBP（ビジネスプロフィール）整備度', v: clamp(Math.round(total + rnd()*30-10), 5, 98)}
+  ];
+  var fbox = el('r-factors'); fbox.innerHTML = '';
+  factors.forEach(function(f){
+    var col = f.v >= 70 ? 'var(--green)' : (f.v >= 40 ? 'var(--amber)' : 'var(--red)');
+    var d = document.createElement('div');
+    d.className = 'frow';
+    d.innerHTML = '<span class="fl">'+f.l+'</span><span class="fbar"><i data-w="'+f.v+'" style="background:'+col+'"></i></span><span class="fv">'+f.v+'</span>';
+    fbox.appendChild(d);
+  });
+
+  // 改善アクション（弱い要因から生成）
+  var recMap = [
+    {f:0, t:'口コミ蓄積ツールで口コミの量を増やす', p:'来店客にQRでアンケート → AIが口コミ草案を生成。AIの一番の信用ソースを太くします。', link:'→ 口コミ増加デモ（本丸・無料プランで利用可）'},
+    {f:1, t:'「地域・業種ワード入り」の口コミに誘導する', p:'「'+current.area+'」「'+current.type+'」を含む口コミがAIの推薦根拠になります。アンケート設問の設計で自然に含有率を上げます。', link:'→ 店舗OS機能①・AIO対策メニュー'},
+    {f:2, t:'（衛生）口コミ返信を自動化して取りこぼさない', p:'返信は差別化要素ではありませんが、最低限の運用衛生。AI返信文の自動作成（多言語対応）で取りこぼしを防ぎつつ運用負荷ゼロに。', link:'→ Standardプランで自動化'},
+    {f:3, t:'写真・最新情報の定期投稿', p:'Instagram連携で投稿を自動転載。「最新情報が動いている店」とAIに認識させます。', link:'→ 投稿AIエージェント'},
+    {f:4, t:'GBPの基本情報を総点検する', p:'カテゴリ・属性・営業時間・メニューの欠損はAIの理解を直接妨げます。プロが代行整備します。', link:'→ Proプラン（媒体編集の代行実行）'}
+  ];
+  var sorted = factors.map(function(f,i){return {i:i, v:f.v};}).sort(function(a,b){return a.v-b.v;});
+  var rbox = el('r-recs'); rbox.innerHTML = '';
+  sorted.slice(0,3).forEach(function(o, rank){
+    var r = recMap[o.i];
+    var pcls = rank===0?'p-high':(rank===1?'p-mid':'p-low');
+    var plab = rank===0?'最優先':(rank===1?'優先':'次点');
+    var d = document.createElement('div');
+    d.className = 'rec fade-in';
+    d.innerHTML = '<span class="pri '+pcls+'">'+plab+'</span><div><b>'+r.t+'</b><p>'+r.p+'</p><span class="link">'+r.link+'</span></div>';
+    rbox.appendChild(d);
+  });
+
+  // 月次スコアカード（モック推移）
+  var tbox = el('r-trends'); tbox.innerHTML = '';
+  var trends = [
+    {h:'AIO露出スコア', unit:'', end:total, growth:0.55},
+    {h:'蓄積口コミ数', unit:'件', end: 40 + Math.round(rnd()*120), growth:0.25},
+    {h:'競合との差分（評点順位）', unit:'位', end: 1 + Math.round(rnd()*4), growth:-0.4, inverse:true}
+  ];
+  trends.forEach(function(t){
+    var pts = [];
+    for(var m=5; m>=0; m--){
+      var ratio = t.inverse ? (1 + t.growth*-1 * (m/5)) : (1 - t.growth * (m/5));
+      pts.push(Math.max(1, Math.round(t.end * ratio)));
+    }
+    var first = pts[0], last = pts[pts.length-1];
+    var deltaTxt = t.inverse
+      ? (first - last > 0 ? '▲ '+(first-last)+'ランクUP' : '—')
+      : '+'+(last-first)+t.unit+'（6ヶ月）';
+    var max = Math.max.apply(null, pts), min = Math.min.apply(null, pts);
+    var span = (max-min)||1;
+    var path = pts.map(function(v,i){
+      return (i===0?'M':'L') + (10+i*44) + ',' + (60 - ((v-min)/span)*46);
+    }).join(' ');
+    var dots = pts.map(function(v,i){
+      return '<circle cx="'+(10+i*44)+'" cy="'+(60-((v-min)/span)*46)+'" r="3" fill="#14b8a6"/>';
+    }).join('');
+    var d = document.createElement('div');
+    d.className = 'trend-card fade-in';
+    d.innerHTML = '<div class="tc-head"><h4>'+t.h+'</h4><span class="delta">'+deltaTxt+'</span></div>'
+      + '<svg width="100%" viewBox="0 0 240 70" preserveAspectRatio="none" style="margin-top:8px">'
+      + '<path d="'+path+'" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round"/>'+dots+'</svg>'
+      + '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--faint)"><span>6ヶ月前</span><span>今月</span></div>';
+    tbox.appendChild(d);
+  });
+
+  showPanel('p-result');
+
+  // アニメーション起動
+  setTimeout(function(){
+    document.querySelectorAll('.donut-arc').forEach(function(a){ a.style.strokeDashoffset = a.dataset.target; });
+    document.querySelectorAll('[data-count]').forEach(function(n){ animateCount(n, parseInt(n.dataset.count,10)); });
+    document.querySelectorAll('.frow .fbar i').forEach(function(b){ b.style.width = b.dataset.w + '%'; });
+  }, 80);
+}
+
+function animateCount(node, target){
+  var start = null, dur = 1100;
+  function step(ts){
+    if(!start) start = ts;
+    var p = Math.min((ts-start)/dur, 1);
+    node.textContent = Math.round(target * (1-Math.pow(1-p,3)));
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function resetAll(){
+  el('in-name').value = ''; el('in-area').value = '';
+  showPanel('p-input');
+}
+</script>
+</body>
+</html>

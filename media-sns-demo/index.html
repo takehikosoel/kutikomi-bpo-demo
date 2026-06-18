@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ガブリ大門 月次レポート — 媒体×SNS統合ビュー（デモ）</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f5f6f8;--card:#ffffff;--card2:#f1f3f7;--line:#e2e5ea;--txt:#1a1d24;--mut:#6b7280;--faint:#9aa3b2;
+--accent:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#3b82f6;--pink:#ec4899;--owned:#0d9488;--violet:#8b5cf6;--teal:#14b8a6;--navy:#0f1f4b;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-size:14px;line-height:1.7}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10;flex-wrap:wrap}
+.top h1{font-size:17px;margin:0}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.badge.demo{background:#fde68a;border-color:#f59e0b;color:#92400e;font-weight:700}
+main{max-width:920px;margin:0 auto;padding:28px 20px 60px}
+
+/* ===== サマリ ===== */
+.summary{background:linear-gradient(135deg,var(--navy),#1e3a8a);color:#fff;border-radius:18px;padding:28px 30px;margin-bottom:22px}
+.summary .tt{font-size:12px;font-weight:700;letter-spacing:.1em;color:#7eeadb;margin-bottom:12px}
+.summary ol{margin:0;padding-left:0;list-style:none;counter-reset:s}
+.summary li{counter-increment:s;display:flex;gap:14px;padding:10px 0;font-size:15.5px;line-height:1.65;align-items:flex-start}
+.summary li+li{border-top:1px solid rgba(255,255,255,.12)}
+.summary li::before{content:counter(s);flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#7eeadb;color:var(--navy);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+.summary b{color:#ffd9ad}
+
+/* ===== アクションプラン ===== */
+h2.sec{font-size:17px;margin:30px 0 12px;display:flex;align-items:center;gap:8px}
+.ap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ap-row{display:flex;gap:16px;padding:16px 20px;align-items:flex-start}
+.ap-row+.ap-row{border-top:1px solid var(--line)}
+.ap-row.done-zone{background:#fafbfd}
+.when{flex-shrink:0;width:74px;text-align:center;font-size:11px;font-weight:800;border-radius:8px;padding:5px 0;margin-top:2px}
+.w-now{background:rgba(239,68,68,.1);color:var(--bad)}
+.w-month{background:rgba(245,158,11,.14);color:#b45309}
+.w-next{background:rgba(107,114,128,.12);color:var(--mut)}
+.ap-body{flex:1}
+.ap-body b{font-size:15px;display:block;margin-bottom:2px}
+.ap-body p{margin:0;font-size:12.5px;color:var(--mut)}
+.ap-meta{flex-shrink:0;text-align:right;font-size:11.5px;color:var(--mut);min-width:120px}
+.ap-meta .who{display:inline-block;font-weight:700;border-radius:6px;padding:1px 9px;font-size:10.5px;margin-bottom:3px}
+.who.soel{background:rgba(20,184,166,.12);color:var(--teal)}
+.who.tenpo{background:rgba(59,130,246,.12);color:#1d4ed8}
+.ap-meta .effort{display:block}
+@media(max-width:640px){.ap-row{flex-wrap:wrap}.ap-meta{text-align:left}}
+
+/* ===== 示唆 ===== */
+.insights{display:grid;grid-template-columns:1fr;gap:12px}
+.ins{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:12px;padding:16px 20px}
+.ins.red{border-left-color:var(--bad)}
+.ins.teal{border-left-color:var(--teal)}
+.ins b{font-size:15px;display:block;margin-bottom:4px}
+.ins p{margin:0;font-size:13px;color:var(--mut)}
+.ins .ev{display:inline-block;margin-top:8px;font-size:11.5px;color:var(--faint);background:var(--card2);border-radius:7px;padding:3px 10px}
+
+/* ===== 詳細（折りたたみ）===== */
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:14px;overflow:hidden}
+summary{cursor:pointer;padding:16px 20px;font-size:14.5px;font-weight:700;color:var(--mut);list-style:none;display:flex;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary .chev{transition:transform .2s;color:var(--teal);font-size:12px}
+details[open] summary .chev{transform:rotate(90deg)}
+details[open] summary{border-bottom:1px solid var(--line);color:var(--txt)}
+.d-body{padding:18px 20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--card2);border-radius:10px;padding:11px 13px}
+.kpi .l{font-size:10.5px;color:var(--mut);display:block}
+.kpi .v{font-size:19px;font-weight:700;display:block;margin-top:1px}
+.kpi .s{font-size:10.5px;color:var(--mut)}
+.kpi.real{border-left:3px solid var(--accent)}
+.kpi.sns{border-left:3px solid var(--pink)}
+.kpi.gbp{border-left:3px solid var(--teal)}
+.kpi.line{border-left:3px solid #06c755}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:11px;background:#fafbfc}
+.tag{font-size:10px;padding:1px 8px;border-radius:999px;font-weight:700;white-space:nowrap}
+.tag.api{background:rgba(34,197,94,.15);color:#15803d}
+.tag.csv{background:rgba(245,158,11,.15);color:#b45309}
+.tag.now{background:rgba(59,130,246,.12);color:#1d4ed8}
+canvas{max-height:300px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--mut);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.note{font-size:11px;color:var(--mut);margin:8px 0 0}
+.funnel{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.fstage{flex:1;min-width:150px;padding:12px 14px;background:var(--card2);border-radius:10px}
+.fstage h3{font-size:12px;margin:0 0 4px;color:var(--mut)}
+.fstage .big{font-size:17px;font-weight:800}
+.fstage .big small{font-size:10px;color:var(--mut);font-weight:400}
+.fstage ul{margin:6px 0 0;padding:0;list-style:none;font-size:10.5px;color:var(--mut)}
+.fstage li i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px}
+.footer{max-width:920px;margin:0 auto;padding:8px 20px 32px;color:var(--faint);font-size:11px;text-align:center}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><a href="../index.html" style="color:var(--teal);text-decoration:none;font-size:12px;font-weight:700">← 店舗OS トップ</a><br>🥩 ガブリ大門 月次レポート <span style="color:var(--mut);font-size:12.5px;font-weight:400">媒体×SNS統合ビュー（2026年4月実績＋5月オペ）</span></h1>
+  <div class="badges">
+    <span class="badge demo">DEMO</span>
+    <span class="badge">媒体=実データ / SNS・GBP=モック</span>
+  </div>
+</div>
+<main>
+
+<!-- ===== サマリ ===== -->
+<div class="summary">
+  <div class="tt">今月の結論 — 3つだけ</div>
+  <ol>
+    <li><div>集客の<b>主力は食べログ（予約の94.8%）</b>。この主力を活かしながら、<b>自前の予約経路・SNS・口コミという接点も並行して太らせ、全体を底上げ</b>します。</div></li>
+    <li><div>Instagramは月8.6万リーチの認知を作っているのに、<b>予約につながったか計測できない状態</b>。投資判断の前に、まず計測の線をつなぎます。</div></li>
+    <li><div>口コミ・LINE・再来店のデータが<b>「貯まる資産」になっていない</b>。QRとLINEで蓄積を始めれば、AI検索（AIO）対策の土台にもなります。</div></li>
+  </ol>
+</div>
+
+<!-- ===== アクションプラン ===== -->
+<h2 class="sec">✅ アクションプラン</h2>
+<div class="ap">
+  <div class="ap-row">
+    <span class="when w-now">今週</span>
+    <div class="ap-body"><b>SNS→予約の計測線をつなぐ</b>
+      <p>InstagramプロフィールとLINEのリンクに計測パラメータを設定。来月から「SNSは予約に効いているか」が数字で判定できるようになります。</p></div>
+    <div class="ap-meta"><span class="who soel">SOEL代行</span><span class="effort">店舗作業：なし</span></div>
+  </div>
+  <div class="ap-row">
+    <span class="when w-now">今週</span>
+    <div class="ap-body"><b>Instagram・GBPの連携権限を付与</b>
+      <p>権限をいただければ取込を自動化し、このレポートが毎月自動更新になります（手作業の集計が不要に）。</p></div>
+    <div class="ap-meta"><span class="who tenpo">店舗</span><span class="effort">作業：約5分</span></div>
+  </div>
+  <div class="ap-row">
+    <span class="when w-month">今月</span>
+    <div class="ap-body"><b>口コミ蓄積QRを卓上・会計時に設置</b>
+      <p>POPはSOELが制作します。AIが店を推薦する一番の信用ソース＝口コミの蓄積を開始。低評価は店長だけに届く設計です。<a href="../kuchikomi-demo/index.html" style="color:var(--teal);font-weight:700">→ 口コミ増加デモ</a></p></div>
+    <div class="ap-meta"><span class="who soel">SOEL制作</span><span class="who tenpo">店舗設置</span></div>
+  </div>
+  <div class="ap-row">
+    <span class="when w-month">今月</span>
+    <div class="ap-body"><b>自前予約の月次目標を置く：47人 → 100人</b>
+      <p>現在オウンド経由は予約全体の4.1%だけ。LINE再来店クーポンとGoogle予約導線の整備で、まず8%台へ。食べログを主力に保ちつつ、自前経路も育てて全体の予約を底上げします。</p></div>
+    <div class="ap-meta"><span class="who soel">SOEL運用</span><span class="effort">月次で進捗報告</span></div>
+  </div>
+  <div class="ap-row done-zone">
+    <span class="when w-next">来月〜</span>
+    <div class="ap-body"><b>投稿→検索→予約のラグ分析</b>
+      <p>計測データが2ヶ月貯まり次第、「投稿の何日後に食べログ・マップ検索が動くか」を分析し、SNS投資の判断材料を出します。</p></div>
+    <div class="ap-meta"><span class="who soel">SOEL分析</span><span class="effort">データ蓄積待ち</span></div>
+  </div>
+  <div class="ap-row done-zone">
+    <span class="when w-next">来月〜</span>
+    <div class="ap-body"><b>媒体ミックスの最適化材料を作成</b>
+      <p>各媒体の貢献と費用を並べ、どの接点にどれだけ配分すると全体が伸びるかの判断材料を提示します。</p></div>
+    <div class="ap-meta"><span class="who soel">SOEL分析</span></div>
+  </div>
+</div>
+
+<!-- ===== 示唆 ===== -->
+<h2 class="sec">💡 なぜそう言えるか（示唆）</h2>
+<div class="insights">
+  <div class="ins teal">
+    <b>接点が一極に集中している（予約の94.8%が食べログ経由）</b>
+    <p>予約1,151人のうち1,091人が食べログ経由。食べログは強力な主力チャネルです。だからこそ、それ以外の接点が育っていないと打ち手の選択肢が狭くなります。従量課金は3年で約3割上がっており、主力を維持しつつ接点を増やすことで全体の底上げと打ち手の幅を広げるのが狙いです。</p>
+    <span class="ev">根拠：媒体実績 2026/04（実データ）— 食べログ予約94.8%・従量課金 ¥257,400/月</span>
+  </div>
+  <div class="ins">
+    <b>Instagramの効果は「不明」— 効いていないではなく、測っていない</b>
+    <p>月8.6万リーチの認知がありながら、プロフィールから予約への遷移が計測されていないため、投資を増やすべきか減らすべきか判断できません。判断できる状態を作ることが先決です。</p>
+    <span class="ev">根拠：現ダッシュボードのInstagram実績欄がすべて空（計測線なし）※リーチ数値はデモ用モック</span>
+  </div>
+  <div class="ins teal">
+    <b>「時間でしか貯まらない資産」がまだゼロ — 始めるなら早いほど有利</b>
+    <p>口コミ・アンケート回答・LINE友だちは後からまとめて作れません。AI検索がGoogleマップの口コミを推薦根拠にし始めた今、蓄積開始の早さがそのまま競合との差になります。</p>
+    <span class="ev">根拠：GoogleマップAIレビュー質問機能 実装済み（2025/12〜）／ 口コミ蓄積・LINE運用 現在未着手</span>
+  </div>
+</div>
+
+<!-- ===== 詳細データ（折りたたみ）===== -->
+<h2 class="sec" style="color:var(--mut);font-size:14px;margin-top:36px">📊 数字の詳細（根拠データ）</h2>
+
+<details>
+  <summary><span class="chev">▶</span>統合KPI — 媒体（実）＋ SNS・GBP（モック）</summary>
+  <div class="d-body">
+    <div class="kpis">
+      <div class="kpi real"><span class="l">媒体想定売上（実）</span><span class="v">¥517.9万</span><span class="s">予約1,151人・従量課金¥26.0万</span></div>
+      <div class="kpi real"><span class="l">食べログアクセス（実）</span><span class="v">33,363</span><span class="s">予約1,091人 ROI 19.1×</span></div>
+      <div class="kpi gbp"><span class="l">GBP表示回数（モック）</span><span class="v">28,016</span><span class="s">電話135・ルート検索247</span></div>
+      <div class="kpi sns"><span class="l">IGリーチ（モック）</span><span class="v">86,400</span><span class="s">フォロワー4,820（+230）</span></div>
+      <div class="kpi sns"><span class="l">プロフ→サイトタップ（モック）</span><span class="v">312</span><span class="s">投稿12本・保存589</span></div>
+      <div class="kpi line"><span class="l">LINE友だち（モック）</span><span class="v">1,240</span><span class="s">配信2回・開封率61%</span></div>
+    </div>
+    <p class="note">現状のry-dashboardsはInstagram・LINEの枠はあるがデータが空。連携後、この6枚が毎月自動で埋まる。</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="chev">▶</span>カスタマージャーニー横断ビュー — どの段階がブラックボックスか</summary>
+  <div class="d-body">
+    <div class="funnel">
+      <div class="fstage"><h3>認知</h3><span class="big">86,400<small> リーチ</small></span>
+        <ul><li><i style="background:#ec4899"></i>Instagram（モック）</li><li><i style="background:#8b5cf6"></i>インフルエンサー（施策時）</li></ul></div>
+      <div class="fstage"><h3>検索・比較</h3><span class="big">61,675<small> 閲覧</small></span>
+        <ul><li><i style="background:#f59e0b"></i>食べログ 33,363（実）</li><li><i style="background:#14b8a6"></i>GBP 28,016（モック）</li><li><i style="background:#ef4444"></i>一休 296（実）</li></ul></div>
+      <div class="fstage"><h3>予約</h3><span class="big">1,151<small> 人（実）</small></span>
+        <ul><li><i style="background:#f59e0b"></i>媒体 1,104</li><li><i style="background:#0d9488"></i>オウンド 47</li><li><i style="background:#06c755"></i>LINE経由 計測未設定</li></ul></div>
+      <div class="fstage"><h3>来店・体験</h3><span class="big">2,324<small> 人（実5月）</small></span>
+        <ul><li><i style="background:#a78bfa"></i>ウォークイン率 39.4%</li><li><i style="background:#84cc16"></i>リピート率 5.9%</li></ul></div>
+      <div class="fstage"><h3>口コミ・再来</h3><span class="big">—<small> 未取得</small></span>
+        <ul><li><i style="background:#14b8a6"></i>口コミ蓄積（Phase 1で開始）</li><li><i style="background:#06c755"></i>LINEクーポン（未着手）</li></ul></div>
+    </div>
+    <p class="note">「認知」と「口コミ・再来」が現状ブラックボックス。ここをSNS連携と口コミツールで可視化するのがPhase 2。</p>
+  </div>
+</details>
+
+<details id="d-chart">
+  <summary><span class="chev">▶</span>クロスチャネル推移 — 食べログ実34ヶ月 × IGリーチ（モック）</summary>
+  <div class="d-body">
+    <canvas id="c-cross" height="92"></canvas>
+    <div class="legend">
+      <span><i style="background:#f97316"></i>食べログアクセス（実データ）</span>
+      <span><i style="background:#ec4899"></i>Instagramリーチ（モック・右軸）</span>
+      <span><i style="background:#8b5cf6"></i>▼ 投稿強化・インフルエンサー等の施策月</span>
+    </div>
+    <p class="note">連携後に検証できる仮説：「IGリーチ増は翌月の食べログ指名検索を押し上げるか」。因果は主張せず、同じ画面に置いて見せる。</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="chev">▶</span>データ連携プラン — チャネル別の取得経路と自動化レベル</summary>
+  <div class="d-body">
+    <table>
+      <tr><th>チャネル</th><th>取りたい指標</th><th>取得経路</th><th>自動化</th></tr>
+      <tr><td><b>Instagram</b></td><td>リーチ・フォロワー・保存・プロフィール/サイトタップ</td><td>Meta Graph API（ビジネスアカウント要・公式）</td><td><span class="tag api">API自動 ◎</span></td></tr>
+      <tr><td><b>Googleビジネスプロフィール</b></td><td>表示回数・検索KW・電話・ルート・口コミ</td><td>GBP Performance API（オーナー権限要・公式）</td><td><span class="tag api">API自動 ◎</span></td></tr>
+      <tr><td><b>LINE公式</b></td><td>友だち数・配信・開封・クーポン使用</td><td>LINE Messaging API / インサイト（公式）</td><td><span class="tag api">API自動 ◎</span></td></tr>
+      <tr><td><b>食べログ</b></td><td>アクセス・予約・従量課金</td><td>公式APIなし → 管理画面CSVの月次取得</td><td><span class="tag csv">月次CSV △</span></td></tr>
+      <tr><td><b>一休・ホットペッパー等</b></td><td>アクセス・予約・コスト</td><td>同上（管理画面から月次）</td><td><span class="tag csv">月次CSV △</span></td></tr>
+      <tr><td><b>ResReserve / 予約台帳</b></td><td>予約明細・コース・客層</td><td>CSVエクスポート → 取込ジョブ</td><td><span class="tag now">半自動 ○</span></td></tr>
+    </table>
+    <p class="note">⚠ API仕様（権限・レート制限・取得可能期間）は実装前に公式ドキュメントで要確認。特にMeta系は審査・トークン更新の運用設計が必要。グルメ媒体は「管理画面CSVを店舗オペとして握れるか」が前提（ロードマップのリスク項目）。</p>
+  </div>
+</details>
+
+</main>
+<div class="footer">店舗OS Phase 2 プレビュー（デモ）／ 媒体実績はry-dashboards実データ（〜2026/04）、SNS・GBP・LINEはモック ／ ry-dashboards本体には未反映 ／ 2026-06-10 SOEL</div>
+
+<script>
+// ===== 実データ（ry-dashboards/gaburi.htmlより抜粋）=====
+var MONTHS = ["2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04"];
+var TABELOG_ACCESS = [19573,21487,29194,34404,27510,23101,32045,25522,23719,25167,26502,22914,28073,29562,34276,35191,29449,46097,56618,67150,57058,49652,40779,32702,31086,38869,34072,39411,31996,28493,36397,33363];
+
+// ===== Instagramリーチ（モック・決定論的生成）=====
+function igReach(){
+  var v=[], base=22000;
+  for(var i=0;i<MONTHS.length;i++){
+    var growth = base * (1 + i*0.052);
+    var season = Math.sin(i*0.55)*6000;
+    var spike = (i===19||i===26||i===30) ? 24000 : 0;
+    v.push(Math.round(growth + season + spike));
+  }
+  return v;
+}
+var IG = igReach();
+var MARKERS = [
+  {i:19, label:'リール強化開始'},
+  {i:26, label:'インフルエンサー来店'},
+  {i:30, label:'父の日キャンペーン'}
+];
+
+Chart.defaults.color="#475569";
+Chart.defaults.borderColor="#e2e5ea";
+Chart.defaults.font.family="-apple-system,sans-serif";
+
+var markerPlugin = {
+  id:'markers',
+  afterDatasetsDraw: function(chart){
+    var ctx=chart.ctx, xs=chart.scales.x, area=chart.chartArea;
+    MARKERS.forEach(function(m){
+      var x=xs.getPixelForValue(m.i);
+      if(x<area.left||x>area.right) return;
+      ctx.save();
+      ctx.strokeStyle='rgba(139,92,246,.55)';
+      ctx.setLineDash([4,4]); ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x,area.top+14); ctx.lineTo(x,area.bottom); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#8b5cf6';
+      ctx.font='700 10px -apple-system,sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText('▼ '+m.label, Math.min(Math.max(x,area.left+50),area.right-50), area.top+10);
+      ctx.restore();
+    });
+  }
+};
+
+// 折りたたみ内のcanvasは開いた時に初期化（閉じたままだと幅0で描画されるため）
+var chartInit = false;
+document.getElementById('d-chart').addEventListener('toggle', function(e){
+  if(!e.target.open || chartInit) return;
+  chartInit = true;
+  new Chart(document.getElementById('c-cross'),{
+    type:'line',
+    plugins:[markerPlugin],
+    data:{labels:MONTHS,datasets:[
+      {label:'食べログアクセス（実）',data:TABELOG_ACCESS,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.08)',fill:true,tension:.25,pointRadius:0,borderWidth:2.5,yAxisID:'y'},
+      {label:'Instagramリーチ（モック）',data:IG,borderColor:'#ec4899',borderDash:[6,4],tension:.25,pointRadius:0,borderWidth:2,yAxisID:'y2'}
+    ]},
+    options:{
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{maxTicksLimit:12,autoSkip:true}},
+        y:{beginAtZero:true,title:{display:true,text:'食べログ',font:{size:10}},ticks:{callback:function(v){return (v/1000)+'k';}}},
+        y2:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'IGリーチ',font:{size:10}},ticks:{callback:function(v){return (v/1000)+'k';}}}
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

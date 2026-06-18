@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>口コミ増加エンジン — プロダクトデモ｜SOEL 店舗OS</title>
+<style>
+:root{
+  --bg:#f5f6f8;--card:#fff;--line:#e2e5ea;--ink:#1a1d24;--sub:#6b7280;--faint:#9aa3b2;
+  --teal:#14b8a6;--teal-d:#0f766e;--blue:#3b82f6;--blue-d:#1d4ed8;--amber:#f59e0b;--amber-d:#b45309;
+  --red:#ef4444;--red-d:#b91c1c;--violet:#8b5cf6;--violet-d:#6d28d9;--green:#22c55e;--green-d:#15803d;
+  --navy:#0f1f4b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.6}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 70px}
+
+header{background:linear-gradient(135deg,var(--navy) 0%,#1e3a8a 60%,#0f766e 100%);color:#fff;padding:30px 20px 0}
+.h-inner{max-width:1060px;margin:0 auto}
+.h-inner .brand{font-size:12px;font-weight:700;letter-spacing:.12em;color:#7eeadb;margin-bottom:6px}
+.h-inner h1{font-size:22px}
+.h-inner p.sub{margin-top:5px;font-size:12.5px;opacity:.85}
+.demo-tag{display:inline-block;margin-top:10px;background:rgba(245,158,11,.9);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:999px}
+.tabs{max-width:1060px;margin:20px auto 0;display:flex;gap:4px;overflow-x:auto}
+.tab{background:rgba(255,255,255,.1);color:rgba(255,255,255,.78);border:none;cursor:pointer;font-size:13.5px;font-weight:700;padding:12px 20px;border-radius:12px 12px 0 0;white-space:nowrap}
+.tab.on{background:var(--bg);color:var(--navy)}
+
+.pane{display:none;padding-top:26px}
+.pane.on{display:block;animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== お客様アプリ ===== */
+.app-stage{display:flex;flex-direction:column;align-items:center;gap:14px}
+.stage-cap{font-size:12.5px;color:var(--sub);text-align:center;max-width:520px}
+.stage-cap b{color:var(--ink)}
+.phone{width:100%;max-width:380px;background:#111;border-radius:40px;padding:12px;box-shadow:0 18px 50px rgba(15,31,75,.28);margin:0 auto}
+.phone .notch{width:120px;height:22px;background:#111;border-radius:0 0 14px 14px;margin:0 auto 0;position:relative;z-index:2}
+.screen{background:#fafafa;border-radius:30px;overflow:hidden;min-height:620px;display:flex;flex-direction:column;margin-top:-22px;padding-top:22px}
+.s-head{background:var(--navy);color:#fff;padding:14px 18px 12px;text-align:center}
+.s-head .shop{font-size:14.5px;font-weight:800}
+.s-head .sub2{font-size:10.5px;opacity:.75}
+.langbar{display:flex;gap:5px;justify-content:center;padding:8px 0 2px;background:var(--navy)}
+.lang{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);border:none;border-radius:999px;padding:3px 10px;cursor:pointer}
+.lang.on{background:#7eeadb;color:var(--navy)}
+.s-body{flex:1;padding:16px;overflow-y:auto}
+.s-step{display:none}
+.s-step.on{display:block;animation:fade .35s ease both}
+.q-label{font-size:13px;font-weight:800;margin:4px 0 10px}
+.q-sub{font-size:10.5px;color:var(--faint);margin:-6px 0 10px}
+.stars{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.star{font-size:34px;cursor:pointer;color:#d7dbe2;transition:transform .1s}
+.star.on{color:var(--amber)}
+.star:active{transform:scale(1.2)}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 14px;font-size:12.5px;margin-bottom:8px;cursor:pointer;font-weight:600;color:var(--ink)}
+.opt.sel{border-color:var(--teal);background:#ecfaf7;color:var(--teal-d)}
+.s-body textarea{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;font-size:12.5px;min-height:74px;font-family:inherit;resize:none}
+.s-btn{display:block;width:100%;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;font-size:14px;font-weight:800;padding:13px;cursor:pointer;margin-top:14px}
+.s-btn:disabled{opacity:.35;cursor:default}
+.s-btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--sub);font-weight:600;font-size:12px;padding:10px}
+.progress{display:flex;gap:5px;padding:10px 16px 0}
+.progress i{flex:1;height:4px;border-radius:99px;background:var(--line)}
+.progress i.on{background:var(--teal)}
+.ai-gen{background:#0f172a;border-radius:13px;padding:14px;margin-top:6px}
+.ai-gen .ai-h{font-size:10.5px;color:#7eeadb;font-weight:700;margin-bottom:8px}
+.ai-gen .ai-tx{font-size:12px;color:#e2e8f0;min-height:104px;line-height:1.8}
+.ai-gen .cursor{display:inline-block;width:7px;height:13px;background:#7eeadb;vertical-align:-2px;animation:blink .8s infinite}
+@keyframes blink{50%{opacity:0}}
+.review-done{border:1.5px solid var(--teal);background:#ecfaf7;border-radius:13px;padding:11px 13px;margin-top:10px;font-size:11.5px;line-height:1.7;display:none}
+.doors-h{font-size:11px;font-weight:800;color:var(--sub);text-align:center;margin:14px 0 8px}
+.door{display:block;width:100%;border:1.5px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:10px;cursor:pointer;background:#fff;text-align:left}
+.door .dt{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.door .dd{font-size:10.5px;color:var(--sub);margin-top:3px}
+.door.a{border-color:#4285f4}.door.a .dt{color:#1a73e8}
+.door.b{border-color:var(--teal)}.door.b .dt{color:var(--teal-d)}
+.gico{background:#fff;border:1px solid #e2e5ea;color:#4285f4;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.gpost{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px}
+.gpost .gp-h{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--sub);font-weight:700;margin-bottom:8px}
+.gpost .gp-shop{font-size:12.5px;font-weight:800}
+.gpost .gp-stars{color:var(--amber);font-size:15px;letter-spacing:1px}
+.gpost .gp-tx{font-size:11.5px;color:var(--ink);line-height:1.7;margin-top:6px;border:1px solid var(--line);border-radius:8px;padding:9px;background:#fafbfc}
+.coupon-area{text-align:center}
+.wheel-box{position:relative;width:190px;height:190px;margin:14px auto 6px}
+.wheel{width:100%;height:100%;border-radius:50%;border:7px solid #fff;box-shadow:0 4px 18px rgba(0,0,0,.15);transition:transform 1.3s cubic-bezier(.2,.75,.3,1)}
+.wheel-ptr{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:18px solid var(--red);z-index:2}
+.coupon{display:none;background:repeating-linear-gradient(45deg,#fff8ec,#fff8ec 12px,#fff3dd 12px,#fff3dd 24px);border:2px dashed var(--amber);border-radius:13px;padding:14px;margin-top:12px}
+.coupon b{font-size:16px;color:var(--amber-d)}.coupon p{font-size:10.5px;color:var(--sub)}
+
+/* ===== ダッシュボード ===== */
+.sec-t{font-size:15px;margin:26px 0 4px;padding-left:11px;border-left:4px solid var(--teal)}
+.sec-note{font-size:11.5px;color:var(--faint);margin:4px 0 12px 15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:840px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.kpi .kl{font-size:11px;color:var(--sub);font-weight:700}
+.kpi .kn{font-size:24px;font-weight:800;margin:2px 0}
+.kpi .kd{font-size:11px;font-weight:800;color:var(--green-d)}
+.kpi .kd.warn{color:var(--amber-d)}
+.g2{display:grid;grid-template-columns:1.15fr 1fr;gap:16px}
+@media(max-width:840px){.g2{grid-template-columns:1fr}}
+.topic{margin-bottom:11px}
+.topic .tl{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:4px}
+.topic .tl .cnt{font-weight:600;color:var(--faint)}
+.bar{height:14px;background:#eef0f4;border-radius:99px;overflow:hidden;display:flex}
+.bar .pos{background:var(--teal)}.bar .neg{background:var(--red)}
+.bar i{display:block;height:100%}
+.tlegend{font-size:11px;color:var(--faint);margin-top:8px}
+.tlegend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 4px 0 10px;vertical-align:-1px}
+.fix{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-top:1px dashed var(--line)}
+.fix:first-of-type{border-top:none}
+.fix .rk{flex-shrink:0;width:24px;height:24px;border-radius:7px;background:var(--amber);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.fix b{font-size:13px}.fix p{font-size:11.5px;color:var(--sub)}
+.fix .src{font-size:10.5px;color:var(--teal-d);font-weight:700;background:#ecfaf7;border-radius:6px;padding:1px 8px;display:inline-block;margin-top:4px}
+.appr{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.appr:first-child{border-top:none}
+.appr .gate{flex-shrink:0;font-size:10px;font-weight:800;color:#fff;border-radius:6px;padding:2px 9px;margin-top:2px;white-space:nowrap}
+.gate.auto{background:var(--green)}.gate.need{background:var(--amber)}
+.appr .ab{flex:1}.appr .ab b{font-size:12.5px}.appr .ab p{font-size:11px;color:var(--sub)}
+.appr .act{flex-shrink:0;display:flex;gap:6px;align-items:center}
+.mini{border:none;border-radius:8px;font-size:11px;font-weight:800;padding:6px 12px;cursor:pointer}
+.mini.ok{background:var(--teal);color:#fff}.mini.no{background:#fff;border:1.5px solid var(--line);color:var(--sub)}
+.done-pill{font-size:11px;font-weight:800;color:var(--green-d)}
+.tag2{display:inline-block;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:1px 8px}
+.feed{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);font-size:12px}
+.feed:first-child{border-top:none}
+.feed .fst{flex-shrink:0;color:var(--amber);font-size:12.5px;font-weight:800;width:54px}
+.feed .ft{flex:1;color:var(--ink)}
+.feed .ft small{display:block;color:var(--faint);font-size:10.5px;margin-top:2px}
+.chip{display:inline-block;font-size:10px;font-weight:800;border-radius:5px;padding:1px 7px;margin-left:4px}
+.chip.pub{background:rgba(66,133,244,.12);color:#1a73e8}
+.chip.priv{background:rgba(245,158,11,.14);color:var(--amber-d)}
+.foot{color:var(--faint);font-size:11.5px;margin-top:42px;text-align:center}
+.foot a{color:var(--teal-d)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <div class="brand">SOEL ｜ 店舗OS ／ AI集客運用BPO ・ <a href="../index.html" style="color:#7eeadb;text-decoration:none">← 店舗OS トップ</a></div>
+    <h1>口コミ増加エンジン — プロダクトデモ</h1>
+    <p class="sub">デモ店舗: 炭火焼肉 ガブリ 大門店 ／ すべてモックデータ</p>
+    <span class="demo-tag">DEMO</span>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab(0,this)">📱 お客様アプリ</button>
+      <button class="tab" onclick="showTab(1,this)">🖥 運用ダッシュボード（店長・本部）</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ TAB 0: お客様アプリ ============ -->
+  <div class="pane on" id="pane0">
+    <div class="app-stage">
+      <p class="stage-cap">店頭・卓上のQRから開く、<b>お客様のスマホ画面</b>です。30秒のアンケートを送信すると、AIが回答から口コミ草案を用意。<b>投稿するか／店長へ私的に伝えるか</b>はお客様が選びます。</p>
+      <div class="phone"><div class="notch"></div><div class="screen">
+        <div class="s-head">
+          <div class="shop">炭火焼肉 ガブリ 大門店</div>
+          <div class="sub2" id="t-subtitle">ご来店ありがとうございます！30秒アンケート</div>
+        </div>
+        <div class="langbar">
+          <button class="lang on" onclick="setLang('ja',this)">日本語</button>
+          <button class="lang" onclick="setLang('en',this)">EN</button>
+          <button class="lang" onclick="setLang('zh',this)">中文</button>
+          <button class="lang" onclick="setLang('ko',this)">한국어</button>
+        </div>
+        <div class="progress"><i id="pg0" class="on"></i><i id="pg1"></i><i id="pg2"></i><i id="pg3"></i></div>
+        <div class="s-body">
+
+          <div class="s-step on" id="st0">
+            <p class="q-label" id="t-q1">本日のご満足度を教えてください</p>
+            <div class="stars" id="stars"></div>
+            <p style="text-align:center;font-size:12px;color:var(--faint)" id="star-word">タップして評価</p>
+            <button class="s-btn" id="btn-s1" disabled onclick="goStep(1)">次へ</button>
+          </div>
+
+          <div class="s-step" id="st1">
+            <p class="q-label" id="t-q2">良かった点を選んでください（複数OK）</p>
+            <p class="q-sub" id="t-q2s">※ 選んだ内容からAIが口コミ草案を作ります</p>
+            <div id="opts"></div>
+            <button class="s-btn" id="btn-s2" disabled onclick="goStep(2)">次へ</button>
+          </div>
+
+          <div class="s-step" id="st2">
+            <p class="q-label" id="t-q3">一言メッセージ（任意）</p>
+            <textarea id="freetext" placeholder="例）タレが絶品でした！"></textarea>
+            <button class="s-btn" onclick="goSpin()" id="t-gen">アンケートを送信する</button>
+            <p class="q-sub" id="t-gensub" style="text-align:center;margin-top:8px">※ ご回答の御礼に、この場でクーポンルーレットを回せます</p>
+          </div>
+
+          <!-- 送信完了 → ①ルーレット＆クーポン ②同時に口コミ/意見へ誘導 -->
+          <div class="s-step" id="st-spin">
+            <div class="coupon-area">
+              <p class="q-label" id="t-c1">🎉 アンケートありがとうございました！<br>まずはルーレットでクーポンGET</p>
+              <p class="q-sub" id="t-c1s" style="text-align:center">※ ご回答の御礼です（このあと投稿してもしなくてもOK）</p>
+              <div class="wheel-box"><div class="wheel-ptr"></div><div class="wheel" id="wheel"></div></div>
+              <button class="s-btn" id="btn-spin" onclick="spin()">ルーレットを回す！</button>
+              <div class="coupon" id="coupon">
+                <b id="coupon-name">🍺 ドリンク1杯無料</b>
+                <p>次回ご来店時にこの画面をスタッフへ ／ 有効期限30日 ／ クーポンID: GB-<span id="cid"></span></p>
+              </div>
+            </div>
+            <div id="postdoors" style="display:none;margin-top:8px">
+              <p class="doors-h" id="t-doorsh">よろしければ、ひと言いただけませんか？</p>
+              <button class="door a" onclick="chooseDoor('public')">
+                <span class="dt"><span class="gico">G</span><span id="t-doora">Googleに口コミを記載しませんか？</span></span>
+                <span class="dd" id="t-dooras">AIが下書きを用意します。コピペで30秒、あとは投稿するだけ。</span>
+              </button>
+              <button class="door b" onclick="chooseDoor('private')">
+                <span class="dt">✉️ <span id="t-doorb">お店に直接フィードバックを記載しませんか？</span></span>
+                <span class="dd" id="t-doorbs">店長だけに届きます。公開はされません。気になった点もぜひ。</span>
+              </button>
+              <button class="s-btn ghost" id="t-skipdoor" onclick="goDone()">クーポンだけ受け取って終了</button>
+            </div>
+          </div>
+
+          <div class="s-step" id="st3">
+            <div class="ai-gen">
+              <div class="ai-h" id="t-aih">🤖 AIが回答から口コミ草案を作成中…（地域・業種ワードを自動で含めます）</div>
+              <div class="ai-tx" id="ai-tx"><span class="cursor"></span></div>
+            </div>
+            <div class="review-done" id="review-done"></div>
+            <button class="s-btn" id="btn-topost" style="display:none" onclick="toPost()">
+              <span style="display:flex;align-items:center;justify-content:center;gap:8px"><span class="gico">G</span><span id="t-topost">この下書きでGoogleに進む</span></span>
+            </button>
+          </div>
+
+          <!-- 投稿画面風（door A） -->
+          <div class="s-step" id="st-post">
+            <div class="gpost">
+              <div class="gp-h"><span class="gico">G</span><span>Google マップ ／ 口コミを投稿</span></div>
+              <div class="gp-shop">炭火焼肉 ガブリ 大門店</div>
+              <div class="gp-stars" id="post-stars">★★★★★</div>
+              <div class="gp-tx" id="post-tx"></div>
+            </div>
+            <p class="q-sub" style="text-align:center;margin-top:8px">草案はコピー済み。貼り付けて、自由に直してから投稿できます。</p>
+            <button class="s-btn" onclick="goDone()" id="t-postbtn">この内容で投稿する</button>
+            <button class="s-btn ghost" onclick="goDone()">あとで投稿する</button>
+          </div>
+
+          <!-- 私的FB確認（door B） -->
+          <div class="s-step" id="st-priv">
+            <p class="q-label" id="t-privh">店長に届けました ✉️</p>
+            <p style="font-size:12px;color:var(--sub)" id="t-privp">いただいた内容は店長に直接届き、サービス改善（診断→直す3点）に使わせていただきます。公開はされません。</p>
+            <button class="s-btn" onclick="goDone()" id="t-privbtn">OK</button>
+          </div>
+
+          <!-- 完了 -->
+          <div class="s-step" id="st-done">
+            <div style="text-align:center;padding:26px 6px 6px">
+              <div style="font-size:48px">🙌</div>
+              <p class="q-label" id="t-doneh" style="font-size:15px;margin-top:6px">ありがとうございました！</p>
+              <p style="font-size:12px;color:var(--sub)" id="t-donep">またのご来店をお待ちしています。クーポンは次回ご来店時にスタッフへご提示ください。</p>
+            </div>
+            <button class="s-btn ghost" onclick="resetSurvey()">↩ デモを最初から</button>
+          </div>
+
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ============ TAB 1: 運用ダッシュボード ============ -->
+  <div class="pane" id="pane1">
+    <div class="kpis">
+      <div class="kpi"><div class="kl">今月の新規口コミ</div><div class="kn">+38<span style="font-size:13px">件</span></div><div class="kd">▲ 先月比 +12</div></div>
+      <div class="kpi"><div class="kl">アンケ→Google投稿 転換</div><div class="kn">42%</div><div class="kd">▲ +6pt</div></div>
+      <div class="kpi"><div class="kl">AI自動化率</div><div class="kn">81%</div><div class="kd">店長の承認 月2.0hぶん</div></div>
+      <div class="kpi"><div class="kl">承認待ち</div><div class="kn" style="color:var(--amber-d)">3<span style="font-size:13px">件</span></div><div class="kd warn">危険な2割（要確認）</div></div>
+    </div>
+
+    <h3 class="sec-t">口コミ診断 — どんな口コミか</h3>
+    <p class="sec-note">公開口コミ＋私的フィードバックを言及トピックで集計。弱い項目＝底上げの伸びしろ。</p>
+    <div class="g2">
+      <div class="card">
+        <h4 style="font-size:12.5px;margin-bottom:12px;color:var(--sub)">言及トピック別 ポジ／ネガ（直近90日）</h4>
+        <div id="topics"></div>
+        <div class="tlegend"><i style="background:var(--teal)"></i>ポジ<i style="background:var(--red)"></i>ネガ ／ 数字は言及件数</div>
+      </div>
+      <div class="card">
+        <h4 style="font-size:12.5px;margin-bottom:6px;color:var(--sub)">🛠 今月の「直す3点」（診断からの自動提案）</h4>
+        <p style="font-size:11px;color:var(--faint);margin-bottom:8px">私的フィードバック（公開前）から拾うので、評価を落とさず改善できる。</p>
+        <div id="fixes"></div>
+      </div>
+    </div>
+
+    <h3 class="sec-t">承認キュー — AIが8割自動、危険な2割だけ承認</h3>
+    <p class="sec-note">安全な8割（定型対応・地域ワード投稿）はAIが自動。営業情報・価格・センシティブだけ承認する。</p>
+    <div class="card" id="approvals"></div>
+
+    <h3 class="sec-t">最近の口コミ（自動収集）</h3>
+    <p class="sec-note">お客様が選んだ「公開／私的」が、そのままここに流れ込む。私的は店長だけに見え、診断の燃料になる。</p>
+    <div class="card" id="feed"></div>
+
+    <p class="foot">SOEL 店舗OS — 口コミ増加エンジン（プロダクトデモ）／ すべてモックデータ ／ 2026-06-16<br>
+      関連デモ: <a href="../tenpo-os-demo/index.html">店舗OS 統合デモ</a>・<a href="../media-sns-demo/index.html">媒体×SNSレポート</a>・<a href="../aio-shindan-demo/index.html">AIO診断（登る先）</a>　｜　戦略の詳細は <a href="../新商材企画_AI集客運用BPO.html">新商材企画HTML</a></p>
+  </div>
+
+</div>
+
+<script>
+// ============ タブ ============
+function showTab(i, btn){
+  document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on', i===j);});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ============ お客様アプリ（4言語） ============
+var I18N = {
+  ja:{subtitle:'ご来店ありがとうございます！30秒アンケート', q1:'本日のご満足度を教えてください', tap:'タップして評価',
+      q2:'良かった点を選んでください（複数OK）', q2s:'※ 選んだ内容からAIが口コミ草案を作ります',
+      q3:'一言メッセージ（任意）', gen:'アンケートを送信する', gensub:'※ 送信した回答から、AIが口コミ草案を用意します', next:'次へ',
+      thanksh:'アンケートのご回答ありがとうございました！', thanksp:'回答をもとに、AIが口コミの草案をご用意しました。投稿するかどうかはあなた次第です。', thanksbtn:'AIの口コミ草案を見る ✨', thankssub:'※ 回答の御礼クーポンは、投稿してもしなくても最後にお渡しします',
+      aih:'🤖 AIが回答から口コミ草案を作成中…（地域・業種ワードを自動で含めます）',
+      doorsh:'よろしければ、ひと言いただけませんか？',
+      doora:'Googleに口コミを記載しませんか？', dooras:'AIが下書きを用意します。コピペで30秒、あとは投稿するだけ。',
+      doorb:'お店に直接フィードバックを記載しませんか？', doorbs:'店長だけに届きます。公開はされません。気になった点もぜひ。',
+      topost:'この下書きでGoogleに進む', skipdoor:'クーポンだけ受け取って終了', postbtn:'この内容で投稿する',
+      doneh:'ありがとうございました！', donep:'またのご来店をお待ちしています。クーポンは次回ご来店時にスタッフへご提示ください。', privh:'店長に届けました ✉️', privp:'いただいた内容は店長に直接届き、サービス改善（診断→直す3点）に使わせていただきます。公開はされません。', privbtn:'OK',
+      opts:['お肉の質・味','タレ・メニューの豊富さ','スタッフの接客','コスパが良い','店内の雰囲気・清潔感','個室・席のゆったり感'],
+      c1:'🎉 アンケートありがとうございました！<br>まずはルーレットでクーポンGET', c1s:'※ ご回答の御礼です（このあと投稿してもしなくてもOK）', spinBtn:'ルーレットを回す！'},
+  en:{subtitle:'Thanks for visiting! 30-sec survey', q1:'How was your experience today?', tap:'Tap to rate',
+      q2:'What did you like? (multiple OK)', q2s:'AI will draft your review from your choices',
+      q3:'A short message (optional)', gen:'Submit survey', gensub:'* AI prepares a review draft from your answers', next:'Next',
+      thanksh:'Thank you for completing the survey!', thanksp:'If you’d like, in one easy step —', thanksbtn:'See the AI review draft ✨', thankssub:'* The thank-you coupon is given at the end whether or not you post',
+      aih:'🤖 AI is drafting a review from your answers… (auto-includes area & cuisine words)',
+      doorsh:'If you don’t mind, a quick word?',
+      doora:'Post a review on Google?', dooras:'AI prepares the draft. Paste in 30 seconds and post.',
+      doorb:'Send direct feedback to the restaurant?', doorbs:'Goes only to the manager, never public. Tell us anything.',
+      topost:'Continue to Google with this draft', skipdoor:'Just take the coupon & finish', postbtn:'Post this review',
+      doneh:'Thank you!', donep:'We look forward to seeing you again. Show the coupon to our staff on your next visit.', privh:'Sent to the manager ✉️', privp:'Your feedback goes straight to the manager and powers our improvements. It is not made public.', privbtn:'OK',
+      opts:['Quality of the meat','Sauce & menu variety','Friendly staff','Great value','Atmosphere & cleanliness','Comfortable private rooms'],
+      c1:'🎉 Thanks for the survey!<br>First, spin for a coupon', c1s:'* Our thank-you for answering (post or not, your choice)', spinBtn:'Spin the wheel!'},
+  zh:{subtitle:'感谢光临！30秒问卷', q1:'请为今天的体验打分', tap:'点击评分',
+      q2:'您觉得哪些方面不错？（可多选）', q2s:'AI将根据您的选择生成评论草稿',
+      q3:'留言（可选）', gen:'提交问卷', gensub:'* AI将根据您提交的回答准备评论草稿', next:'下一步',
+      thanksh:'感谢您填写问卷！', thanksp:'如果方便，只需简单一步——', thanksbtn:'查看AI评论草稿 ✨', thankssub:'* 无论是否发布，最后都会赠送答谢优惠券',
+      aih:'🤖 AI正在根据您的回答生成评论草稿…（自动加入地区与品类关键词）',
+      doorsh:'方便的话，留一句话好吗？',
+      doora:'要在Google上写条评论吗？', dooras:'AI已备好草稿。粘贴30秒即可发布。',
+      doorb:'要直接向门店反馈吗？', doorbs:'仅店长可见，不会公开。任何在意的点都欢迎。',
+      topost:'用此草稿前往Google', skipdoor:'只领优惠券并结束', postbtn:'发布此评论',
+      doneh:'谢谢您！', donep:'期待您再次光临。优惠券请于下次到店时出示给店员。', privh:'已转达给店长 ✉️', privp:'您的反馈将直接传达给店长，用于改进（诊断→改善3点）。不会公开。', privbtn:'好的',
+      opts:['肉的品质与味道','酱料和菜单丰富','店员服务好','性价比高','店内氛围干净','包间宽敞舒适'],
+      c1:'🎉 感谢填写问卷！<br>先转转盘领优惠券', c1s:'* 这是填写问卷的答谢（之后是否发布由您）', spinBtn:'转动转盘！'},
+  ko:{subtitle:'방문해 주셔서 감사합니다! 30초 설문', q1:'오늘의 만족도를 알려주세요', tap:'탭하여 평가',
+      q2:'좋았던 점을 선택해주세요 (복수 가능)', q2s:'선택 내용으로 AI가 리뷰 초안을 작성합니다',
+      q3:'한마디 메시지 (선택)', gen:'설문 제출하기', gensub:'* 제출한 답변으로 AI가 리뷰 초안을 준비합니다', next:'다음',
+      thanksh:'설문에 응답해 주셔서 감사합니다!', thanksp:'괜찮으시다면, 간단한 한 단계로——', thanksbtn:'AI 리뷰 초안 보기 ✨', thankssub:'* 답변 감사 쿠폰은 게시 여부와 관계없이 마지막에 드립니다',
+      aih:'🤖 AI가 답변으로 리뷰 초안 작성 중…（지역·업종 키워드 자동 포함）',
+      doorsh:'괜찮으시면, 한마디 부탁드려도 될까요?',
+      doora:'Google에 리뷰를 남겨보시겠어요?', dooras:'AI가 초안을 준비합니다. 붙여넣기 30초면 게시 완료.',
+      doorb:'매장에 직접 피드백을 남겨보시겠어요?', doorbs:'점장에게만 전달되며 공개되지 않습니다. 무엇이든 편하게.',
+      topost:'이 초안으로 Google로 이동', skipdoor:'쿠폰만 받고 종료', postbtn:'이 내용으로 올리기',
+      doneh:'감사합니다!', donep:'다음 방문을 기다리겠습니다. 쿠폰은 다음 방문 시 직원에게 제시해 주세요.', privh:'점장에게 전달했습니다 ✉️', privp:'주신 의견은 점장에게 직접 전달되어 개선(진단→고칠 3가지)에 활용됩니다. 공개되지 않습니다.', privbtn:'확인',
+      opts:['고기의 질과 맛','소스·메뉴의 다양함','직원의 친절한 응대','가성비가 좋음','매장 분위기·청결함','넓고 편한 룸 좌석'],
+      c1:'🎉 설문 감사합니다!<br>먼저 룰렛으로 쿠폰 받기', c1s:'* 답변에 대한 감사 선물입니다 (게시 여부는 자유)', spinBtn:'룰렛 돌리기!'}
+};
+var lang='ja', rating=0, selected=[];
+
+function setLang(l, btn){
+  lang=l;
+  document.querySelectorAll('.lang').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var t=I18N[l];
+  setTx('t-subtitle',t.subtitle); setTx('t-q1',t.q1); setTx('star-word',t.tap);
+  setTx('t-q2',t.q2); setTx('t-q2s',t.q2s); setTx('t-q3',t.q3);
+  setTx('t-gen',t.gen); setTx('t-gensub',t.gensub);
+  setTx('btn-s1',t.next); setTx('btn-s2',t.next); setTx('t-aih',t.aih);
+  setTx('t-doorsh',t.doorsh); setTx('t-doora',t.doora); setTx('t-dooras',t.dooras);
+  setTx('t-doorb',t.doorb); setTx('t-doorbs',t.doorbs); setTx('t-topost',t.topost); setTx('t-skipdoor',t.skipdoor);
+  setTx('t-postbtn',t.postbtn); setTx('t-privh',t.privh); setTx('t-privp',t.privp); setTx('t-privbtn',t.privbtn);
+  setTx('t-doneh',t.doneh); setTx('t-donep',t.donep);
+  document.getElementById('t-c1').innerHTML=t.c1; setTx('t-c1s',t.c1s); setTx('btn-spin',t.spinBtn);
+  buildOpts();
+}
+function setTx(id,v){var e=document.getElementById(id); if(e) e.textContent=v;}
+
+function buildStars(){
+  var box=document.getElementById('stars'); box.innerHTML='';
+  for(var i=1;i<=5;i++){(function(n){
+    var s=document.createElement('span'); s.className='star'; s.textContent='★';
+    s.onclick=function(){
+      rating=n;
+      document.querySelectorAll('.star').forEach(function(st,j){st.classList.toggle('on', j<n);});
+      document.getElementById('btn-s1').disabled=false;
+      document.getElementById('star-word').textContent='★'.repeat(n)+'（'+n+'/5）';
+    };
+    box.appendChild(s);
+  })(i);}
+}
+function buildOpts(){
+  var box=document.getElementById('opts'); box.innerHTML=''; selected=[];
+  document.getElementById('btn-s2').disabled=true;
+  I18N[lang].opts.forEach(function(o,i){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=function(){
+      b.classList.toggle('sel');
+      var idx=selected.indexOf(i); if(idx>=0) selected.splice(idx,1); else selected.push(i);
+      document.getElementById('btn-s2').disabled=selected.length===0;
+    };
+    box.appendChild(b);
+  });
+}
+var STEP_IDS=['st0','st1','st2','st-spin','st3','st-post','st-priv','st-done'];
+function showStep(id){ STEP_IDS.forEach(function(s){document.getElementById(s).classList.toggle('on', s===id);}); }
+function goStep(n){
+  showStep('st'+n);
+  for(var i=0;i<4;i++){var p=document.getElementById('pg'+i); if(p) p.classList.toggle('on', i<=Math.min(n,3));}
+}
+function goSpin(){
+  showStep('st-spin');
+  document.getElementById('pg3').classList.add('on');
+  document.getElementById('postdoors').style.display='none';
+  buildWheel();
+}
+function goDone(){ showStep('st-done'); }
+function genReview(){
+  showStep('st3');
+  document.getElementById('pg3').classList.add('on');
+  var picks = selected.map(function(i){return I18N.ja.opts[i];});
+  var free = document.getElementById('freetext').value.trim();
+  var parts=['大門・浜松町エリアで焼肉なら間違いなくここ。'];
+  if(picks.indexOf('お肉の質・味')>=0) parts.push('お肉の質が高く、特に厚切りタンは絶品でした。');
+  if(picks.indexOf('タレ・メニューの豊富さ')>=0) parts.push('タレの種類が豊富で最後まで飽きずに楽しめます。');
+  if(picks.indexOf('スタッフの接客')>=0) parts.push('スタッフの方の気配りが素晴らしく、焼き加減のアドバイスも的確。');
+  if(picks.indexOf('コスパが良い')>=0) parts.push('この内容でこの価格はコスパ抜群だと思います。');
+  if(picks.indexOf('店内の雰囲気・清潔感')>=0) parts.push('店内は清潔感があり落ち着いた雰囲気。');
+  if(picks.indexOf('個室・席のゆったり感')>=0) parts.push('席がゆったりしていて接待や記念日にも使えそう。');
+  if(parts.length===1) parts.push('雰囲気・味ともに大満足でした。');
+  if(free) parts.push('「'+free+'」');
+  parts.push('大門で焼肉店を探している方にはぜひおすすめしたいお店です。');
+  var review = parts.join('');
+  var node=document.getElementById('ai-tx'); node.innerHTML='<span class="cursor"></span>';
+  document.getElementById('review-done').style.display='none';
+  document.getElementById('btn-topost').style.display='none';
+  var i=0;
+  var iv=setInterval(function(){
+    i+=2; node.innerHTML = review.slice(0,i) + '<span class="cursor"></span>';
+    if(i>=review.length){
+      clearInterval(iv); node.innerHTML=review;
+      var done=document.getElementById('review-done'); done.style.display='block';
+      done.innerHTML='✅ <b>草案完成。</b>内容はご自由に編集できます。投稿はあくまで任意です。';
+      document.getElementById('btn-topost').style.display='block';
+      window._review=review;
+    }
+  },30);
+}
+function chooseDoor(which){
+  if(which==='public'){ genReview(); }
+  else { showStep('st-priv'); }
+}
+function toPost(){
+  if(window._review && navigator.clipboard){ try{navigator.clipboard.writeText(window._review);}catch(e){} }
+  document.getElementById('post-tx').textContent = window._review||'';
+  document.getElementById('post-stars').textContent = '★'.repeat(rating||5);
+  showStep('st-post');
+}
+var PRIZES=[{n:'🍺 ドリンク1杯無料',c:'#14b8a6'},{n:'🥩 上タン50%OFF',c:'#3b82f6'},{n:'🍦 デザート無料',c:'#8b5cf6'},{n:'💴 500円OFF',c:'#f59e0b'},{n:'🎟 次回10%OFF',c:'#ef4444'},{n:'🥗 サラダ無料',c:'#22c55e'}];
+function buildWheel(){
+  var w=document.getElementById('wheel');
+  w.style.background='conic-gradient('+PRIZES.map(function(p,i){return p.c+' '+(i*60)+'deg '+((i+1)*60)+'deg';}).join(',')+')';
+  w.style.transform='rotate(0deg)';
+  document.getElementById('coupon').style.display='none';
+  document.getElementById('btn-spin').disabled=false;
+}
+function spin(){
+  document.getElementById('btn-spin').disabled=true;
+  var pick=Math.floor(Math.random()*PRIZES.length);
+  document.getElementById('wheel').style.transform='rotate('+(360*3+(360-(pick*60+30)))+'deg)';
+  setTimeout(function(){
+    document.getElementById('coupon-name').textContent=PRIZES[pick].n;
+    document.getElementById('cid').textContent=String(Math.floor(Math.random()*90000)+10000);
+    document.getElementById('coupon').style.display='block';
+    document.getElementById('postdoors').style.display='block';
+  },1450);
+}
+function resetSurvey(){
+  rating=0; selected=[]; window._review=null;
+  document.getElementById('freetext').value='';
+  document.getElementById('ai-tx').innerHTML='<span class="cursor"></span>';
+  document.getElementById('review-done').style.display='none';
+  document.getElementById('btn-topost').style.display='none';
+  document.getElementById('postdoors').style.display='none';
+  document.getElementById('coupon').style.display='none';
+  document.getElementById('btn-s1').disabled=true;
+  document.getElementById('star-word').textContent=I18N[lang].tap;
+  buildStars(); buildOpts(); goStep(0);
+}
+
+// ============ ダッシュボード ============
+var TOPICS=[
+  {l:'お肉の質・味',   pos:62, neg:5},
+  {l:'スタッフの接客', pos:38, neg:9},
+  {l:'コスパ・価格',   pos:21, neg:18},
+  {l:'店内の清潔感',   pos:24, neg:14},
+  {l:'待ち時間・案内', pos:9,  neg:23},
+  {l:'予約・電話対応', pos:7,  neg:12}
+];
+function drawTopics(){
+  var box=document.getElementById('topics'); box.innerHTML='';
+  TOPICS.forEach(function(t){
+    var tot=t.pos+t.neg, posw=Math.round(t.pos/tot*100);
+    var d=document.createElement('div'); d.className='topic';
+    d.innerHTML='<div class="tl"><span>'+t.l+'</span><span class="cnt">+'+t.pos+' / −'+t.neg+'</span></div>'
+      +'<div class="bar"><i class="pos" style="width:'+posw+'%"></i><i class="neg" style="width:'+(100-posw)+'%"></i></div>';
+    box.appendChild(d);
+  });
+}
+var FIXES=[
+  {t:'ピーク時の「待ち時間の見える化」', p:'金土19-20時に「案内が遅い」が集中。受付に待ち時間表示と次回優先予約の案内を。', src:'私的FB 23件中14件が待ち時間'},
+  {t:'価格の納得感を先に伝える', p:'「思ったより高い」は注文前の期待値ズレ。看板メニューの“量×価格”をメニュー冒頭に明示。', src:'ネガ18件：価格の体感差'},
+  {t:'卓・トイレの清掃チェック頻度UP', p:'清潔感のネガは夜帯に偏在。混雑ピーク後の見回りを30分間隔に。', src:'清潔感ネガ14件・夜帯'}
+];
+function drawFixes(){
+  var box=document.getElementById('fixes'); box.innerHTML='';
+  FIXES.forEach(function(f,i){
+    var d=document.createElement('div'); d.className='fix';
+    d.innerHTML='<span class="rk">'+(i+1)+'</span><div><b>'+f.t+'</b><p>'+f.p+'</p><span class="src">'+f.src+'</span></div>';
+    box.appendChild(d);
+  });
+}
+var APPROVALS=[
+  {gate:'auto', tag:'返信', col:'#3b82f6', t:'★4-5口コミへの定型返信 ×12件', p:'地域・業種ワード入りでAIが自動返信（衛生作業）。'},
+  {gate:'auto', tag:'投稿', col:'#14b8a6', t:'Google最新情報「父の日 厚切りタン」', p:'Instagram連携で自動転載。安全な定型投稿。'},
+  {gate:'auto', tag:'診断', col:'#8b5cf6', t:'今月の「直す3点」レポート生成', p:'集まった声からAIが自動抽出・店長へ共有。'},
+  {gate:'need', tag:'要承認', col:'#f59e0b', t:'GBP 営業時間の変更（祝日対応）', p:'営業情報は誤ると影響大。危険な2割。'},
+  {gate:'need', tag:'要承認', col:'#f59e0b', t:'★1口コミへの個別返信案', p:'センシティブ。トーンを確認してから公開。'},
+  {gate:'need', tag:'要承認', col:'#ef4444', t:'メニュー価格の改定（コース+300円）', p:'価格は要確認。承認後にGBP/媒体へ反映。'}
+];
+function drawApprovals(){
+  var box=document.getElementById('approvals'); box.innerHTML='';
+  APPROVALS.forEach(function(a,idx){
+    var d=document.createElement('div'); d.className='appr';
+    var right = a.gate==='auto'
+      ? '<span class="done-pill">✓ 自動実行済</span>'
+      : '<div class="act" id="act'+idx+'"><button class="mini ok" onclick="approve('+idx+',true)">承認</button><button class="mini no" onclick="approve('+idx+',false)">却下</button></div>';
+    d.innerHTML='<span class="gate '+a.gate+'">'+(a.gate==='auto'?'AI自動':'要承認')+'</span>'
+      +'<div class="ab"><b><span class="tag2" style="background:'+a.col+';margin-right:6px">'+a.tag+'</span>'+a.t+'</b><p>'+a.p+'</p></div>'+right;
+    box.appendChild(d);
+  });
+  var note=document.createElement('div');
+  note.style.cssText='font-size:11px;color:var(--faint);border-top:1px dashed var(--line);margin-top:6px;padding-top:10px';
+  note.innerHTML='営業情報・価格などリスクのある内容だけ店長が承認。あとの定型対応（返信・定型投稿など）はAIが自動で行います。';
+  box.appendChild(note);
+}
+function approve(idx, ok){
+  var act=document.getElementById('act'+idx); if(!act) return;
+  act.innerHTML = ok ? '<span class="done-pill">✓ 承認 → 媒体へ反映</span>' : '<span style="font-size:11px;font-weight:800;color:var(--red-d)">✗ 却下（AIが修正案を再提示）</span>';
+}
+var FEED=[
+  {st:'★★★★★', t:'厚切りタンが絶品。大門で焼肉ならここ。', meta:'2分前・公開投稿', kind:'pub', tag:'AI返信済'},
+  {st:'★★★★☆', t:'接客が丁寧。少しだけ待ち時間が…', meta:'18分前・公開投稿', kind:'pub', tag:'AI返信済'},
+  {st:'★★☆☆☆', t:'会計に時間がかかった。料理は良かった。', meta:'31分前・私的フィードバック', kind:'priv', tag:'診断へ'},
+  {st:'★★★★★', t:'個室が広く接待に最適でした。', meta:'1時間前・公開投稿', kind:'pub', tag:'AI返信済'},
+  {st:'★★★☆☆', t:'味は良いが価格が思ったより高め。', meta:'2時間前・私的フィードバック', kind:'priv', tag:'診断へ'}
+];
+function drawFeed(){
+  var box=document.getElementById('feed'); box.innerHTML='';
+  FEED.forEach(function(f){
+    var chip = f.kind==='pub' ? '<span class="chip pub">公開</span>' : '<span class="chip priv">店長のみ</span>';
+    var d=document.createElement('div'); d.className='feed';
+    d.innerHTML='<span class="fst">'+f.st+'</span><div class="ft">'+f.t+chip
+      +'<small>'+f.meta+' ／ '+f.tag+'</small></div>';
+    box.appendChild(d);
+  });
+}
+
+// init
+buildStars(); buildOpts(); drawTopics(); drawFixes(); drawApprovals(); drawFeed();
+</script>
+</body>
+</html>

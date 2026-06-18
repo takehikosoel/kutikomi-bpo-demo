@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新商材企画 — AI集客運用BPO（GMAPピボット）</title>
+<style>
+  :root{
+    --ink:#1a1d24; --sub:#5b6470; --line:#e3e7ed; --bg:#f6f8fb; --card:#fff;
+    --accent:#2f6df6; --accent2:#0fb37f; --warn:#e8762a; --bad:#d8443c; --pur:#7a52d9;
+    --good-bg:#eafaf3; --warn-bg:#fdf3ea; --bad-bg:#fdecea; --acc-bg:#eef3fe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 22px 80px}
+  header.hero{background:linear-gradient(135deg,#1b2a4a,#2f6df6);color:#fff;border-radius:18px;padding:34px 30px;margin-bottom:10px}
+  header.hero .kicker{font-size:12px;letter-spacing:.18em;opacity:.85;font-weight:700}
+  header.hero h1{margin:8px 0 6px;font-size:27px;line-height:1.35}
+  header.hero p{margin:0;opacity:.9;font-size:14px}
+  header.hero .meta{margin-top:14px;font-size:12px;opacity:.8}
+  section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px;margin-top:18px}
+  h2{font-size:20px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  h2 .num{background:var(--ink);color:#fff;font-size:13px;width:26px;height:26px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  h2 .lv{font-size:11px;color:var(--sub);font-weight:600;border:1px solid var(--line);padding:1px 8px;border-radius:99px}
+  .lead{color:var(--sub);font-size:13.5px;margin:2px 0 18px}
+  h3{font-size:15.5px;margin:20px 0 8px}
+  p{margin:8px 0}
+  strong{color:#11141a}
+  .hl{background:linear-gradient(transparent 60%,#fff2a8 60%);font-weight:700}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin:5px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ccard{border:1px solid var(--line);border-radius:13px;padding:16px 16px;background:#fff}
+  .ccard .cn{font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--accent);
+    display:inline-block;padding:2px 10px;border-radius:99px;margin-bottom:8px}
+  .ccard.c2 .cn{background:var(--accent2)} .ccard.c3 .cn{background:var(--pur)}
+  .ccard h4{margin:0 0 6px;font-size:15px}
+  .ccard p{margin:0;font-size:13px;color:var(--sub)}
+  .action{background:var(--acc-bg);border:1px solid #cfe0ff;border-radius:13px;padding:16px 18px;margin-top:16px}
+  .action b{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f1f4f9;font-size:12.5px;color:#33404f}
+  td.c{text-align:center;white-space:nowrap}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px}
+  .t-good{background:var(--good-bg);color:#0a8a5f} .t-warn{background:var(--warn-bg);color:#bb5a17}
+  .t-bad{background:var(--bad-bg);color:#bb352d} .t-acc{background:var(--acc-bg);color:#2256c9}
+  .callout{border-left:4px solid var(--accent);background:#f7faff;padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.good{border-color:var(--accent2);background:var(--good-bg)}
+  .callout.warn{border-color:var(--warn);background:var(--warn-bg)}
+  .callout.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .callout .lbl{font-weight:800;font-size:12px;letter-spacing:.05em;display:block;margin-bottom:3px}
+  details{border:1px solid var(--line);border-radius:11px;padding:4px 16px;margin:12px 0;background:#fafbfd}
+  summary{cursor:pointer;font-weight:700;font-size:13.5px;padding:9px 0;color:#33404f}
+  details[open]{padding-bottom:14px}
+  .quote{font-size:12.5px;color:var(--sub);font-style:normal;border-left:3px solid var(--line);padding-left:12px;margin:10px 0}
+  .tree{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+  .node{border:1px solid var(--line);border-radius:10px;padding:9px 14px;background:#fff;position:relative;font-size:13.5px}
+  .node .l{font-size:11px;font-weight:800;color:var(--accent);margin-right:8px}
+  .node.dim{opacity:.78}
+  .arrow{text-align:center;color:#aab3c0;font-size:13px;line-height:1}
+  .tri{display:block;margin:14px auto;max-width:430px}
+  .foot{color:var(--sub);font-size:12px;text-align:center;margin-top:30px}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .pill{border:1px solid var(--line);border-radius:99px;padding:4px 13px;font-size:12.5px;background:#fff}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+  .kpi .k{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:#fff}
+  .kpi .k .v{font-size:22px;font-weight:800;color:var(--accent)}
+  .kpi .k .t{font-size:12px;color:var(--sub);margin-top:2px}
+  @media(max-width:680px){.grid3,.grid2,.kpi{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">SOEL ／ 新商材企画 ／ 社内戦略メモ</div>
+  <h1>費用対効果で売るのをやめる。<br>「AI集客運用BPO」で粗利と粘着を取りに行く。</h1>
+  <p>GMAP広告のコモディティ化と粗利1万からの脱出 — 戦略の骨子・価格・販路・差別化・粗利逆算・実証テスト</p>
+  <div class="meta">作成：2026-06-16 ／ 共有先：岡崎さん・斉藤さん ／ 根拠：ファイブグループ商談(6/15)・齋藤さん打合せ(6/10)・口コミ365/競合分析　※数字は一部「仮」</div>
+</header>
+
+<!-- 1. サマリー -->
+<section>
+  <h2><span class="num">1</span>エグゼクティブサマリー</h2>
+  <p class="lead">結論3つ → 推奨アクション。詳細ロジックは2章以降。</p>
+  <div class="grid3">
+    <div class="ccard">
+      <span class="cn">結論 01</span>
+      <h4>費用対効果で売るのをやめる</h4>
+      <p>飲食の売上要因は特定不能（メニュー・競合・価格・シフト・予約）。「測れる価値」は<strong>需要の所在地を所有しないSOELにとって解約コストゼロ＝効果一本足</strong>で、効果が陰った瞬間に切られる。6/15 ファイブグループがこれを露呈。</p>
+    </div>
+    <div class="ccard c2">
+      <span class="cn">結論 02</span>
+      <h4>商材＝AI運用の口コミ＋BPO</h4>
+      <p>実需がある「口コミ増加＋媒体運用代行」を、<strong>AIで原価構造を付け替えて</strong>提供。固定＋工数従量、広告/インフルはオプション。粗利はAI原価、販路は<strong>自前1,400→4,400店</strong>。要塞ロックインは追わない。</p>
+    </div>
+    <div class="ccard c3">
+      <span class="cn">結論 03</span>
+      <h4>急所は「人の承認スループット」一点</h4>
+      <p>粗利の分水嶺はAIの賢さでなく<strong>承認を捌く速さ</strong>。危険な2割の承認ゲートを<strong>店長に振る</strong>と、粗利・ロックイン・責任分散が同時成立。<strong>¥3〜5万で粗利7〜8割</strong>が射程。</p>
+    </div>
+  </div>
+  <div class="action">
+    <b>▶ 推奨アクション</b>　自前ベースから<strong>100店へ3ヶ月無料配布</strong>し「実装テスト兼GTM実証」。Day1から計装して4指標（自動率・1店人手分・苦情率・実AIコスト）を測り、<strong>本契約トリガーを事前定義</strong>する。無料期間コスト概算 <strong>約¥1.5M</strong>（100店×3ヶ月×~¥5k）。
+  </div>
+</section>
+
+<!-- 2. 背景 -->
+<section>
+  <h2><span class="num">2</span>背景：なぜ今ピボットか</h2>
+  <p class="lead">GMAP広告は構造的に粗利が薄く、コモディティ化が進む。</p>
+  <ul>
+    <li><strong>粗利が薄い</strong>：1店あたり月¥1万程度。運用代行＝労働で、スケールしない。</li>
+    <li><strong>コモディティ化</strong>：競合が軒並みP-MAX 20%フラットへ横並び。配信での差別化が消えつつある。</li>
+    <li><strong>費用対効果が立たない</strong>：通常プラン月¥6万に対し、利益率10%前提だと月60万売上増でトントン、実質100万増が必要。客単価¥4,000の好条件でも100店配信して達成は1〜2店のみ（6/15商談）。</li>
+    <li><strong>業態によっては相性が悪い（※一般化はしない／例：ファイブグループ）</strong>：リピーター重視の特定業態では「一見客を連れる広告」が戦略と噛み合わない、という個別ケースもある。これは全顧客に当てはまる構造ではなく、6/15商談の固有事情。</li>
+  </ul>
+  <div class="callout">
+    <span class="lbl">起点となった社内の気づき（齋藤さん打合せ 6/10）</span>
+    「GMAP広告はいつか切られる。いかに切られにくく価値を出すか。<strong>めんどくさいは結構な価値</strong>。費用対効果で測れない設計をする。」
+  </div>
+</section>
+
+<!-- 3. コアロジック -->
+<section>
+  <h2><span class="num">3</span>コアロジック：なぜ "測れる価値" は死ぬか<span class="lv">L0–L2</span></h2>
+  <p class="lead">「測れるから切られる」のではない。「所有してないから切られる」。</p>
+
+  <h3>① 食べログ／ホットペッパーが切られない本当の理由</h3>
+  <p>食べログ/ホットペッパーは<strong>客が店を探し・選ぶ場所そのもの（＝需要の所在地）</strong>。店がここの<strong>掲載をやめる（解約する）と、客が探している場所から店が消える</strong>＝見つけてもらえない＝来店が減る。つまり<strong>解約する側（店）が損をする</strong>。だから効果がそこそこでも払い続ける。</p>
+  <p>一方、GMAP広告やSNS運用を<strong>やめても店はGoogleマップ/SNSから消えない</strong>（掲載・アカウントは店のものとして残る）。客が最終的に店を選ぶ場所はGoogle/食べログ側が握っていて、SOELの運用はその"上に乗ったオプション"にすぎない。だから<strong>やめても店は痛くない＝インフラ化できない＝切られる</strong>。</p>
+
+  <h3>② 所有してないと何がダメか＝「辞めても顧客が痛くない」</h3>
+  <p>店がSOELを解約しても、GBPも口コミも順位も全部"店のもの"として残る。SOELは差し替え可能なミドルウェア。<strong>解約コストがゼロ → 引き止めが「効果の証明」一本足になる → 効果は揺れる → 切られる。</strong></p>
+  <div class="callout good">
+    <span class="lbl">ピボットの肝</span>
+    所有（＝解約コスト）は、効果が見えない月を耐えさせる"二本目の足"。これが無いから効果次第で即切られる。だから新商材は<strong>「辞めたら顧客が痛い」を効果と無関係に人工的に作る</strong>。
+  </div>
+
+  <h3>③ インフラには2種類ある — SOELが取れるのは右だけ</h3>
+  <table>
+    <tr><th>種類</th><th>例</th><th>SOELは所有できるか</th></tr>
+    <tr><td><strong>需要の所在地</strong><br>（客が店を選ぶ場所）</td><td>食べログ・ホットペッパー・Googleマップ・Instagram・AI検索</td><td class="c"><span class="tag t-bad">✕ 構造的に無理</span><br><span style="font-size:11.5px;color:#5b6470">所有はGoogle/食べログ。二面市場は作れない</span></td></tr>
+    <tr><td><strong>業務の記録地</strong><br>（店の経営記録）</td><td>POS・会計・予約台帳・<strong>全店横断の評判/媒体/売上台帳</strong></td><td class="c"><span class="tag t-warn">△ 一部可</span><br><span style="font-size:11.5px;color:#5b6470">大物はリクルート/freee。横断台帳は無主</span></td></tr>
+  </table>
+</section>
+
+<!-- 4. 戦略の降下 -->
+<section>
+  <h2><span class="num">4</span>戦略の降下：要塞ロックインを捨てる<span class="lv">L3</span></h2>
+  <p class="lead">「壮大なOS」は罠だった。"正解への降下"であって敗北ではない。</p>
+
+  <div class="callout warn">
+    <span class="lbl">操縦盤／OS構想を引っ込めた理由</span>
+    大企業はBIを自前で持てる。可視化ダッシュボードが効くのは「Excelでは限界・BIチームは無い」中間層だけ＝狭く価格感度が高い。背骨にするには脆い。
+  </div>
+
+  <h3>核心の矛盾</h3>
+  <div class="grid2">
+    <div class="ccard"><h4>売れるもの</h4><p>口コミ増加・BPO（実需あり・口コミ365が5,400店で証明）<br><span class="tag t-bad" style="margin-top:8px">ロックインが弱い</span></p></div>
+    <div class="ccard"><h4>強くロックするもの</h4><p>OS・不正検知・売上予測<br><span class="tag t-bad" style="margin-top:8px">実需が無い／データが無く作れない</span></p></div>
+  </div>
+
+  <h3>答え＝勝ち筋の三角形</h3>
+  <p>ロックインは北極星ではない。<strong>粗利・販路・ほどほどの粘着</strong>が北極星。口コミ365が要塞なしで5,400店を作れている時点で、これは証明済み。</p>
+  <svg class="tri" viewBox="0 0 430 230" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="215,18 38,205 392,205" fill="#eef3fe" stroke="#cfe0ff" stroke-width="2"/>
+    <text x="215" y="12" text-anchor="middle" font-size="13" font-weight="700" fill="#2f6df6">勝ち筋</text>
+    <g font-size="12.5" font-weight="700" fill="#1a1d24">
+      <text x="215" y="48" text-anchor="middle">① AI原価</text>
+      <text x="215" y="65" text-anchor="middle" font-size="11" font-weight="400" fill="#5b6470">粗利を作る</text>
+      <text x="70" y="198" text-anchor="middle">② ほどほど粘着</text>
+      <text x="70" y="214" text-anchor="middle" font-size="11" font-weight="400" fill="#5b6470">口コミ減衰＋束</text>
+      <text x="360" y="198" text-anchor="middle">③ 販路</text>
+      <text x="360" y="214" text-anchor="middle" font-size="11" font-weight="400" fill="#5b6470">面を取る</text>
+    </g>
+  </svg>
+  <p style="font-size:12.5px;color:var(--sub)">※ 口コミの粘着＝「増加エンジン」を店舗にinstall→解約＝口コミ増加が止まる＝AIO/MEO順位が"減衰"する。広告（切っても横ばい）より構造的にスティッキー。</p>
+</section>
+
+<!-- 5. 商材定義 -->
+<section>
+  <h2><span class="num">5</span>商材定義<span class="lv">L4</span></h2>
+  <p class="lead">AI運用の口コミ＋媒体BPO。広告/インフルは"乗せる"オプション。</p>
+
+  <h3>機能</h3>
+  <div class="pill-row">
+    <span class="pill">口コミ増加エンジン（QR→アンケ→AI生成→投稿）</span>
+    <span class="pill">媒体/SNS投稿</span>
+    <span class="pill">媒体情報更新</span>
+    <span class="pill">AIO対策</span>
+    <span class="pill">レポート/サマリ</span>
+  </div>
+  <div class="pill-row">
+    <span class="pill" style="background:var(--acc-bg)">オプション：広告運用</span>
+    <span class="pill" style="background:var(--acc-bg)">オプション：インフルエンサー実行</span>
+    <span class="pill" style="background:var(--good-bg)">v2：来店実測(food-log)</span>
+    <span class="pill" style="background:var(--good-bg)">v2：売上予測</span>
+  </div>
+
+  <h3>価格</h3>
+  <table>
+    <tr><th>区分</th><th>課金</th><th>狙い</th></tr>
+    <tr><td>口コミ増加</td><td class="c">固定</td><td>入口の楔・減衰で粘着</td></tr>
+    <tr><td>BPO（媒体更新・投稿の代理実行）</td><td class="c">固定＋工数従量</td><td>工数＝<strong>成果物の個数</strong>で課金（時間でない）</td></tr>
+    <tr><td>広告運用</td><td class="c">固定（別オプション）</td><td>台帳に"乗る"側にする</td></tr>
+  </table>
+  <p>価格帯 <strong>¥3〜5万</strong>。ティアは2つ：<strong>セルフ承認（安・高粗利）／おまかせ（高・お守り上澄み）</strong>。</p>
+  <div class="callout good">
+    <span class="lbl">重要：成果報酬は "効果" ではなく "工数"</span>
+    成果報酬を売上に紐づけた瞬間、効果一本足の罠に逆戻りする。<strong>課金軸は工数（やった業務量＝個数）</strong>。効果を見たい客にだけ、来店実測(food-log)を上澄みオプションとして売る。固定は"解約検討の閾値より下"に置く＝お守り保険料のように払い続けられる。
+  </div>
+</section>
+
+<!-- 6. 差別化 -->
+<section>
+  <h2><span class="num">6</span>差別化：対 口コミ365<span class="lv">L3</span></h2>
+  <p class="lead">二番煎じでいい。ただし "安いから勝つ" ではなく "原価×CACが低い構造" で勝つ。</p>
+  <p>口コミ365は「可視化＋運用代行ツール」。彼らが持っていない層で包む：</p>
+  <table>
+    <tr><th>SOELの武器</th><th>口コミ365に対して</th></tr>
+    <tr><td><strong>来店実測（food-log）</strong></td><td>口コミだけでなく"実際に来た"まで見せる。彼らに無い。成果オプションの土台にも。</td></tr>
+    <tr><td><strong>広告/インフルエンサー実行</strong></td><td>ツール＋運用代行に留まらず、集客の"実行"までできる。</td></tr>
+    <tr><td><strong>自前販路（1,400/4,400店）</strong></td><td>単体直販の彼らより、低CACで速く面を取れる。</td></tr>
+    <tr><td><strong>（登る先）売上予測</strong></td><td>food-log由来の来店信号で、将来彼らが作れない予測へ。</td></tr>
+  </table>
+  <div class="callout warn">
+    <span class="lbl">釘</span>
+    規模で上の口コミ365（5,400店）と<strong>価格"だけ"で殴ると値下げ合戦で負ける</strong>。安く出せる根拠は2つ必須：①原価が構造的に低い（AI運用）②CACが構造的に低い（自前ベース/アライアンス内蔵）。
+  </div>
+</section>
+
+<!-- 7. 販路 -->
+<section>
+  <h2><span class="num">7</span>販路（GTM）：面はトップダウンで取る<span class="lv">L4</span></h2>
+  <p class="lead">無料を全国に撒くのではない。自前の顧客構造から、企業単位で面を広げる。</p>
+  <div class="grid2">
+    <div class="ccard">
+      <span class="cn">Phase 1</span>
+      <h4>自前ベースへクロスセル</h4>
+      <p>契約1,400店 ＋ 契約企業内の未契約4,400店。<strong>CACほぼゼロ</strong>で、1社落とす→全店に広げる＝企業単位の面取り。</p>
+    </div>
+    <div class="ccard c2">
+      <span class="cn">Phase 2</span>
+      <h4>外部アライアンス</h4>
+      <p>Canly(13万店)等に"口コミ集客モジュール"として乗る。自前で実証してから外へ。アライアンスは増幅器であって起爆剤でない。</p>
+    </div>
+  </div>
+  <div class="callout good">
+    <span class="lbl">効く逆説</span>
+    GMAPに懐疑的な客ほど、効果依存の低い「口コミ＋BPO」が刺さる。今あるベースの不満を、より切られにくい商材で巻き取れる＝<strong>クロスセルが守りにもなる</strong>。
+  </div>
+</section>
+
+<!-- 8. 粗利逆算 -->
+<section>
+  <h2><span class="num">8</span>粗利の逆算<span class="lv">L6</span></h2>
+  <p class="lead">¥3〜5万で粗利7割 → 原価は売上の3割以下＝月¥9,000〜¥15,000まで。</p>
+  <div class="kpi">
+    <div class="k"><div class="v">~¥5-6.5k</div><div class="t">総原価/店・月</div></div>
+    <div class="k"><div class="v">~80%</div><div class="t">粗利 @¥30,000</div></div>
+    <div class="k"><div class="v">~88%</div><div class="t">粗利 @¥50,000</div></div>
+    <div class="k"><div class="v">2h</div><div class="t">許容人手/店・月</div></div>
+  </div>
+  <div class="callout good">
+    <span class="lbl">結論</span>
+    AIコストは制約じゃない。粗利は<strong>「人の承認スループット」一点</strong>で決まる。バイト(¥1,300)が月2hで捌ければ7割は余裕で超える。前提は「自動振り分け／承認キューが効く」こと。
+  </div>
+  <details>
+    <summary>▸ 原価内訳（数字）</summary>
+    <table>
+      <tr><th>原価項目</th><th>1店/月の目安</th><th>コメント</th></tr>
+      <tr><td>AI/API（返信・投稿・AIO・レポート）</td><td class="c">¥2,000〜3,000</td><td>画像生成入れても収まる。制約じゃない</td></tr>
+      <tr><td>承認の人件費（バイト¥1,300×2h）</td><td class="c">¥2,600</td><td><strong>ここが粗利の正体</strong></td></tr>
+      <tr><td>ツール/インフラ</td><td class="c">¥500〜1,000</td><td>スケールで薄まる</td></tr>
+      <tr><td>初期設定の按分（2〜4h一括）</td><td class="c">¥500〜1,000</td><td>初期費 or 最低3〜6ヶ月縛りで守る</td></tr>
+      <tr><td><strong>＝総原価</strong></td><td class="c"><strong>約¥5,000〜6,500</strong></td><td>@¥30k→粗利~80% / @¥50k→~88%</td></tr>
+    </table>
+    <p class="quote">時給¥2,500のフルロード社員で計算しても、許容人手は月2〜4時間（1日4〜9分）。セルフ承認ティア（店長がゲート）ならSOEL人手は月1時間未満→粗利80%超。</p>
+  </details>
+</section>
+
+<!-- 9. 急所 -->
+<section>
+  <h2><span class="num">9</span>急所：AI×人の境界設計<span class="lv">L5</span></h2>
+  <p class="lead">「どこまでAIか」を1本のスライダーで考えると詰む。タスクを "被害の大きさ×取り返しやすさ" で仕分ける。</p>
+  <table>
+    <tr><th>タスク</th><th>爆発半径</th><th>判定</th></tr>
+    <tr><td>4〜5★返信／定型媒体更新／レポート／競合監視／AIO下書き</td><td class="c">小・可逆</td><td class="c"><span class="tag t-good">全自動（ゲートなし）</span></td></tr>
+    <tr><td>3★以下返信／対外発信投稿／写真選定</td><td class="c">中・公開物</td><td class="c"><span class="tag t-warn">AI下書き→人が承認</span></td></tr>
+    <tr><td>異物・健康被害・法務・差別ワード口コミ／炎上兆候</td><td class="c">大・不可逆</td><td class="c"><span class="tag t-bad">即・人＋店舗にアラート</span></td></tr>
+  </table>
+  <p>これで<strong>8割（高評価・定型）はフルAIで流れ、人は危険な2割だけ</strong>。だから1人が何百店も捌ける。</p>
+
+  <div class="callout">
+    <span class="lbl">粗利のトリック</span>
+    原価が労働に戻るのは「人がゼロから書く」とき。<strong>人には"承認だけ"させる</strong>（数秒・例外のみ）。1タップ承認キューをAIで安く作り、ツールで粗利を買う。
+  </div>
+
+  <div class="callout good">
+    <span class="lbl">今日一番の発見：ゲートを店長に振る＝リスクが堀に化ける</span>
+    危険2割の承認を<strong>店長のスマホに振る</strong>と3つ同時解決：<br>
+    ① <strong>原価</strong>：SOEL労働が消える　② <strong>ロックイン</strong>：店長が毎日承認＝業務フローに埋め込まれる（探していた"切れなさ"）　③ <strong>責任</strong>：「あなたが承認した」＝賠償リスク分散。<br>
+    自然にティア化：<strong>セルフ承認（安・高粗利・高粘着）／おまかせ（高・お守り）</strong>。店長がサボれば一定時間で有料側へフォールバック。
+  </div>
+
+  <div class="callout warn">
+    <span class="lbl">残リスク</span>
+    全自動の高評価返信も、量産するとテンプレ臭が並ぶ→読む客に"業者感"＆Googleも一律テンプレを好まない。対策＝店舗らしさ・語彙のばらつき注入。爆発半径は小。
+  </div>
+</section>
+
+<!-- 10. 実装テスト -->
+<section>
+  <h2><span class="num">10</span>実装テスト兼GTM実証<span class="lv">アクション</span></h2>
+  <p class="lead">机上の7割が本物かを、自前ベースで1〜3ヶ月で事実にする。</p>
+  <div class="grid2">
+    <div class="ccard">
+      <h4>規模・期間</h4>
+      <p>自前ベースから<strong>100店へ3ヶ月無料配布</strong>（GMAP無料トライアルの型を踏襲）。任意で先に10店で承認設計を煮詰めてから100店へ。</p>
+    </div>
+    <div class="ccard">
+      <h4>作る最小限</h4>
+      <p>① リスク振り分け（自動/要承認/即アラート）<br>② 承認キュー（最初はLINE/Slackボタンでも可）<br>③ 危険ワードの即エスカレ</p>
+    </div>
+  </div>
+  <h3>Day1から計装して測る4指標</h3>
+  <table>
+    <tr><th>指標</th><th>狙い</th><th>合格ライン</th></tr>
+    <tr><td>自動で流れた割合</td><td>高いほど勝ち</td><td class="c">80%超</td></tr>
+    <tr><td>1店あたり人手分/月</td><td>粗利の正体</td><td class="c">≤2h（バイト¥1,300）</td></tr>
+    <tr><td>苦情・炎上件数</td><td>品質事故</td><td class="c">許容内</td></tr>
+    <tr><td>実AIコスト/店</td><td>原価確認</td><td class="c">≤¥3,000</td></tr>
+  </table>
+  <div class="callout bad">
+    <span class="lbl">先に決めておくこと（決めないと4ヶ月目に100店離脱）</span>
+    <strong>本契約トリガー</strong>を事前定義（例：口コミN件増／承認運用が定着→月¥Xで本契約）。GMAP無料トライアルの「経路検索が閾値超えたら本契約」と同じ構造。無料→本契約の<strong>転換率</strong>も測る。
+  </div>
+  <p style="font-size:12.5px;color:var(--sub)">無料期間コスト概算 <strong>約¥1.5M</strong>（100店×3ヶ月×~¥5k）＝面取り＆粗利検証への投資。</p>
+</section>
+
+<!-- 11. 付録 -->
+<section>
+  <h2><span class="num">11</span>付録</h2>
+  <details>
+    <summary>▸ 競合一覧とロックイン機構</summary>
+    <table>
+      <tr><th>サービス</th><th>提供</th><th>価格(目安)</th><th>ロックイン機構</th></tr>
+      <tr><td>口コミ365</td><td>口コミ収集＋AIO＋運用代行</td><td class="c">¥3万(代行)/¥6万(総合)</td><td>口コミ増加エンジンの減衰／5,400店の先行</td></tr>
+      <tr><td>Canly</td><td>GBP一括管理</td><td class="c">要問合せ</td><td>13万店・高タッチ支援への依存</td></tr>
+      <tr><td>Gyro-n MEO</td><td>順位計測＋AI返信</td><td class="c">¥1,500〜2,500/店</td><td>低価格でデフォルト化／履歴蓄積</td></tr>
+      <tr><td>Yext(海外)</td><td>200+媒体同期</td><td class="c">高額・年契約</td><td>解約で掲載が元に戻る"データ人質"</td></tr>
+      <tr><td>Birdeye/Podium(海外)</td><td>口コミ依頼＋メッセージ</td><td class="c">$299〜/店</td><td>SMS/決済/CRM連携で業務埋め込み</td></tr>
+      <tr><td>Toast(海外)</td><td>飲食POS</td><td class="c">SaaS＋専用機</td><td>専用ハード＋決済＋複数年契約＝最強</td></tr>
+    </table>
+    <p class="quote">リクルートの型：Airレジ(無料POS)で記録地を握り、ホットペッパー広告を上に乗せる。＝"広告は台帳に乗る側"の原典。</p>
+  </details>
+  <details>
+    <summary>▸ ユニットエコノミクス補足</summary>
+    <ul>
+      <li>口コミ返信50件/月想定：危険2割=10件、各30秒承認=5分＋投稿承認10分＋月次もの→キューが良ければ月30〜60分。2hは保守的。</li>
+      <li>セルフ承認ティア：SOEL人手＝QA抜き取り＋エスカレのみ→月1時間未満→粗利80%超。</li>
+      <li>POS連携は同意でなく配管が壁。「見えるなら渡す」店は多い。スマレジ等はAPI開、Airレジ(最多)は閉じ気味→繋がるPOSから・CSV手渡しでも可で段階的に。</li>
+    </ul>
+  </details>
+  <details>
+    <summary>▸ 議論の依存ツリー（L0→L6）</summary>
+    <div class="tree">
+      <div class="node"><span class="l">L0</span>何の勝負か＝測れる価値を捨てる</div>
+      <div class="arrow">↓</div>
+      <div class="node"><span class="l">L1</span>誰の何に刺すか＝顧客×永続ペイン</div>
+      <div class="arrow">↓</div>
+      <div class="node"><span class="l">L2</span>何で切られなくするか＝ロックイン機構</div>
+      <div class="arrow">↓</div>
+      <div class="node"><span class="l">L3/L4</span>差別化(対口コミ365)／販路(自前→アライアンス)</div>
+      <div class="arrow">↓</div>
+      <div class="node"><span class="l">L5</span>どう作るか＝AI×人の境界・データ順序</div>
+      <div class="arrow">↓</div>
+      <div class="node dim"><span class="l">L6</span>価格・粗利・収益（上流が決まれば機械的）</div>
+    </div>
+  </details>
+</section>
+
+<p class="foot">SOEL 新商材企画 ／ 2026-06-16 ／ 本資料は社内戦略検討用。数字の一部は「仮」前提のため、実装テストの4指標で事実化する。</p>
+
+</div>
+</body>
+</html>

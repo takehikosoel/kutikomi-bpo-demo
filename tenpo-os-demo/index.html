@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>店舗OS 統合デモ — サービスアウトプット一覧｜SOEL</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f5f6f8;--card:#fff;--line:#e2e5ea;--ink:#1a1d24;--sub:#6b7280;--faint:#9aa3b2;
+  --teal:#14b8a6;--teal-d:#0f766e;--blue:#3b82f6;--blue-d:#1d4ed8;--amber:#f59e0b;--amber-d:#b45309;
+  --red:#ef4444;--red-d:#b91c1c;--violet:#8b5cf6;--violet-d:#6d28d9;--green:#22c55e;--green-d:#15803d;
+  --navy:#0f1f4b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.65}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 80px}
+
+header{background:linear-gradient(135deg,var(--navy) 0%,#1e3a8a 60%,#0f766e 100%);color:#fff;padding:34px 20px 0}
+.h-inner{max-width:1060px;margin:0 auto}
+.h-inner .brand{font-size:12px;font-weight:700;letter-spacing:.12em;color:#7eeadb;margin-bottom:6px}
+.h-inner h1{font-size:24px}
+.h-inner p.sub{margin-top:6px;font-size:13px;opacity:.85}
+.demo-tag{display:inline-block;margin-top:10px;background:rgba(245,158,11,.9);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:999px}
+
+.tabs{max-width:1060px;margin:22px auto 0;display:flex;gap:4px;overflow-x:auto;padding:0 0 0}
+.tab{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:none;cursor:pointer;font-size:13px;font-weight:700;padding:11px 18px;border-radius:12px 12px 0 0;white-space:nowrap}
+.tab.on{background:var(--bg);color:var(--navy)}
+
+.pane{display:none;padding-top:28px}
+.pane.on{display:block;animation:fade .4s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.sec-t{font-size:15.5px;margin:26px 0 10px;padding-left:11px;border-left:4px solid var(--teal)}
+.note{font-size:12px;color:var(--faint);margin:4px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:840px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ===== スマホフレーム ===== */
+.duo-layout{display:grid;grid-template-columns:390px 1fr;gap:26px;align-items:start}
+@media(max-width:840px){.duo-layout{grid-template-columns:1fr}}
+.phone{width:100%;max-width:390px;background:#111;border-radius:38px;padding:12px;box-shadow:0 12px 40px rgba(15,31,75,.25);margin:0 auto}
+.phone .notch{width:120px;height:22px;background:#111;border-radius:0 0 14px 14px;margin:0 auto 0;position:relative;z-index:2}
+.screen{background:#fafafa;border-radius:28px;overflow:hidden;min-height:600px;display:flex;flex-direction:column;margin-top:-22px;padding-top:22px}
+.s-head{background:var(--navy);color:#fff;padding:14px 18px 12px;text-align:center}
+.s-head .shop{font-size:14.5px;font-weight:800}
+.s-head .sub2{font-size:10.5px;opacity:.75}
+.langbar{display:flex;gap:5px;justify-content:center;padding:8px 0 2px;background:var(--navy)}
+.lang{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);border:none;border-radius:999px;padding:3px 10px;cursor:pointer}
+.lang.on{background:#7eeadb;color:var(--navy)}
+.s-body{flex:1;padding:16px;overflow-y:auto}
+.s-step{display:none}
+.s-step.on{display:block;animation:fade .35s ease both}
+.q-label{font-size:13px;font-weight:800;margin:4px 0 10px}
+.q-sub{font-size:10.5px;color:var(--faint);margin:-6px 0 10px}
+.stars{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.star{font-size:34px;cursor:pointer;color:#d7dbe2;transition:transform .1s}
+.star.on{color:var(--amber)}
+.star:active{transform:scale(1.2)}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 14px;font-size:12.5px;margin-bottom:8px;cursor:pointer;font-weight:600;color:var(--ink)}
+.opt.sel{border-color:var(--teal);background:#ecfaf7;color:var(--teal-d)}
+.s-body textarea{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;font-size:12.5px;min-height:74px;font-family:inherit;resize:none}
+.s-btn{display:block;width:100%;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;font-size:14px;font-weight:800;padding:13px;cursor:pointer;margin-top:14px}
+.s-btn:disabled{opacity:.35;cursor:default}
+.s-btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--sub);font-weight:600;font-size:12px;padding:10px}
+.progress{display:flex;gap:5px;padding:10px 16px 0}
+.progress i{flex:1;height:4px;border-radius:99px;background:var(--line)}
+.progress i.on{background:var(--teal)}
+
+.ai-gen{background:#0f172a;border-radius:13px;padding:14px;margin-top:6px}
+.ai-gen .ai-h{font-size:10.5px;color:#7eeadb;font-weight:700;margin-bottom:8px}
+.ai-gen .ai-tx{font-size:12px;color:#e2e8f0;min-height:110px;line-height:1.8}
+.ai-gen .cursor{display:inline-block;width:7px;height:13px;background:#7eeadb;vertical-align:-2px;animation:blink .8s infinite}
+@keyframes blink{50%{opacity:0}}
+.review-done{border:1.5px solid var(--teal);background:#ecfaf7;border-radius:13px;padding:13px;margin-top:10px;font-size:12px;line-height:1.8;display:none}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:8px}
+.gbtn .gico{background:#fff;color:#4285f4;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+
+.coupon-area{text-align:center}
+.wheel-box{position:relative;width:190px;height:190px;margin:14px auto 6px}
+.wheel{width:100%;height:100%;border-radius:50%;border:7px solid #fff;box-shadow:0 4px 18px rgba(0,0,0,.15);transition:transform 3.2s cubic-bezier(.15,.7,.25,1)}
+.wheel-ptr{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:18px solid var(--red);z-index:2}
+.coupon{display:none;background:repeating-linear-gradient(45deg,#fff8ec,#fff8ec 12px,#fff3dd 12px,#fff3dd 24px);border:2px dashed var(--amber);border-radius:13px;padding:14px;margin-top:12px}
+.coupon b{font-size:16px;color:var(--amber-d)}
+.coupon p{font-size:10.5px;color:var(--sub)}
+
+/* 右側解説 */
+.exp h3{font-size:14px;margin-bottom:6px}
+.exp .pt{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.exp .pt .n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.exp .pt p{font-size:12.5px;color:var(--sub)}
+.exp .pt p b{color:var(--ink)}
+.warn{border-left:4px solid var(--amber);background:rgba(245,158,11,.07);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--sub);margin-top:10px}
+.warn b{color:var(--amber-d)}
+
+/* ===== ダッシュボード ===== */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:840px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.kpi .kl{font-size:11px;color:var(--sub);font-weight:700}
+.kpi .kn{font-size:23px;font-weight:800;margin:2px 0}
+.kpi .kd{font-size:11px;font-weight:800;color:var(--green-d)}
+.kpi .kd.down{color:var(--red-d)}
+.work-band{background:linear-gradient(135deg,var(--teal-d),var(--blue-d));color:#fff;border-radius:14px;padding:16px 22px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.work-band .wb-big{font-size:30px;font-weight:800;color:#7eeadb}
+.work-band .wb-big small{font-size:13px;color:#fff;opacity:.8;font-weight:600}
+.work-band p{font-size:12px;opacity:.85;flex:1;min-width:200px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--sub);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sk-list{margin-top:10px}
+.sk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed var(--line);font-size:12px}
+.sk .d{flex-shrink:0;font-weight:800;color:var(--teal-d);width:48px}
+.sk .tag2{flex-shrink:0;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:1px 8px;margin-top:2px}
+.sk p{color:var(--sub)}
+
+/* ===== テーブル共通 ===== */
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+th{background:#fafbfc;font-size:11.5px;color:var(--sub)}
+.tbl-card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+tr.me td{background:#ecfaf7;font-weight:700}
+.up{color:var(--green-d);font-weight:800}.down{color:var(--red-d);font-weight:800}.flat{color:var(--faint)}
+.pos-badge{display:inline-block;font-size:10.5px;font-weight:800;border-radius:6px;padding:1px 8px}
+.pb-g{background:rgba(34,197,94,.12);color:var(--green-d)}
+.pb-a{background:rgba(245,158,11,.14);color:var(--amber-d)}
+.pb-r{background:rgba(239,68,68,.1);color:var(--red-d)}
+
+.rank1{font-weight:800;color:var(--amber-d)}
+.health{display:inline-block;width:64px;height:7px;background:#eef0f4;border-radius:99px;overflow:hidden;vertical-align:middle;margin-right:6px}
+.health i{display:block;height:100%;border-radius:99px}
+
+.link-card{display:block;background:var(--card);border:1.5px solid var(--teal);border-radius:14px;padding:18px 22px;text-decoration:none;color:var(--ink);margin-top:14px}
+.link-card:hover{background:#ecfaf7}
+.link-card b{color:var(--teal-d)}
+.link-card p{font-size:12px;color:var(--sub)}
+
+.foot{color:var(--faint);font-size:11.5px;margin-top:48px;text-align:center}
+
+/* ===== 媒体編集（代行実行） ===== */
+.mtag{display:inline-block;font-size:10px;font-weight:800;color:#fff;border-radius:6px;padding:2px 8px;margin-right:5px;vertical-align:1px}
+.mt-tabelog{background:#c8a24a}.mt-gbp{background:#4285f4}.mt-insta{background:#c13584}.mt-line{background:#06c755}.mt-multi{background:var(--violet)}
+.qrow{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px dashed var(--line)}
+.qrow:first-child{border-top:none}
+.qrow .qmain{flex:1;min-width:0}
+.qrow .qtask{font-size:12.5px;font-weight:700;color:var(--ink)}
+.qrow .qdraft{font-size:11px;color:var(--sub);margin-top:3px}
+.qstat{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:150px}
+.badge{display:inline-block;font-size:10px;font-weight:800;border-radius:6px;padding:2px 9px;white-space:nowrap}
+.bd-auto{background:rgba(34,197,94,.13);color:var(--green-d)}
+.bd-need{background:rgba(245,158,11,.16);color:var(--amber-d)}
+.bd-hyg{background:#eef0f4;color:var(--sub)}
+.bd-done{background:rgba(59,130,246,.13);color:var(--blue-d)}
+.gate-btns{display:flex;gap:6px}
+.gbn{border:none;border-radius:8px;font-size:10.5px;font-weight:800;padding:5px 11px;cursor:pointer}
+.gbn-ok{background:var(--teal);color:#fff}
+.gbn-ng{background:#fff;border:1.5px solid var(--line);color:var(--sub)}
+.gbn:disabled{opacity:.4;cursor:default}
+.mininote{font-size:11px;color:var(--faint);border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
+
+/* ===== お客様アプリ（新フロー：kuchikomi移植） ===== */
+.app-stage{display:flex;flex-direction:column;align-items:center;gap:14px}
+.stage-cap{font-size:12.5px;color:var(--sub);text-align:center;max-width:560px}
+.stage-cap b{color:var(--ink)}
+.wheel{transition:transform 1.3s cubic-bezier(.2,.75,.3,1)}
+.gico{background:#fff;border:1px solid #e2e5ea;color:#4285f4;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.doors-h{font-size:11px;font-weight:800;color:var(--sub);text-align:center;margin:14px 0 8px}
+.door{display:block;width:100%;border:1.5px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:10px;cursor:pointer;background:#fff;text-align:left}
+.door .dt{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.door .dd{font-size:10.5px;color:var(--sub);margin-top:3px}
+.door.a{border-color:#4285f4}.door.a .dt{color:#1a73e8}
+.door.b{border-color:var(--teal)}.door.b .dt{color:var(--teal-d)}
+.gpost{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px}
+.gpost .gp-h{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--sub);font-weight:700;margin-bottom:8px}
+.gpost .gp-shop{font-size:12.5px;font-weight:800}
+.gpost .gp-stars{color:var(--amber);font-size:15px;letter-spacing:1px}
+.gpost .gp-tx{font-size:11.5px;color:var(--ink);line-height:1.7;margin-top:6px;border:1px solid var(--line);border-radius:8px;padding:9px;background:#fafbfc}
+
+/* ===== ダッシュボード（RY実データ移植・gaburi由来） ===== */
+.ryd{--mut:#6b7280;--good:#16a34a;--bad:#dc2626;--card2:#f1f3f7;--pink:#ec4899;margin-top:6px}
+.ry-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.ryd .span12{grid-column:span 12}.ryd .span8{grid-column:span 8}.ryd .span6{grid-column:span 6}.ryd .span4{grid-column:span 4}
+@media(max-width:840px){.ryd .span12,.ryd .span8,.ryd .span6,.ryd .span4{grid-column:span 12}}
+.ryd .card{padding:16px 18px}
+.ryd .card h2{font-size:15px;margin:0 0 4px;font-weight:700}
+.ryd .card h2 small{font-size:11px;color:var(--mut);font-weight:400;margin-left:6px}
+.ryd .note{font-size:11px;color:var(--mut);margin:8px 0 0}
+.ryd .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.ryd .kpi{background:var(--card2);border:0;border-radius:10px;padding:12px 14px}
+.ryd .kpi .l{font-size:11px;color:var(--mut);display:block}
+.ryd .kpi .v{font-size:22px;font-weight:800;display:block;margin:2px 0 0}
+.ryd .kpi .s{font-size:11px;color:var(--mut)}
+.ryd .kpi.ops{border-left:3px solid var(--blue)}.ryd .kpi.media{border-left:3px solid var(--amber)}
+.ryd table{font-size:13px}
+.ryd th,.ryd td{padding:7px 8px;text-align:right;border:0;border-bottom:1px solid var(--line)}
+.ryd th:first-child,.ryd td:first-child{text-align:left}
+.ryd th{color:var(--mut);font-weight:600;font-size:11px;background:transparent}
+.ryd tr.hl{background:rgba(245,158,11,.08)}.ryd tr.hl td{font-weight:700}
+.ryd .tag{font-size:10px;padding:1px 7px;border-radius:999px}
+.ryd .tag.metered{background:rgba(236,72,153,.15);color:#be185d}
+.ryd .tag.owned{background:rgba(13,148,136,.15);color:#0f766e}
+.ryd .pos{color:var(--good)}.ryd .neg{color:var(--bad)}
+.ryd .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-left:8px}
+.ryd .seg button{background:var(--card2);color:var(--mut);border:0;padding:4px 10px;font-size:11px;cursor:pointer}
+.ryd .seg button.on{background:var(--amber);color:#1a1d24;font-weight:700}
+.ryd canvas{max-height:300px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <a href="../index.html" style="color:#7eeadb;font-size:12px;font-weight:700;text-decoration:none">← 店舗OS トップ</a>
+    <div class="brand">SOEL ｜ 店舗OS</div>
+    <h1>店舗OS 統合デモ — サービスアウトプット</h1>
+    <p class="sub">デモ店舗: 炭火焼肉 ガブリ 大門店（RYコーポレーション）／ 全データはモックです</p>
+    <span class="demo-tag">DEMO</span>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab(0,this)">📱 お客様体験（口コミ蓄積）</button>
+      <button class="tab" onclick="showTab(1,this)">📊 店舗ダッシュボード</button>
+      <button class="tab" onclick="showTab(2,this)">🔭 競合モニタ</button>
+      <button class="tab" onclick="showTab(3,this)">🏢 チェーンサマリ（本部）</button>
+      <button class="tab" onclick="showTab(4,this)">📝 媒体編集（代行実行）</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ TAB 0: お客様体験 ============ -->
+<div class="pane on" id="pane0">
+  <div class="app-stage">
+    <p class="stage-cap">店頭・卓上のQRから開く、<b>お客様のスマホ画面</b>です。30秒アンケートを送ると<b>ルーレットでクーポン獲得</b>（回答の御礼）。同時に<b>Google投稿／店長への私的FB</b>を全員一律で提示し、投稿するかはお客様が選びます。</p>
+    <div class="phone"><div class="notch"></div><div class="screen">
+      <div class="s-head">
+        <div class="shop">炭火焼肉 ガブリ 大門店</div>
+        <div class="sub2" id="t-subtitle">ご来店ありがとうございます！30秒アンケート</div>
+      </div>
+      <div class="langbar">
+        <button class="lang on" onclick="setLang('ja',this)">日本語</button>
+        <button class="lang" onclick="setLang('en',this)">EN</button>
+        <button class="lang" onclick="setLang('zh',this)">中文</button>
+        <button class="lang" onclick="setLang('ko',this)">한국어</button>
+      </div>
+      <div class="progress"><i id="pg0" class="on"></i><i id="pg1"></i><i id="pg2"></i><i id="pg3"></i></div>
+      <div class="s-body">
+
+        <div class="s-step on" id="st0">
+          <p class="q-label" id="t-q1">本日のご満足度を教えてください</p>
+          <div class="stars" id="stars"></div>
+          <p style="text-align:center;font-size:12px;color:var(--faint)" id="star-word">タップして評価</p>
+          <button class="s-btn" id="btn-s1" disabled onclick="goStep(1)">次へ</button>
+        </div>
+
+        <div class="s-step" id="st1">
+          <p class="q-label" id="t-q2">良かった点を選んでください（複数OK）</p>
+          <p class="q-sub" id="t-q2s">※ 選んだ内容からAIが口コミ草案を作ります</p>
+          <div id="opts"></div>
+          <button class="s-btn" id="btn-s2" disabled onclick="goStep(2)">次へ</button>
+        </div>
+
+        <div class="s-step" id="st2">
+          <p class="q-label" id="t-q3">一言メッセージ（任意）</p>
+          <textarea id="freetext" placeholder="例）タレが絶品でした！"></textarea>
+          <button class="s-btn" onclick="goSpin()" id="t-gen">アンケートを送信する</button>
+          <p class="q-sub" id="t-gensub" style="text-align:center;margin-top:8px">※ ご回答の御礼に、この場でクーポンルーレットを回せます</p>
+        </div>
+
+        <!-- 送信完了 → ①ルーレット＆クーポン ②同時に口コミ/意見へ誘導 -->
+        <div class="s-step" id="st-spin">
+          <div class="coupon-area">
+            <p class="q-label" id="t-c1">🎉 アンケートありがとうございました！<br>まずはルーレットでクーポンGET</p>
+            <p class="q-sub" id="t-c1s" style="text-align:center">※ ご回答の御礼です（このあと投稿してもしなくてもOK）</p>
+            <div class="wheel-box"><div class="wheel-ptr"></div><div class="wheel" id="wheel"></div></div>
+            <button class="s-btn" id="btn-spin" onclick="spin()">ルーレットを回す！</button>
+            <div class="coupon" id="coupon">
+              <b id="coupon-name">🍺 ドリンク1杯無料</b>
+              <p>次回ご来店時にこの画面をスタッフへ ／ 有効期限30日 ／ クーポンID: GB-<span id="cid"></span></p>
+            </div>
+          </div>
+          <div id="postdoors" style="display:none;margin-top:8px">
+            <p class="doors-h" id="t-doorsh">よろしければ、ひと言いただけませんか？</p>
+            <button class="door a" onclick="chooseDoor('public')">
+              <span class="dt"><span class="gico">G</span><span id="t-doora">Googleに口コミを記載しませんか？</span></span>
+              <span class="dd" id="t-dooras">AIが下書きを用意します。コピペで30秒、あとは投稿するだけ。</span>
+            </button>
+            <button class="door b" onclick="chooseDoor('private')">
+              <span class="dt">✉️ <span id="t-doorb">お店に直接フィードバックを記載しませんか？</span></span>
+              <span class="dd" id="t-doorbs">店長だけに届きます。公開はされません。気になった点もぜひ。</span>
+            </button>
+            <button class="s-btn ghost" id="t-skipdoor" onclick="goDone()">クーポンだけ受け取って終了</button>
+          </div>
+        </div>
+
+        <div class="s-step" id="st3">
+          <div class="ai-gen">
+            <div class="ai-h" id="t-aih">🤖 AIが回答から口コミ草案を作成中…（地域・業種ワードを自動で含めます）</div>
+            <div class="ai-tx" id="ai-tx"><span class="cursor"></span></div>
+          </div>
+          <div class="review-done" id="review-done"></div>
+          <button class="s-btn" id="btn-topost" style="display:none" onclick="toPost()">
+            <span style="display:flex;align-items:center;justify-content:center;gap:8px"><span class="gico">G</span><span id="t-topost">この下書きでGoogleに進む</span></span>
+          </button>
+        </div>
+
+        <!-- 投稿画面風（door A） -->
+        <div class="s-step" id="st-post">
+          <div class="gpost">
+            <div class="gp-h"><span class="gico">G</span><span>Google マップ ／ 口コミを投稿</span></div>
+            <div class="gp-shop">炭火焼肉 ガブリ 大門店</div>
+            <div class="gp-stars" id="post-stars">★★★★★</div>
+            <div class="gp-tx" id="post-tx"></div>
+          </div>
+          <p class="q-sub" style="text-align:center;margin-top:8px">草案はコピー済み。貼り付けて、自由に直してから投稿できます。</p>
+          <button class="s-btn" onclick="goDone()" id="t-postbtn">この内容で投稿する</button>
+          <button class="s-btn ghost" onclick="goDone()">あとで投稿する</button>
+        </div>
+
+        <!-- 私的FB確認（door B） -->
+        <div class="s-step" id="st-priv">
+          <p class="q-label" id="t-privh">店長に届けました ✉️</p>
+          <p style="font-size:12px;color:var(--sub)" id="t-privp">いただいた内容は店長に直接届き、サービス改善（診断→直す3点）に使わせていただきます。公開はされません。</p>
+          <button class="s-btn" onclick="goDone()" id="t-privbtn">OK</button>
+        </div>
+
+        <!-- 完了 -->
+        <div class="s-step" id="st-done">
+          <div style="text-align:center;padding:26px 6px 6px">
+            <div style="font-size:48px">🙌</div>
+            <p class="q-label" id="t-doneh" style="font-size:15px;margin-top:6px">ありがとうございました！</p>
+            <p style="font-size:12px;color:var(--sub)" id="t-donep">またのご来店をお待ちしています。クーポンは次回ご来店時にスタッフへご提示ください。</p>
+          </div>
+          <button class="s-btn ghost" onclick="resetSurvey()">↩ デモを最初から</button>
+        </div>
+
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ============ TAB 1: ダッシュボード ============ -->
+<div class="pane" id="pane1">
+  <div class="work-band">
+    <div><div style="font-size:12px;font-weight:700;opacity:.85">今月の運用サポート実績</div>
+    <div class="wb-big">12<small> 件</small>　<span style="font-size:13px;opacity:.6">／</span>　<span style="font-size:22px">8.5<small> 時間ぶん</small></span></div></div>
+    <p>今月、媒体の更新・投稿・返信などを代わりに実施しました。（卓上QR導線の設置・調整×4、診断「直す3点」レポート×2、媒体写真差替×3、最新情報投稿×8、競合レポート×1、口コミ返信×42件 ほか）</p>
+  </div>
+
+  <div class="ryd">
+    <div id="ry-root" class="ry-grid"></div>
+  </div>
+
+  <h3 class="sec-t">今月の運用サポート明細</h3>
+  <p class="note">当月にお店に代わって実施した施策の一覧です。</p>
+  <div class="card sk-list" id="sklist"></div>
+</div>
+
+<!-- ============ TAB 2: 競合モニタ ============ -->
+<div class="pane" id="pane2">
+  <h3 class="sec-t">大門・浜松町エリア 焼肉 — 週次定点観測</h3>
+  <p class="note">毎週月曜に自動取得します。（Google Places API想定）</p>
+  <div class="tbl-card"><table id="comp-table"></table></div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <h3 style="font-size:13.5px;margin-bottom:8px">📈 評点レース（直近12週）</h3>
+      <svg id="race" viewBox="0 0 440 180" width="100%"></svg>
+      <div class="legend" id="race-legend"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13.5px;margin-bottom:8px">🗞 今週の動き（自動検知）</h3>
+      <div class="sk-list">
+        <div class="sk"><span class="d">6/9</span><span class="tag2" style="background:var(--red)">警戒</span><p><b>焼肉キング浜松町</b>が食べログでクーポン施策を開始。週末の予約流出に注意。</p></div>
+        <div class="sk"><span class="d">6/8</span><span class="tag2" style="background:var(--amber)">変化</span><p><b>大門ホルモン酒場</b>の新着口コミ8件（うち★5×6）。投稿ペースが先週比2.7倍。</p></div>
+        <div class="sk"><span class="d">6/5</span><span class="tag2" style="background:var(--green)">好機</span><p><b>炭火亭 芝大門</b>がランチ営業を休止。「大門 焼肉 ランチ」の検索需要が空きました。</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 3: チェーンサマリ ============ -->
+<div class="pane" id="pane3">
+  <h3 class="sec-t">RYコーポレーション — 全店舗サマリ（2026年5月）</h3>
+  <p class="note">本部向けの全店舗 横断ビュー。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kl">全店 マップ表示回数</div><div class="kn">96,400</div><div class="kd">▲ +18%（前月比）</div></div>
+    <div class="kpi"><div class="kl">全店 蓄積口コミ（累計）</div><div class="kn">412<span style="font-size:13px">件</span></div><div class="kd">▲ +61件</div></div>
+    <div class="kpi"><div class="kl">平均評点</div><div class="kn">4.21</div><div class="kd">▲ +0.05</div></div>
+    <div class="kpi"><div class="kl">要対応アラート</div><div class="kn" style="color:var(--red-d)">2<span style="font-size:13px">件</span></div><div class="kd down">★2以下 未返信あり</div></div>
+  </div>
+
+  <h3 class="sec-t">店舗ランキング</h3>
+  <div class="tbl-card"><table id="chain-table"></table></div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <h3 style="font-size:13.5px;margin-bottom:6px">💡 本部への提案（AI自動生成イメージ）</h3>
+      <div class="sk-list">
+        <div class="sk"><span class="tag2" style="background:var(--teal-d);width:auto">本丸</span><p><b>診断→直す3点→他店へ横展開のループが効いている。</b>ガブリ大門は集めた口コミを診断し「直す3点」（待ち時間表示・タレ説明・個室導線）を実行。健全度が全店トップに。<b>最下位のココリコ上野へこの『増やす（卓上QR＋会計時声かけ）→診断→直す3点』ループを横展開</b>すれば、月+15件ペースが見込めます。</p></div>
+        <div class="sk"><span class="tag2" style="background:var(--teal);width:auto">提案</span><p><b>媒体ミックスの最適化余地：</b>媒体ごとに予約単価が異なるため、各媒体の強みに合わせて配分を組み替えると費用対効果が上がります。ココリコ上野の販促費配分を見直す価値があります。</p></div>
+        <div class="sk"><span class="tag2" style="background:var(--faint);width:auto">衛生</span><p><b>★1口コミ（ガブリ大門 6/7）が48時間未返信。</b>返信草案を作成済み — 1クリックで承認できます（返信は定型作業として淡々と処理）。</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:13.5px;margin-bottom:6px">📚 店舗に蓄積されるデータ</h3>
+      <div class="sk-list">
+        <div class="sk"><p style="font-size:12.5px"><b>アンケート回答 1,847件</b> — 顧客の嗜好・来店きっかけの生データ</p></div>
+        <div class="sk"><p style="font-size:12.5px"><b>口コミ・返信の全履歴 412件</b> — AI返信の学習文脈込み</p></div>
+        <div class="sk"><p style="font-size:12.5px"><b>媒体実績 14ヶ月分</b> — 前年同月比較が可能になる時系列</p></div>
+        <div class="sk"><p style="font-size:12.5px"><b>施策ログ 86件</b> — 何をやって何が動いたかの実験記録</p></div>
+        <div class="sk"><p style="font-size:12.5px"><b>競合定点観測 52週分</b> — エリアの勢力図の変化履歴</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 4: 媒体編集（代行実行） ============ -->
+<div class="pane" id="pane4">
+  <div class="work-band">
+    <div><div style="font-size:12px;font-weight:700;opacity:.85">今月の媒体編集 代行</div>
+    <div class="wb-big">18<small> 件</small>　<span style="font-size:13px;opacity:.6">／</span>　<span style="font-size:22px">6.0<small> 時間ぶん</small></span></div></div>
+    <p>各媒体の更新・投稿・写真差替を、お店に代わって実施します。</p>
+  </div>
+
+  <h3 class="sec-t">📥 今週の依頼キュー</h3>
+  <p class="note">依頼 → AIが下書き → 危険な2割だけ店長が承認 → SOELが各媒体へ反映 → ログ記録。安全な8割はAIが自動実行します。</p>
+  <div class="card sk-list" id="queue-list"></div>
+
+  <h3 class="sec-t">🛡 承認ゲート（危険な2割だけ人が見る）</h3>
+  <div class="card">
+    <p style="font-size:12.5px;color:var(--sub)">営業時間・価格・センシティブな投稿など<b style="color:var(--ink)">リスクのある内容だけ店長が承認/却下</b>。残りの定型作業（写真差替・定型投稿・★4-5の返信）はAIが自動実行します。上の依頼キューで <b style="color:var(--amber-d)">要承認</b> の行のボタンを押すと、ステータスが「承認済→実行」に変わります。</p>
+  </div>
+
+  <h3 class="sec-t">🕑 実行ログ（媒体横断タイムライン）</h3>
+  <p class="note">完了した編集を媒体横断で時系列表示。「何を・どの媒体に・いつ反映したか」が全部残ります。</p>
+  <div class="card sk-list" id="exec-log"></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="mininote" style="margin-top:0"><b>媒体APIの可否：</b>GBP（Googleビジネスプロフィール）・Instagram・LINEは<b>API連携</b>で自動反映、食べログ等は<b>管理画面オペで丁寧に反映</b>します（media-sns-demoの連携表と整合）。媒体ごとに最適な反映経路を使い分け、それぞれの強みを活かす中立設計です。</div>
+    <div class="mininote">口コミ「返信」は、この依頼キューの中の<b>1枠の衛生作業</b>として淡々と処理します（差別化の本丸は「増やす→診断→直す」のループ側）。</div>
+  </div>
+</div>
+
+<p class="foot">SOEL 店舗OS 統合デモ ／ すべてモックデータ ／ 2026-06-10 ／ 関連: <a href="../kuchikomi-demo/index.html" style="color:var(--teal-d)">口コミ増加デモ（本丸）</a>・<a href="../aio-shindan-demo/index.html" style="color:var(--teal-d)">AIO診断デモ</a>・<a href="tenpo-os-roadmap-2026-06-10.html" style="color:var(--teal-d)">施策設計書</a></p>
+</div>
+
+<script>
+// ============ タブ ============
+function showTab(i, btn){
+  document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on', i===j);});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  if(i===1 && !window._chartDrawn){ drawRYDashboard(); drawSkList(); window._chartDrawn=true; }
+  if(i===2 && !window._compDrawn){ drawComp(); drawRace(); window._compDrawn=true; }
+  if(i===3 && !window._chainDrawn){ drawChain(); window._chainDrawn=true; }
+  if(i===4 && !window._biteiDrawn){ drawBitei(); window._biteiDrawn=true; }
+}
+
+// ============ TAB0: お客様アプリ（新フロー・4言語） ============
+var I18N = {
+  ja:{subtitle:'ご来店ありがとうございます！30秒アンケート', q1:'本日のご満足度を教えてください', tap:'タップして評価',
+      q2:'良かった点を選んでください（複数OK）', q2s:'※ 選んだ内容からAIが口コミ草案を作ります',
+      q3:'一言メッセージ（任意）', gen:'アンケートを送信する', gensub:'※ ご回答の御礼に、この場でクーポンルーレットを回せます', next:'次へ',
+      aih:'🤖 AIが回答から口コミ草案を作成中…（地域・業種ワードを自動で含めます）',
+      doorsh:'よろしければ、ひと言いただけませんか？',
+      doora:'Googleに口コミを記載しませんか？', dooras:'AIが下書きを用意します。コピペで30秒、あとは投稿するだけ。',
+      doorb:'お店に直接フィードバックを記載しませんか？', doorbs:'店長だけに届きます。公開はされません。気になった点もぜひ。',
+      topost:'この下書きでGoogleに進む', skipdoor:'クーポンだけ受け取って終了', postbtn:'この内容で投稿する',
+      doneh:'ありがとうございました！', donep:'またのご来店をお待ちしています。クーポンは次回ご来店時にスタッフへご提示ください。', privh:'店長に届けました ✉️', privp:'いただいた内容は店長に直接届き、サービス改善（診断→直す3点）に使わせていただきます。公開はされません。', privbtn:'OK',
+      opts:['お肉の質・味','タレ・メニューの豊富さ','スタッフの接客','コスパが良い','店内の雰囲気・清潔感','個室・席のゆったり感'],
+      c1:'🎉 アンケートありがとうございました！<br>まずはルーレットでクーポンGET', c1s:'※ ご回答の御礼です（このあと投稿してもしなくてもOK）', spinBtn:'ルーレットを回す！'},
+  en:{subtitle:'Thanks for visiting! 30-sec survey', q1:'How was your experience today?', tap:'Tap to rate',
+      q2:'What did you like? (multiple OK)', q2s:'AI will draft your review from your choices',
+      q3:'A short message (optional)', gen:'Submit survey', gensub:'* AI prepares a review draft from your answers', next:'Next',
+      aih:'🤖 AI is drafting a review from your answers… (auto-includes area & cuisine words)',
+      doorsh:'If you don’t mind, a quick word?',
+      doora:'Post a review on Google?', dooras:'AI prepares the draft. Paste in 30 seconds and post.',
+      doorb:'Send direct feedback to the restaurant?', doorbs:'Goes only to the manager, never public. Tell us anything.',
+      topost:'Continue to Google with this draft', skipdoor:'Just take the coupon & finish', postbtn:'Post this review',
+      doneh:'Thank you!', donep:'We look forward to seeing you again. Show the coupon to our staff on your next visit.', privh:'Sent to the manager ✉️', privp:'Your feedback goes straight to the manager and powers our improvements. It is not made public.', privbtn:'OK',
+      opts:['Quality of the meat','Sauce & menu variety','Friendly staff','Great value','Atmosphere & cleanliness','Comfortable private rooms'],
+      c1:'🎉 Thanks for the survey!<br>First, spin for a coupon', c1s:'* Our thank-you for answering (post or not, your choice)', spinBtn:'Spin the wheel!'},
+  zh:{subtitle:'感谢光临！30秒问卷', q1:'请为今天的体验打分', tap:'点击评分',
+      q2:'您觉得哪些方面不错？（可多选）', q2s:'AI将根据您的选择生成评论草稿',
+      q3:'留言（可选）', gen:'提交问卷', gensub:'* AI将根据您提交的回答准备评论草稿', next:'下一步',
+      aih:'🤖 AI正在根据您的回答生成评论草稿…（自动加入地区与品类关键词）',
+      doorsh:'方便的话，留一句话好吗？',
+      doora:'要在Google上写条评论吗？', dooras:'AI已备好草稿。粘贴30秒即可发布。',
+      doorb:'要直接向门店反馈吗？', doorbs:'仅店长可见，不会公开。任何在意的点都欢迎。',
+      topost:'用此草稿前往Google', skipdoor:'只领优惠券并结束', postbtn:'发布此评论',
+      doneh:'谢谢您！', donep:'期待您再次光临。优惠券请于下次到店时出示给店员。', privh:'已转达给店长 ✉️', privp:'您的反馈将直接传达给店长，用于改进（诊断→改善3点）。不会公开。', privbtn:'好的',
+      opts:['肉的品质与味道','酱料和菜单丰富','店员服务好','性价比高','店内氛围干净','包间宽敞舒适'],
+      c1:'🎉 感谢填写问卷！<br>先转转盘领优惠券', c1s:'* 这是填写问卷的答谢（之后是否发布由您）', spinBtn:'转动转盘！'},
+  ko:{subtitle:'방문해 주셔서 감사합니다! 30초 설문', q1:'오늘의 만족도를 알려주세요', tap:'탭하여 평가',
+      q2:'좋았던 점을 선택해주세요 (복수 가능)', q2s:'선택 내용으로 AI가 리뷰 초안을 작성합니다',
+      q3:'한마디 메시지 (선택)', gen:'설문 제출하기', gensub:'* 제출한 답변으로 AI가 리뷰 초안을 준비합니다', next:'다음',
+      aih:'🤖 AI가 답변으로 리뷰 초안 작성 중…（지역·업종 키워드 자동 포함）',
+      doorsh:'괜찮으시면, 한마디 부탁드려도 될까요?',
+      doora:'Google에 리뷰를 남겨보시겠어요?', dooras:'AI가 초안을 준비합니다. 붙여넣기 30초면 게시 완료.',
+      doorb:'매장에 직접 피드백을 남겨보시겠어요?', doorbs:'점장에게만 전달되며 공개되지 않습니다. 무엇이든 편하게.',
+      topost:'이 초안으로 Google로 이동', skipdoor:'쿠폰만 받고 종료', postbtn:'이 내용으로 올리기',
+      doneh:'감사합니다!', donep:'다음 방문을 기다리겠습니다. 쿠폰은 다음 방문 시 직원에게 제시해 주세요.', privh:'점장에게 전달했습니다 ✉️', privp:'주신 의견은 점장에게 직접 전달되어 개선(진단→고칠 3가지)에 활용됩니다. 공개되지 않습니다.', privbtn:'확인',
+      opts:['고기의 질과 맛','소스·메뉴의 다양함','직원의 친절한 응대','가성비가 좋음','매장 분위기·청결함','넓고 편한 룸 좌석'],
+      c1:'🎉 설문 감사합니다!<br>먼저 룰렛으로 쿠폰 받기', c1s:'* 답변에 대한 감사 선물입니다 (게시 여부는 자유)', spinBtn:'룰렛 돌리기!'}
+};
+var lang='ja', rating=0, selected=[];
+
+function setLang(l, btn){
+  lang=l;
+  document.querySelectorAll('.lang').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var t=I18N[l];
+  setTx('t-subtitle',t.subtitle); setTx('t-q1',t.q1); setTx('star-word',t.tap);
+  setTx('t-q2',t.q2); setTx('t-q2s',t.q2s); setTx('t-q3',t.q3);
+  setTx('t-gen',t.gen); setTx('t-gensub',t.gensub);
+  setTx('btn-s1',t.next); setTx('btn-s2',t.next); setTx('t-aih',t.aih);
+  setTx('t-doorsh',t.doorsh); setTx('t-doora',t.doora); setTx('t-dooras',t.dooras);
+  setTx('t-doorb',t.doorb); setTx('t-doorbs',t.doorbs); setTx('t-topost',t.topost); setTx('t-skipdoor',t.skipdoor);
+  setTx('t-postbtn',t.postbtn); setTx('t-privh',t.privh); setTx('t-privp',t.privp); setTx('t-privbtn',t.privbtn);
+  setTx('t-doneh',t.doneh); setTx('t-donep',t.donep);
+  document.getElementById('t-c1').innerHTML=t.c1; setTx('t-c1s',t.c1s); setTx('btn-spin',t.spinBtn);
+  buildOpts();
+}
+function setTx(id,v){var e=document.getElementById(id); if(e) e.textContent=v;}
+
+function buildStars(){
+  var box=document.getElementById('stars'); box.innerHTML='';
+  for(var i=1;i<=5;i++){(function(n){
+    var s=document.createElement('span'); s.className='star'; s.textContent='★';
+    s.onclick=function(){
+      rating=n;
+      document.querySelectorAll('.star').forEach(function(st,j){st.classList.toggle('on', j<n);});
+      document.getElementById('btn-s1').disabled=false;
+      document.getElementById('star-word').textContent='★'.repeat(n)+'（'+n+'/5）';
+    };
+    box.appendChild(s);
+  })(i);}
+}
+function buildOpts(){
+  var box=document.getElementById('opts'); box.innerHTML=''; selected=[];
+  document.getElementById('btn-s2').disabled=true;
+  I18N[lang].opts.forEach(function(o,i){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=function(){
+      b.classList.toggle('sel');
+      var idx=selected.indexOf(i); if(idx>=0) selected.splice(idx,1); else selected.push(i);
+      document.getElementById('btn-s2').disabled=selected.length===0;
+    };
+    box.appendChild(b);
+  });
+}
+var STEP_IDS=['st0','st1','st2','st-spin','st3','st-post','st-priv','st-done'];
+function showStep(id){ STEP_IDS.forEach(function(s){document.getElementById(s).classList.toggle('on', s===id);}); }
+function goStep(n){
+  showStep('st'+n);
+  for(var i=0;i<4;i++){var p=document.getElementById('pg'+i); if(p) p.classList.toggle('on', i<=Math.min(n,3));}
+}
+function goSpin(){
+  showStep('st-spin');
+  document.getElementById('pg3').classList.add('on');
+  document.getElementById('postdoors').style.display='none';
+  buildWheel();
+}
+function goDone(){ showStep('st-done'); }
+function genReview(){
+  showStep('st3');
+  document.getElementById('pg3').classList.add('on');
+  var picks = selected.map(function(i){return I18N.ja.opts[i];});
+  var free = document.getElementById('freetext').value.trim();
+  var parts=['大門・浜松町エリアで焼肉なら間違いなくここ。'];
+  if(picks.indexOf('お肉の質・味')>=0) parts.push('お肉の質が高く、特に厚切りタンは絶品でした。');
+  if(picks.indexOf('タレ・メニューの豊富さ')>=0) parts.push('タレの種類が豊富で最後まで飽きずに楽しめます。');
+  if(picks.indexOf('スタッフの接客')>=0) parts.push('スタッフの方の気配りが素晴らしく、焼き加減のアドバイスも的確。');
+  if(picks.indexOf('コスパが良い')>=0) parts.push('この内容でこの価格はコスパ抜群だと思います。');
+  if(picks.indexOf('店内の雰囲気・清潔感')>=0) parts.push('店内は清潔感があり落ち着いた雰囲気。');
+  if(picks.indexOf('個室・席のゆったり感')>=0) parts.push('席がゆったりしていて接待や記念日にも使えそう。');
+  if(parts.length===1) parts.push('雰囲気・味ともに大満足でした。');
+  if(free) parts.push('「'+free+'」');
+  parts.push('大門で焼肉店を探している方にはぜひおすすめしたいお店です。');
+  var review = parts.join('');
+  var node=document.getElementById('ai-tx'); node.innerHTML='<span class="cursor"></span>';
+  document.getElementById('review-done').style.display='none';
+  document.getElementById('btn-topost').style.display='none';
+  var i=0;
+  var iv=setInterval(function(){
+    i+=2; node.innerHTML = review.slice(0,i) + '<span class="cursor"></span>';
+    if(i>=review.length){
+      clearInterval(iv); node.innerHTML=review;
+      var done=document.getElementById('review-done'); done.style.display='block';
+      done.innerHTML='✅ <b>草案完成。</b>内容はご自由に編集できます。投稿はあくまで任意です。';
+      document.getElementById('btn-topost').style.display='block';
+      window._review=review;
+    }
+  },30);
+}
+function chooseDoor(which){
+  if(which==='public'){ genReview(); }
+  else { showStep('st-priv'); }
+}
+function toPost(){
+  if(window._review && navigator.clipboard){ try{navigator.clipboard.writeText(window._review);}catch(e){} }
+  document.getElementById('post-tx').textContent = window._review||'';
+  document.getElementById('post-stars').textContent = '★'.repeat(rating||5);
+  showStep('st-post');
+}
+var PRIZES=[{n:'🍺 ドリンク1杯無料',c:'#14b8a6'},{n:'🥩 上タン50%OFF',c:'#3b82f6'},{n:'🍦 デザート無料',c:'#8b5cf6'},{n:'💴 500円OFF',c:'#f59e0b'},{n:'🎟 次回10%OFF',c:'#ef4444'},{n:'🥗 サラダ無料',c:'#22c55e'}];
+function buildWheel(){
+  var w=document.getElementById('wheel');
+  w.style.background='conic-gradient('+PRIZES.map(function(p,i){return p.c+' '+(i*60)+'deg '+((i+1)*60)+'deg';}).join(',')+')';
+  w.style.transform='rotate(0deg)';
+  document.getElementById('coupon').style.display='none';
+  document.getElementById('btn-spin').disabled=false;
+}
+function spin(){
+  document.getElementById('btn-spin').disabled=true;
+  var pick=Math.floor(Math.random()*PRIZES.length);
+  document.getElementById('wheel').style.transform='rotate('+(360*3+(360-(pick*60+30)))+'deg)';
+  setTimeout(function(){
+    document.getElementById('coupon-name').textContent=PRIZES[pick].n;
+    document.getElementById('cid').textContent=String(Math.floor(Math.random()*90000)+10000);
+    document.getElementById('coupon').style.display='block';
+    document.getElementById('postdoors').style.display='block';
+  },1450);
+}
+function resetSurvey(){
+  rating=0; selected=[]; window._review=null;
+  document.getElementById('freetext').value='';
+  document.getElementById('ai-tx').innerHTML='<span class="cursor"></span>';
+  document.getElementById('review-done').style.display='none';
+  document.getElementById('btn-topost').style.display='none';
+  document.getElementById('postdoors').style.display='none';
+  document.getElementById('coupon').style.display='none';
+  document.getElementById('btn-s1').disabled=true;
+  document.getElementById('star-word').textContent=I18N[lang].tap;
+  buildStars(); buildOpts(); goStep(0);
+}
+
+// ============ TAB1: ダッシュボード ============
+var SK = [
+  {d:'6/01', tag:'増やす', col:'#14b8a6', tx:'【本丸】卓上QR＋会計時声かけの導線を設置・調整（声を集める仕掛け）', x:1},
+  {d:'6/08', tag:'診断', col:'#0f766e', tx:'【本丸】集まった口コミを診断し「直す3点」レポートを店長へ（増やす→診断→直す）', x:8},
+  {d:'6/02', tag:'媒体', col:'#3b82f6', tx:'食べログ: コース写真6点を差替（プロ撮影分）', x:2},
+  {d:'6/05', tag:'投稿', col:'#14b8a6', tx:'Google最新情報: 「父の日 厚切りタン」投稿（Instagram連携で自動転載）', x:5},
+  {d:'6/12', tag:'広告', col:'#f59e0b', tx:'Googleマップ広告: 半径1.2km・夜帯のみで再開', x:12},
+  {d:'6/18', tag:'インフル', col:'#8b5cf6', tx:'グルメ系インフルエンサー来店投稿（リール、再生4.2万）', x:18},
+  {d:'6/24', tag:'メニュー', col:'#ef4444', tx:'ランチ「焼肉重」をぐるなび・GBPメニューに追加', x:24},
+  {d:'6/28', tag:'返信', col:'#9aa3b2', tx:'口コミ返信×42件（★4-5は定型で自動処理）', x:28}
+];
+// ----- RY実データ（炭火焼肉 ガブリ 大門店 / gaburi.html 由来・モック扱い）-----
+const RYDATA = {"store": "ビストロガブリ 大門店", "period_ops": "2026年5月", "period_media": "2026年04月", "kyaku": 4500, "months": ["2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"], "media_series": {"食べログ": {"label": "食べログ", "access": [19573, 21487, 29194, 34404, 27510, 23101, 32045, 25522, 23719, 25167, 26502, 22914, 28073, 29562, 34276, 35191, 29449, 46097, 56618, 67150, 57058, 49652, 40779, 32702, 31086, 38869, 34072, 39411, 31996, 28493, 36397, 33363], "reservations": [550, 555, 738, 998, 756, 773, 949, 1041, 753, 838, 848, 674, 824, 892, 874, 1101, 885, 793, 1070, 1171, 865, 916, 1000, 824, 774, 916, 746, 1064, 877, 851, 1249, 1091], "cost": [null, null, null, null, 198660, 206690, null, null, null, null, 224070, 191070, 217580, 235510, 236390, 281270, 231770, 213510, 276650, 285890, 227480, 240020, 257180, 226710, 216150, 243430, 205920, 261690, 219120, 215160, 279180, 257400], "revenue": [2475000, 2497500, 3321000, 4491000, 3402000, 3478500, 4270500, 4684500, 3388500, 3771000, 3816000, 3033000, 3708000, 4014000, 3933000, 4954500, 3982500, 3568500, 4815000, 5269500, 3892500, 4122000, 4500000, 3708000, 3483000, 4122000, 3357000, 4788000, 3946500, 3829500, 5620500, 4909500]}, "一休": {"label": "一休", "access": [8869, 8824, 12140, 16684, 8709, 9094, 14367, 17944, 14345, 11937, 12777, 8293, 9284, 7945, 8551, 8188, 2834, 4148, 3178, 3989, 4143, 4080, 3249, 385, 330, 164, 0, 5201, 3993, 3584, 4305, 296], "reservations": [172, 113, 201, 411, 165, 190, 203, 215, 211, 142, 242, 122, 182, 184, 157, 198, 95, 89, 78, 47, 76, 82, 21, 5, 17, 0, 0, 92, 77, 102, 104, 13], "cost": [56708, 7067, 41924, 89784, 42499, 37712, 73615, 65937, 78673, 15657, 67214, 27644, 49725, 47800, 21836, 72344, 25450, 27671, 24470, 14313, 27056, 32218, 9196, 2800, 3672, 0, 0, 24150, 16712, 30452, 32814, 2742], "revenue": [774000, 508500, 904500, 1849500, 742500, 855000, 913500, 967500, 949500, 639000, 1089000, 549000, 819000, 828000, 706500, 891000, 427500, 400500, 351000, 211500, 342000, 369000, 94500, 22500, 76500, 0, 0, 414000, 346500, 459000, 468000, 58500]}, "ホームページ（サイト）": {"label": "ホームページ（サイト）", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0], "reservations": [64, 58, 32, 44, 95, 41, 60, 79, 55, 38, 93, 18, 35, 39, 48, 51, 83, 16, 9, 38, 43, 38, 22, null, 35, 24, 4, 51, 37, 29, 30, 15], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0], "revenue": [288000, 261000, 144000, 198000, 427500, 184500, 270000, 355500, 247500, 171000, 418500, 81000, 157500, 175500, 216000, 216000, 216000, 216000, 40500, 171000, 193500, 171000, 99000, 0, 157500, 108000, 18000, 229500, 166500, 130500, 135000, 67500]}, "Google": {"label": "Google", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, null, 0, 0, 0, 0], "reservations": [11, 21, 28, 21, 6, 20, 18, 20, 10, 59, 14, 21, 32, 38, 24, 22, 21, 18, 71, 64, 29, 28, 16, null, 11, 26, 10, null, 10, 24, 30, 29], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, null, 0, 0, 0, 0], "revenue": [49500, 94500, 126000, 94500, 27000, 90000, 81000, 90000, 45000, 265500, 63000, 94500, 144000, 171000, 108000, 99000, 94500, 81000, 319500, 288000, 130500, 126000, 72000, 0, 49500, 117000, 45000, 0, 45000, 108000, 135000, 130500]}, "AIレセプション": {"label": "AIレセプション", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35, 11, 31, 68, 46, 52, 19, 7, 8, 36, 17, 9, 0, null, null, null, null, null, null, null, null, null], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157500, 49500, 139500, 306000, 207000, 234000, 85500, 31500, 36000, 162000, 76500, 40500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "LINE": {"label": "LINE", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "PayPayグルメ": {"label": "PayPayグルメ", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, 0, 0, null, null, 0], "reservations": [3, 0, 0, 3, 0, 0, 0, 0, 0, 4, 2, 3, 0, 3, 0, 8, 6, 2, 0, 0, 3, 15, 0, null, null, null, null, 2, null, null, null, 3], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, 0, null, null, null, 0], "revenue": [13500, 0, 0, 13500, 0, 0, 0, 0, 0, 18000, 9000, 13500, 0, 13500, 0, 36000, 27000, 9000, 0, 0, 13500, 67500, 0, 0, 0, 0, 0, 9000, 0, 0, 0, 13500]}, "自社アプリ": {"label": "自社アプリ", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 6, 0, 0, 14, 4, 2, 10, null, null, null, null, null, null, null, null, null], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22500, 27000, 27000, 0, 0, 63000, 18000, 9000, 45000, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Instagram": {"label": "Instagram", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "Yahoo!": {"label": "Yahoo!", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, 0, 0], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, 6, 11], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, 0, 0], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27000, 49500]}, "ResReserve（総計）": {"label": "ResReserve（総計）", "access": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, 0, 0], "reservations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null, null, null, 46, 50, 14, 51, 47, 53, 66, 55], "cost": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, 0, 0], "revenue": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 207000, 225000, 63000, 229500, 211500, 238500, 297000, 247500]}}, "media_latest": [{"label": "食べログ", "access": 33363, "reservations": 1091, "revenue": 4909500, "cost": 257400, "roi": 19.073426573426573, "cpa": 235.93033913840515, "owned": false}, {"label": "ResReserve（総計）", "access": 0, "reservations": 55, "revenue": 247500, "cost": 0, "roi": null, "cpa": null, "owned": true}, {"label": "Google", "access": 0, "reservations": 29, "revenue": 130500, "cost": 0, "roi": null, "cpa": null, "owned": true}, {"label": "ホームページ（サイト）", "access": 0, "reservations": 15, "revenue": 67500, "cost": 0, "roi": null, "cpa": null, "owned": true}, {"label": "一休", "access": 296, "reservations": 13, "revenue": 58500, "cost": 2742, "roi": 21.334792122538293, "cpa": 210.92307692307693, "owned": false}, {"label": "Yahoo!", "access": 0, "reservations": 11, "revenue": 49500, "cost": 0, "roi": null, "cpa": null, "owned": true}, {"label": "PayPayグルメ", "access": 0, "reservations": 3, "revenue": 13500, "cost": 0, "roi": null, "cpa": null, "owned": true}], "agg": {"access_all": 33659, "access_media": 33659, "access_owned": 0, "rsv_all": 1151, "rsv_media": 1104, "rsv_owned": 47, "cost_all": 260142, "cost_media": 260142, "cost_owned": 0, "rev_all": 5179500, "rev_media": 4968000, "rev_owned": 211500}, "ops": {"daypart": {"all": {"count": 622, "guests": 2324, "amount": 1362960, "aov": 5586}, "lunch": {"count": 355, "guests": 1097, "amount": 33960, "aov": 2830}, "dinner": {"count": 267, "guests": 1227, "amount": 1329000, "aov": 5728}, "cancel": {"count": 35, "guests": 184, "amount": 88500, "aov": 5900}}, "routes": [{"name": "直接予約", "count": 0, "guests": 0, "amount": 0, "lunch_g": 0, "dinner_g": 0}, {"name": "電話予約", "count": 52, "guests": 424, "amount": 895460, "lunch_g": 133, "dinner_g": 291}, {"name": "ウォークイン", "count": 367, "guests": 915, "amount": 0, "lunch_g": 720, "dinner_g": 195}, {"name": "一休.comレストラン", "count": 11, "guests": 61, "amount": 0, "lunch_g": 14, "dinner_g": 47}, {"name": "ResReserve", "count": 14, "guests": 47, "amount": 0, "lunch_g": 33, "dinner_g": 14}, {"name": "食べログ", "count": 178, "guests": 877, "amount": 467500, "lunch_g": 197, "dinner_g": 680}], "courses": [{"name": "GABURIスタンダードコース", "price": 5500, "sold": 156, "amount": 858000, "lunch_sold": 0, "dinner_sold": 156}, {"name": "季節コース", "price": 6600, "sold": 25, "amount": 165000, "lunch_sold": 0, "dinner_sold": 25}, {"name": "常陸牛炭火焼ライトコース", "price": 6000, "sold": 51, "amount": 306000, "lunch_sold": 0, "dinner_sold": 51}, {"name": "ランチ　Aコース", "price": 1980, "sold": 2, "amount": 3960, "lunch_sold": 2, "dinner_sold": 0}, {"name": "ランチ　Bコース", "price": 3000, "sold": 10, "amount": 30000, "lunch_sold": 10, "dinner_sold": 0}], "repeat": {"all": {"first": 239, "r2": 13, "r3": 2, "r4": 0, "r5": 0, "r6": 0, "rate": 5.9}, "lunch": {"first": 65, "r2": 8, "r3": 1, "r4": 0, "r5": 0, "r6": 0, "rate": 12.2}, "dinner": {"first": 174, "r2": 5, "r3": 1, "r4": 0, "r5": 0, "r6": 0, "rate": 3.3}}, "leadtime": [{"label": "当日", "all": 418, "lunch": 298, "dinner": 120}, {"label": "1日前", "all": 36, "lunch": 13, "dinner": 23}, {"label": "2日前", "all": 18, "lunch": 9, "dinner": 9}, {"label": "3日前", "all": 16, "lunch": 4, "dinner": 12}, {"label": "4日前", "all": 15, "lunch": 5, "dinner": 10}, {"label": "5日前", "all": 12, "lunch": 3, "dinner": 9}, {"label": "6日前", "all": 9, "lunch": 1, "dinner": 8}, {"label": "7日前", "all": 16, "lunch": 8, "dinner": 8}, {"label": "8-15日前", "all": 53, "lunch": 8, "dinner": 45}, {"label": "16-30日前", "all": 21, "lunch": 4, "dinner": 17}, {"label": "31日以上", "all": 8, "lunch": 2, "dinner": 6}], "booked_hour": {"hours": ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"], "counts": [3, 0, 1, 0, 3, 0, 1, 1, 9, 11, 16, 188, 130, 30, 15, 14, 12, 31, 41, 57, 38, 16, 16, 7]}}};
+
+function drawRYDashboard(){
+  if(window._ryCharts){ for(var k in window._ryCharts){ try{window._ryCharts[k].destroy();}catch(e){} } }
+  var charts={}; window._ryCharts=charts;
+  var D=RYDATA, ops=D.ops, dp=ops.daypart;
+  var yen=function(n){return n==null?"—":"¥"+Math.round(n).toLocaleString("ja-JP");};
+  var num=function(n){return n==null?"—":Number(n).toLocaleString("ja-JP");};
+  var pct=function(a,b){return b?((a/b)*100):0;};
+  var C={ops:"#3b82f6",media:"#f59e0b",lunch:"#fbbf24",dinner:"#3b82f6",tabelog:"#f97316",ikkyu:"#ef4444",owned:"#14b8a6",wi:"#a78bfa",tel:"#84cc16",course:"#f59e0b",ala:"#475569",green:"#22c55e",pink:"#ec4899"};
+  Chart.defaults.color="#475569"; Chart.defaults.borderColor="#e2e5ea"; Chart.defaults.font.family="-apple-system,sans-serif";
+  function mk(id,cfg){ if(charts[id])charts[id].destroy(); charts[id]=new Chart(document.getElementById(id),cfg); }
+  var route=function(name){return ops.routes.find(function(r){return r.name===name;})||{count:0,guests:0,amount:0,lunch_g:0,dinner_g:0};};
+  var wi=route("ウォークイン"), tel=route("電話予約");
+  var courseLunch=ops.courses.reduce(function(s,c){return s+c.lunch_sold;},0);
+  var courseDinner=ops.courses.reduce(function(s,c){return s+c.dinner_sold;},0);
+
+  document.getElementById("ry-root").innerHTML=`
+  <section class="card span12">
+    <h2>① KPIサマリー <small>青=5月オペ実績 / 橙=${D.period_media}媒体実績</small></h2>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="card span8">
+    <h2>② 媒体別 費用効果 <small>${D.period_media}・想定売上 vs 従量課金・ROI</small></h2>
+    <div id="media-table"></div>
+    <p class="note">想定売上 = 予約人数 × 客単価¥${num(D.kyaku)}。オウンド(自社経路)は従量課金¥0。ROI = 想定売上 ÷ 従量課金。</p>
+  </section>
+  <section class="card span4">
+    <h2>③ 売上 vs コスト</h2>
+    <canvas id="c-mediabar"></canvas>
+  </section>
+
+  <section class="card span12">
+    <h2>④ 媒体推移 <small>34ヶ月（2023/9〜${D.period_media}）</small>
+      <span class="seg" id="seg-trend">
+        <button data-m="revenue" class="on">想定売上</button>
+        <button data-m="cost">従量課金</button>
+        <button data-m="reservations">予約人数</button>
+        <button data-m="access">アクセス</button>
+      </span></h2>
+    <canvas id="c-trend" height="90"></canvas>
+  </section>
+
+  <section class="card span6">
+    <h2>⑤ ランチ / ディナー比率 <small>5月</small></h2>
+    <canvas id="c-daypart" height="180"></canvas>
+    <div id="daypart-tbl"></div>
+  </section>
+  <section class="card span6">
+    <h2>⑥ 予約経路構成 & ウォークイン比率 <small>5月</small></h2>
+    <canvas id="c-route" height="180"></canvas>
+    <p class="note" id="wi-note"></p>
+  </section>
+
+  <section class="card span6">
+    <h2>⑦ コース vs 非コース（昼夜別） <small>5月</small></h2>
+    <canvas id="c-course-ratio" height="180"></canvas>
+    <p class="note">※「非コース」=席のみ予約＋アラカルト＋未記録ウォークイン。席のみ→コースのアップグレードは本帳票では捕捉できません。</p>
+  </section>
+  <section class="card span6">
+    <h2>⑧ 売れ筋コース <small>5月・販売数×単価</small></h2>
+    <canvas id="c-course" height="180"></canvas>
+  </section>
+
+  <section class="card span6">
+    <h2>⑨ リピート率 <small>5月・昼夜別</small></h2>
+    <canvas id="c-repeat" height="180"></canvas>
+    <div id="repeat-tbl"></div>
+  </section>
+  <section class="card span6">
+    <h2>⑩ 予約リードタイム <small>5月・何日前に予約したか</small></h2>
+    <canvas id="c-lead" height="200"></canvas>
+    <p class="note" id="lead-note"></p>
+  </section>
+
+  <section class="card span12">
+    <h2>⑪ 予約が入った時間帯 <small>5月・予約操作の時刻</small></h2>
+    <canvas id="c-hour" height="120"></canvas>
+    <p class="note">予約が「行われた」時刻です（来店時刻ではありません）。</p>
+  </section>`;
+
+  /* ① KPI */
+  var ml=D.media_latest;
+  var mediaRev=ml.reduce(function(s,m){return s+(m.revenue||0);},0);
+  var mediaCost=ml.reduce(function(s,m){return s+(m.cost||0);},0);
+  var mediaRsv=ml.reduce(function(s,m){return s+(m.reservations||0);},0);
+  var paidRev=ml.filter(function(m){return m.cost>0;}).reduce(function(s,m){return s+(m.revenue||0);},0);
+  var paidROI=mediaCost?(paidRev/mediaCost):null;
+  var kpis=[
+    {c:"ops",l:"注文金額(5月)",v:yen(dp.all.amount),s:"平均客単価 "+yen(dp.all.aov)},
+    {c:"ops",l:"予約(5月)",v:num(dp.all.guests)+"人",s:num(dp.all.count)+"件・キャンセル"+dp.cancel.count+"件"},
+    {c:"ops",l:"ウォークイン率(5月)",v:pct(wi.guests,dp.all.guests).toFixed(1)+"%",s:"人数"+num(wi.guests)+" / 件数"+pct(wi.count,dp.all.count).toFixed(0)+"%"},
+    {c:"ops",l:"リピート率(5月)",v:ops.repeat.all.rate+"%",s:"昼"+ops.repeat.lunch.rate+"% / 夜"+ops.repeat.dinner.rate+"%"},
+    {c:"media",l:"媒体想定売上("+D.period_media+")",v:yen(mediaRev),s:"予約 "+num(mediaRsv)+"人"},
+    {c:"media",l:"従量課金 / ROI",v:yen(mediaCost),s:'従量媒体ROI <b class="pos">'+(paidROI?paidROI.toFixed(1):"—")+'×</b>（食べログ+一休）'}
+  ];
+  document.getElementById("kpis").innerHTML=kpis.map(function(k){return '<div class="kpi '+k.c+'"><span class="l">'+k.l+'</span><span class="v">'+k.v+'</span><span class="s">'+k.s+'</span></div>';}).join("");
+
+  /* ② 媒体テーブル */
+  document.getElementById("media-table").innerHTML=
+    '<table><thead><tr><th>媒体</th><th>区分</th><th>予約人数</th><th>想定売上</th><th>従量課金</th><th>CPA/人</th><th>ROI</th></tr></thead><tbody>'
+    + ml.map(function(m){return '<tr><td>'+m.label+'</td>'
+        +'<td><span class="tag '+(m.owned?"owned":"metered")+'">'+(m.owned?"オウンド":"従量")+'</span></td>'
+        +'<td>'+num(m.reservations)+'</td><td>'+yen(m.revenue)+'</td>'
+        +'<td>'+(m.owned?"¥0":yen(m.cost))+'</td>'
+        +'<td>'+(m.cpa?yen(m.cpa):"—")+'</td>'
+        +'<td>'+(m.roi?'<b class="pos">'+m.roi.toFixed(1)+'×</b>':"—")+'</td></tr>';}).join("")
+    + '<tr class="hl"><td><b>合計(全経路)</b></td><td></td><td><b>'+num(mediaRsv)+'</b></td>'
+      +'<td><b>'+yen(mediaRev)+'</b></td><td><b>'+yen(mediaCost)+'</b></td><td></td>'
+      +'<td><b>'+(paidROI?paidROI.toFixed(1):"—")+'×</b></td></tr>'
+    + '</tbody></table>'
+    + '<p class="note">公式ロールアップは予約'+num(D.agg.rsv_all)+'人・想定売上'+yen(D.agg.rev_all)+'（媒体'+yen(D.agg.rev_media)+'＋オウンド'+yen(D.agg.rev_owned)+'）。上表との差 '+num(mediaRsv-D.agg.rsv_all)+'人/'+yen(mediaRev-D.agg.rev_all)+'はYahoo!・ResReserveが公式合計に未集計のため。ROIは従量課金媒体(食べログ+一休)のみで算出。</p>';
+
+  /* ③ 売上 vs コスト */
+  var mlPaid=ml.filter(function(m){return (m.revenue||0)>0;});
+  mk("c-mediabar",{type:"bar",data:{labels:mlPaid.map(function(m){return m.label;}),
+    datasets:[
+      {label:"想定売上",data:mlPaid.map(function(m){return m.revenue;}),backgroundColor:C.media},
+      {label:"従量課金",data:mlPaid.map(function(m){return m.cost||0;}),backgroundColor:C.pink}]},
+    options:{indexAxis:"y",plugins:{legend:{position:"bottom"}},
+      scales:{x:{type:"logarithmic",ticks:{callback:function(v){return "¥"+Number(v).toLocaleString();}}}}}});
+
+  /* ④ 媒体推移 */
+  var trendMedia=["食べログ","一休","Google","ResReserve（総計）"];
+  var trendColor={"食べログ":C.tabelog,"一休":C.ikkyu,"Google":C.green,"ResReserve（総計）":C.owned};
+  function drawTrend(metric){
+    mk("c-trend",{type:"line",data:{labels:D.months,
+      datasets:trendMedia.filter(function(k){return D.media_series[k];}).map(function(k){return {
+        label:k,data:(D.media_series[k][metric]||[]),borderColor:trendColor[k],
+        backgroundColor:trendColor[k],tension:.25,spanGaps:true,pointRadius:0,borderWidth:2};})},
+      options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+        scales:{x:{ticks:{maxTicksLimit:12,autoSkip:true}},
+          y:{beginAtZero:true,ticks:{callback:function(v){return metric==="revenue"||metric==="cost"?"¥"+(v/1000)+"k":Number(v).toLocaleString();}}}}}});
+  }
+  drawTrend("revenue");
+  document.querySelectorAll("#seg-trend button").forEach(function(b){b.onclick=function(){
+    document.querySelectorAll("#seg-trend button").forEach(function(x){x.classList.remove("on");});
+    b.classList.add("on"); drawTrend(b.dataset.m);};});
+
+  /* ⑤ ランチ/ディナー */
+  mk("c-daypart",{type:"bar",data:{labels:["予約件数","予約人数","注文金額"],
+    datasets:[
+      {label:"ランチ",data:[dp.lunch.count,dp.lunch.guests,dp.lunch.amount],backgroundColor:C.lunch},
+      {label:"ディナー",data:[dp.dinner.count,dp.dinner.guests,dp.dinner.amount],backgroundColor:C.dinner}]},
+    options:{plugins:{legend:{position:"bottom"},
+      tooltip:{callbacks:{label:function(c){
+        var tot=dp.lunch[["count","guests","amount"][c.dataIndex]]+dp.dinner[["count","guests","amount"][c.dataIndex]];
+        return c.dataset.label+": "+(c.dataIndex===2?yen(c.raw):num(c.raw))+" ("+pct(c.raw,tot).toFixed(0)+"%)";}}}},
+      scales:{x:{stacked:true},y:{stacked:true}}}});
+  document.getElementById("daypart-tbl").innerHTML='<table style="margin-top:10px"><thead><tr><th></th><th>件数</th><th>人数</th><th>客単価</th><th>金額</th></tr></thead><tbody>'
+    +'<tr><td>ランチ</td><td>'+dp.lunch.count+'</td><td>'+num(dp.lunch.guests)+'</td><td>'+yen(dp.lunch.aov)+'</td><td>'+yen(dp.lunch.amount)+'</td></tr>'
+    +'<tr><td>ディナー</td><td>'+dp.dinner.count+'</td><td>'+num(dp.dinner.guests)+'</td><td>'+yen(dp.dinner.aov)+'</td><td>'+yen(dp.dinner.amount)+'</td></tr></tbody></table>';
+
+  /* ⑥ 予約経路 */
+  var rsorted=ops.routes.slice().sort(function(a,b){return b.guests-a.guests;});
+  mk("c-route",{type:"bar",data:{labels:rsorted.map(function(r){return r.name;}),
+    datasets:[{label:"予約人数",data:rsorted.map(function(r){return r.guests;}),
+      backgroundColor:rsorted.map(function(r){return r.name==="ウォークイン"?C.wi:r.name==="食べログ"?C.tabelog:r.name==="電話予約"?C.tel:C.ops;})}]},
+    options:{indexAxis:"y",plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:function(c){return num(c.raw)+"人 ("+pct(c.raw,dp.all.guests).toFixed(1)+"%) / "+rsorted[c.dataIndex].count+"件";}}}}}});
+  document.getElementById("wi-note").innerHTML='ウォークイン <b>'+num(wi.guests)+'人='+pct(wi.guests,dp.all.guests).toFixed(1)+'%</b>（件数'+wi.count+'件='+pct(wi.count,dp.all.count).toFixed(0)+'%）。食べログ'+num(route("食べログ").guests)+'人・電話'+num(tel.guests)+'人。';
+
+  /* ⑦ コース vs 非コース */
+  var lunchCt=dp.lunch.count, dinCt=dp.dinner.count;
+  mk("c-course-ratio",{type:"bar",data:{labels:["ランチ","ディナー"],
+    datasets:[
+      {label:"コース",data:[courseLunch,courseDinner],backgroundColor:C.course},
+      {label:"非コース(席のみ/アラカルト)",data:[Math.max(0,lunchCt-courseLunch),Math.max(0,dinCt-courseDinner)],backgroundColor:C.ala}]},
+    options:{indexAxis:"y",plugins:{legend:{position:"bottom"},
+      tooltip:{callbacks:{label:function(c){var tot=c.dataIndex===0?lunchCt:dinCt;return c.dataset.label+": "+c.raw+"件 ("+pct(c.raw,tot).toFixed(0)+"%)";}}}},
+      scales:{x:{stacked:true},y:{stacked:true}}}});
+
+  /* ⑧ 売れ筋コース */
+  var cs=ops.courses.slice().sort(function(a,b){return b.amount-a.amount;}).filter(function(c){return c.amount>0;});
+  mk("c-course",{type:"bar",data:{labels:cs.map(function(c){return c.name.length>16?c.name.slice(0,15)+"…":c.name;}),
+    datasets:[{label:"売上",data:cs.map(function(c){return c.amount;}),backgroundColor:C.media}]},
+    options:{indexAxis:"y",plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:function(c){return yen(cs[c.dataIndex].amount)+" ("+cs[c.dataIndex].sold+"食 @"+yen(cs[c.dataIndex].price)+")";}}}},
+      scales:{x:{ticks:{callback:function(v){return "¥"+(v/1000)+"k";}}}}}});
+
+  /* ⑨ リピート */
+  var rp=ops.repeat;
+  mk("c-repeat",{type:"bar",data:{labels:["初来店","2回目","3回目","4回目以上"],
+    datasets:[
+      {label:"ランチ",data:[rp.lunch.first,rp.lunch.r2,rp.lunch.r3,(rp.lunch.r4+rp.lunch.r5+rp.lunch.r6)],backgroundColor:C.lunch},
+      {label:"ディナー",data:[rp.dinner.first,rp.dinner.r2,rp.dinner.r3,(rp.dinner.r4+rp.dinner.r5+rp.dinner.r6)],backgroundColor:C.dinner}]},
+    options:{plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true}}}});
+  document.getElementById("repeat-tbl").innerHTML='<table style="margin-top:10px"><thead><tr><th></th><th>初来店</th><th>2回目+</th><th>リピート率</th></tr></thead><tbody>'
+    +'<tr><td>終日</td><td>'+rp.all.first+'</td><td>'+(rp.all.r2+rp.all.r3+rp.all.r4+rp.all.r5+rp.all.r6)+'</td><td><b>'+rp.all.rate+'%</b></td></tr>'
+    +'<tr><td>ランチ</td><td>'+rp.lunch.first+'</td><td>'+(rp.lunch.r2+rp.lunch.r3+rp.lunch.r4+rp.lunch.r5+rp.lunch.r6)+'</td><td>'+rp.lunch.rate+'%</td></tr>'
+    +'<tr><td>ディナー</td><td>'+rp.dinner.first+'</td><td>'+(rp.dinner.r2+rp.dinner.r3+rp.dinner.r4+rp.dinner.r5+rp.dinner.r6)+'</td><td>'+rp.dinner.rate+'%</td></tr></tbody></table>';
+
+  /* ⑩ リードタイム */
+  var lt=ops.leadtime;
+  mk("c-lead",{type:"bar",data:{labels:lt.map(function(x){return x.label;}),
+    datasets:[
+      {label:"ランチ",data:lt.map(function(x){return x.lunch;}),backgroundColor:C.lunch},
+      {label:"ディナー",data:lt.map(function(x){return x.dinner;}),backgroundColor:C.dinner}]},
+    options:{plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true}}}});
+  var sameDay=lt.find(function(x){return x.label==="当日";});
+  document.getElementById("lead-note").innerHTML='当日予約 <b>'+sameDay.all+'件 ('+pct(sameDay.all,lt.reduce(function(s,x){return s+x.all;},0)).toFixed(0)+'%)</b>。ウォークイン文化が強く、事前予約は8〜15日前に小ピーク。';
+
+  /* ⑪ 時間帯 */
+  var bh=ops.booked_hour;
+  mk("c-hour",{type:"bar",data:{labels:bh.hours.map(function(h){return h+"時";}),
+    datasets:[{label:"予約件数",data:bh.counts,backgroundColor:bh.counts.map(function(v,i){return (i>=11&&i<=12)?C.media:(i>=17&&i<=20)?C.ops:"#475569";})}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+}
+function drawSkList(){
+  var box=document.getElementById('sklist');
+  box.innerHTML=SK.map(function(s){
+    return '<div class="sk"><span class="d">'+s.d+'</span><span class="tag2" style="background:'+s.col+'">'+s.tag+'</span><p>'+s.tx+'</p></div>';
+  }).join('');
+}
+
+// ============ TAB2: 競合モニタ ============
+var COMP=[
+  {n:'炭火焼肉 ガブリ 大門店', me:true,  r:4.3, rc:188, nw:9,  price:'¥4,000-5,000', pos:'2位', pb:'pb-g', d:'+0.1'},
+  {n:'焼肉キング 浜松町',      me:false, r:4.4, rc:412, nw:5,  price:'¥3,000-4,000', pos:'1位', pb:'pb-a', d:'±0'},
+  {n:'大門ホルモン酒場',        me:false, r:4.1, rc:236, nw:8,  price:'¥3,000-4,000', pos:'3位', pb:'pb-a', d:'+0.2'},
+  {n:'炭火亭 芝大門',          me:false, r:3.9, rc:97,  nw:1,  price:'¥5,000-6,000', pos:'4位', pb:'pb-r', d:'-0.1'},
+  {n:'和牛いちば 浜松町店',     me:false, r:4.0, rc:154, nw:2,  price:'¥6,000-8,000', pos:'5位', pb:'pb-r', d:'±0'}
+];
+function drawComp(){
+  var rows='<tr><th>店舗</th><th>Google評点</th><th>口コミ数</th><th>新着(今週)</th><th>価格帯</th><th>「大門 焼肉」順位</th></tr>';
+  COMP.forEach(function(c){
+    var dcls = c.d.indexOf('+')===0?'up':(c.d.indexOf('-')===0?'down':'flat');
+    rows+='<tr'+(c.me?' class="me"':'')+'><td>'+(c.me?'⭐ ':'')+c.n+(c.me?'（自店）':'')+'</td>'
+      +'<td>'+c.r.toFixed(1)+' <span class="'+dcls+'" style="font-size:10.5px">'+c.d+'</span></td>'
+      +'<td>'+c.rc+'</td><td>'+(c.nw>=5?'<b class="up">+'+c.nw+'</b>':'+'+c.nw)+'</td>'
+      +'<td>'+c.price+'</td><td><span class="pos-badge '+c.pb+'">'+c.pos+'</span></td></tr>';
+  });
+  document.getElementById('comp-table').innerHTML=rows;
+}
+function drawRace(){
+  var W=440,H=180,L=36,R=8,T=12,B=24;
+  var weeks=12;
+  var lines=[
+    {n:'ガブリ大門（自店）', c:'#14b8a6', from:4.05, to:4.3, w:3},
+    {n:'焼肉キング', c:'#9aa3b2', from:4.42, to:4.4, w:1.5},
+    {n:'大門ホルモン酒場', c:'#f59e0b', from:3.85, to:4.1, w:1.5}
+  ];
+  var min=3.7,max=4.6;
+  var xw=(W-L-R)/(weeks-1);
+  function y(v){return T+(H-T-B)*(1-(v-min)/(max-min));}
+  var svg='';
+  [3.8,4.0,4.2,4.4,4.6].forEach(function(v){
+    svg+='<line x1="'+L+'" y1="'+y(v)+'" x2="'+(W-R)+'" y2="'+y(v)+'" stroke="#eef0f4"/>';
+    svg+='<text x="'+(L-6)+'" y="'+(y(v)+3)+'" font-size="9" fill="#9aa3b2" text-anchor="end">'+v.toFixed(1)+'</text>';
+  });
+  lines.forEach(function(ln,li){
+    var pts=[];
+    for(var i=0;i<weeks;i++){
+      var p=i/(weeks-1);
+      var wob=Math.sin(i*2.1+li*4)*0.025;
+      pts.push((L+i*xw)+','+y(ln.from+(ln.to-ln.from)*p+wob));
+    }
+    svg+='<path d="M'+pts.join(' L')+'" fill="none" stroke="'+ln.c+'" stroke-width="'+ln.w+'" stroke-linecap="round"/>';
+  });
+  document.getElementById('race').innerHTML=svg;
+  document.getElementById('race-legend').innerHTML=lines.map(function(ln){
+    return '<span><i style="background:'+ln.c+'"></i>'+ln.n+'</span>';
+  }).join('');
+}
+
+// ============ TAB3: チェーンサマリ ============
+var CHAIN=[
+  {rank:1,n:'炭火焼肉 ガブリ 大門店', view:28016, ctr:3.83, rev:188, mom:'+24', health:86, hc:'#22c55e'},
+  {rank:2,n:'ガブリ 神田店',          view:21400, ctr:3.41, rev:142, mom:'+18', health:74, hc:'#22c55e'},
+  {rank:3,n:'ガブリ 五反田店',        view:19800, ctr:2.95, rev:121, mom:'+11', health:61, hc:'#f59e0b'},
+  {rank:4,n:'ココリコ 上野店',        view:27184, ctr:2.62, rev:96,  mom:'+8',  health:48, hc:'#ef4444'}
+];
+function drawChain(){
+  var rows='<tr><th>順位</th><th>店舗</th><th>マップ表示</th><th>クリック率</th><th>口コミ累計</th><th>今月増</th><th>口コミ健全度*</th></tr>';
+  CHAIN.forEach(function(c){
+    rows+='<tr><td class="'+(c.rank===1?'rank1':'')+'">'+(c.rank===1?'👑 ':'')+c.rank+'</td><td>'+c.n+'</td>'
+      +'<td>'+c.view.toLocaleString()+'</td><td>'+c.ctr.toFixed(2)+'%</td><td>'+c.rev+'件</td>'
+      +'<td class="up">'+c.mom+'</td>'
+      +'<td><span class="health"><i style="width:'+c.health+'%;background:'+c.hc+'"></i></span>'+c.health+'</td></tr>';
+  });
+  rows+='<tr><td colspan="7" style="font-size:10.5px;color:var(--faint)">* 健全度 = 量・鮮度・返信率・地域業種ワード含有率の合成スコア（AIO診断と連動）</td></tr>';
+  document.getElementById('chain-table').innerHTML=rows;
+}
+
+// ============ TAB4: 媒体編集（代行実行） ============
+// media: バッジ表示用。type: auto(安全8割) / need(危険2割・要承認) / hyg(衛生・返信)
+var QUEUE=[
+  {id:0, media:[{c:'mt-gbp',t:'GBP'}], task:'営業時間変更（祝日対応）', draft:'AI下書き完了：6/15(月)を「祝日営業 11:00-22:00」に更新', type:'need', why:'危険な2割：営業情報'},
+  {id:1, media:[{c:'mt-tabelog',t:'食べログ'}], task:'コース写真6点差替', draft:'AI下書き完了：プロ撮影分に差替（順序も最適化）', type:'auto'},
+  {id:2, media:[{c:'mt-gbp',t:'GBP'}], task:'メニュー追加「焼肉重ランチ」', draft:'AI下書き完了：¥1,280・写真付き', type:'need', why:'価格を含む'},
+  {id:3, media:[{c:'mt-insta',t:'Instagram'},{c:'mt-gbp',t:'GBP'}], task:'定型投稿「父の日 厚切りタン」', draft:'AI下書き完了：Instagram＋GBPへ同時投稿（定型）', type:'auto'},
+  {id:4, media:[{c:'mt-multi',t:'口コミ'}], task:'口コミ返信 ★4-5 定型 ×12件', draft:'AI下書き完了：定型テンプレで自動返信（衛生作業）', type:'hyg'}
+];
+var EXEC_LOG=[
+  {d:'6/12', mc:'mt-gbp', mt:'GBP', tx:'最新情報「父の日フェア」投稿を反映（API連携）'},
+  {d:'6/10', mc:'mt-line', mt:'LINE', tx:'友だち向けクーポン配信「厚切りタン50%OFF」（API連携）'},
+  {d:'6/08', mc:'mt-tabelog', mt:'食べログ', tx:'ディナーコースの説明文を更新（管理画面オペ）'},
+  {d:'6/05', mc:'mt-insta', mt:'Instagram', tx:'リール投稿「焼き加減のコツ」を公開（API連携）'},
+  {d:'6/03', mc:'mt-gbp', mt:'GBP', tx:'定休日情報を更新・口コミ★4-5へ定型返信8件（衛生）'},
+  {d:'6/01', mc:'mt-tabelog', mt:'食べログ', tx:'店舗写真のサムネイル順を最適化（管理画面オペ）'}
+];
+function statBadge(type){
+  if(type==='need') return '<span class="badge bd-need">要承認</span>';
+  if(type==='hyg')  return '<span class="badge bd-hyg">自動実行（衛生）</span>';
+  return '<span class="badge bd-auto">自動実行（安全）</span>';
+}
+function drawBitei(){
+  var box=document.getElementById('queue-list');
+  box.innerHTML=QUEUE.map(function(q){
+    var tags=q.media.map(function(m){return '<span class="mtag '+m.c+'">'+m.t+'</span>';}).join('');
+    var right;
+    if(q.type==='need'){
+      right='<div class="qstat" id="qstat'+q.id+'">'
+        + statBadge('need')
+        + '<div style="font-size:10px;color:var(--amber-d)">'+q.why+'</div>'
+        + '<div class="gate-btns"><button class="gbn gbn-ok" onclick="gateAction('+q.id+',true)">承認</button>'
+        + '<button class="gbn gbn-ng" onclick="gateAction('+q.id+',false)">却下</button></div></div>';
+    } else {
+      right='<div class="qstat">'+statBadge(q.type)+'</div>';
+    }
+    return '<div class="qrow"><div class="qmain"><div class="qtask">'+tags+q.task+'</div>'
+      + '<div class="qdraft">'+q.draft+'</div></div>'+right+'</div>';
+  }).join('');
+
+  var log=document.getElementById('exec-log');
+  log.innerHTML=EXEC_LOG.map(function(e){
+    return '<div class="sk"><span class="d">'+e.d+'</span><span class="mtag '+e.mc+'">'+e.mt+'</span><p>'+e.tx+'</p></div>';
+  }).join('');
+}
+function gateAction(id, ok){
+  var el=document.getElementById('qstat'+id);
+  if(!el) return;
+  if(ok){
+    el.innerHTML='<span class="badge bd-done">承認済 → 実行</span><div style="font-size:10px;color:var(--blue-d)">SOELが各媒体へ反映しました</div>';
+  } else {
+    el.innerHTML='<span class="badge bd-hyg">却下 → 保留</span><div style="font-size:10px;color:var(--sub)">店長判断で見送り</div>';
+  }
+}
+
+// init
+buildStars(); buildOpts();
+
+// ============ ハッシュによるタブ深リンク ============
+function openFromHash(){
+  var map={'#kuchikomi':0,'#okyakusama':0,'#dashboard':1,'#kyogo':2,'#chain':3,'#bitei':4};
+  var idx=map[location.hash];
+  if(idx===undefined) return;
+  var btn=document.querySelectorAll('.tab')[idx];
+  if(btn) showTab(idx, btn);
+}
+openFromHash();
+</script>
+</body>
+</html>

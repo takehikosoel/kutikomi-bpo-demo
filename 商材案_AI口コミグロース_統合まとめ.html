@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商材案（統合まとめ）─ AI口コミ・グロースエンジン</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#181b22; --card2:#1f232c; --line:#2c313c;
+    --ink:#e8eaed; --sub:#a4abb8; --mut:#727a89;
+    --accent:#5b9dff; --good:#3ecf8e; --warn:#f5b54a; --bad:#f06363; --purple:#9d8bff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.75;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 90px}
+  header .kicker{color:var(--accent);font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  header h1{font-size:28px;margin:8px 0 6px;letter-spacing:.01em}
+  header .name{font-size:14px;color:var(--sub)}
+  header .meta{color:var(--mut);font-size:12.5px;margin-top:10px}
+  .hero{background:linear-gradient(135deg,rgba(91,157,255,.12),rgba(157,139,255,.08));
+    border:1px solid rgba(91,157,255,.3);border-radius:16px;padding:22px 24px;margin-top:18px}
+  .hero .one{font-size:18px;font-weight:800;line-height:1.6}
+  .hero .one b{color:var(--accent)}
+  .hero .sub{font-size:13.5px;color:var(--sub);margin-top:8px}
+  h2{font-size:20px;margin:50px 0 14px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+  h2 .n{color:var(--accent);font-weight:800;margin-right:10px;font-size:16px}
+  h3{font-size:15.5px;margin:20px 0 8px}
+  p{margin:8px 0} .lead{color:var(--sub);font-size:14px}
+  /* 勝ち筋カード */
+  .win3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .win3 .c{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .win3 .c .k{font-size:11.5px;color:var(--accent);font-weight:800;letter-spacing:.08em}
+  .win3 .c .t{font-size:15px;font-weight:700;margin:8px 0 6px;line-height:1.5}
+  .win3 .c .d{font-size:12.5px;color:var(--sub)}
+  /* バリュースタック */
+  .stack{margin-top:14px}
+  .stack .row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;margin-bottom:8px;border:1px solid var(--line)}
+  .stack .row .lbl{font-weight:800;min-width:160px}
+  .stack .row .desc{font-size:13px;color:var(--sub);flex:1}
+  .stack .row .tier{font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .stack .core{background:rgba(62,207,142,.08);border-color:rgba(62,207,142,.35)}
+  .stack .core .tier{background:var(--good);color:#0b0d12}
+  .stack .mid{background:rgba(245,181,74,.06);border-color:rgba(245,181,74,.3)}
+  .stack .mid .tier{background:var(--warn);color:#0b0d12}
+  .stack .low{background:var(--card)}
+  .stack .low .tier{background:var(--card2);color:var(--mut)}
+  /* フロー */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .step{flex:1;min-width:155px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;position:relative}
+  .step .num{font-size:11px;color:var(--accent);font-weight:800}
+  .step .t{font-weight:700;font-size:13.5px;margin:4px 0}
+  .step .d{font-size:12px;color:var(--sub)}
+  .step .safe{font-size:11px;color:var(--good);margin-top:7px}
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .door{border-radius:10px;padding:14px;border:1px solid var(--line)}
+  .door.a{background:rgba(91,157,255,.07);border-color:rgba(91,157,255,.3)}
+  .door.b{background:rgba(157,139,255,.07);border-color:rgba(157,139,255,.3)}
+  .door .h{font-weight:800;font-size:13.5px}
+  .door.a .h{color:var(--accent)} .door.b .h{color:var(--purple)}
+  .door .d{font-size:12.5px;color:var(--sub);margin-top:4px}
+  /* セーフ/アウト */
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .panel{border-radius:12px;padding:18px;border:1px solid var(--line)}
+  .panel.safe{background:rgba(62,207,142,.07);border-color:rgba(62,207,142,.35)}
+  .panel.out{background:rgba(240,99,99,.07);border-color:rgba(240,99,99,.35)}
+  .panel h3{margin-top:0} .panel.safe h3{color:var(--good)} .panel.out h3{color:var(--bad)}
+  .panel ul{margin:8px 0 0;padding-left:4px;list-style:none}
+  .panel li{position:relative;padding-left:24px;margin-bottom:9px;font-size:13px}
+  .panel.safe li::before{content:"✓";position:absolute;left:0;color:var(--good);font-weight:800}
+  .panel.out li::before{content:"✕";position:absolute;left:0;color:var(--bad);font-weight:800}
+  /* 競合差 */
+  .vs{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 18px;margin-top:14px}
+  .vs .name{font-weight:800}
+  /* テーブル */
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:14px}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:680px}
+  th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  th{background:var(--card2);color:var(--sub);font-weight:600;font-size:12px}
+  tr:last-child td{border-bottom:none}
+  .tag{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px;white-space:nowrap}
+  .t-core{background:rgba(62,207,142,.16);color:#8fe9c2}
+  .t-opt{background:rgba(245,181,74,.16);color:#f5cd8a}
+  .t-out{background:rgba(240,99,99,.16);color:#f3a0a0}
+  /* ビジネスモデル */
+  .biz{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  .biz .b{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .biz .b .h{font-size:12px;color:var(--accent);font-weight:800;letter-spacing:.05em}
+  .biz .b .v{font-size:22px;font-weight:800;margin:6px 0 2px}
+  .biz .b .d{font-size:12px;color:var(--sub)}
+  /* ロードマップ */
+  .road{list-style:none;padding:0;margin:14px 0;counter-reset:r}
+  .road li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px 14px 56px;position:relative;margin-bottom:10px}
+  .road li::before{counter-increment:r;content:"P"counter(r);position:absolute;left:12px;top:13px;
+    background:var(--accent);color:#0b0d12;font-weight:800;font-size:12px;padding:4px 8px;border-radius:7px}
+  .road .w{font-size:12px;color:var(--mut)}
+  /* details / misc */
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:10px 0}
+  details>summary{cursor:pointer;padding:12px 16px;font-size:13.5px;color:var(--sub);font-weight:600;list-style:none}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary::before{content:"▸ ";color:var(--accent)} details[open]>summary::before{content:"▾ "}
+  details .in{padding:0 16px 14px;font-size:12.5px;color:var(--sub)}
+  .note{font-size:12px;color:var(--mut);font-style:italic}
+  .risk li{font-size:13.5px;margin-bottom:8px;color:var(--sub)}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  code{background:var(--card2);padding:1px 6px;border-radius:5px;font-size:12px}
+  .footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--mut)}
+  @media(max-width:760px){.win3,.biz,.twocol,.doors{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">SOEL 新商材 ／ 商材案 統合まとめ（叩き台）</div>
+  <h1>AI口コミ・グロースエンジン</h1>
+  <div class="name">仮称。中身＝「安全に口コミが増える × どんな口コミかで店を底上げ」</div>
+  <div class="meta">2026-06-16 ／ 出典：パクれる商材調査・規約調査（各deep-research）＋設計判断（本セッション）</div>
+
+  <div class="hero">
+    <div class="one">微妙な店が多い世の中で、<b>“安全に”口コミが増え、入った口コミで店が本当に良くなる</b>。<br>飲食・店舗向けの、AI運用＋媒体BPO。</div>
+    <div class="sub">口コミ「返信」はコモディティ（競合全社が標準装備）。本丸は<b>増やす仕掛け × 診断インサイトの一本ループ</b>。しかも規約・法令の内側でやる＝<b>炎上・アカBANしない</b>ことそのものが差別化になる。</div>
+  </div>
+</header>
+
+<!-- 勝ち筋 -->
+<h2><span class="n">01</span>勝ち筋（3つの結論）</h2>
+<div class="win3">
+  <div class="c">
+    <div class="k">WIN 1 ─ 市場</div>
+    <div class="t">「微妙な店が多い」を逆手に取る</div>
+    <div class="d">単純に口コミを増やすと微妙さが可視化され評価が下がる＝既存ツールの死角。SOELは<b>“安全に増やす×底上げ”</b>で、過半数の微妙な店という巨大市場で勝つ。</div>
+  </div>
+  <div class="c">
+    <div class="k">WIN 2 ─ コア</div>
+    <div class="t">返信ではなく「増やす×診断」</div>
+    <div class="d">AIの本当の使いどころは返信自動化ではなく、<b>客の声を下書き化して投稿摩擦をゼロにする</b>＋<b>口コミを診断して直す3点を出す</b>。返信はオプションに格下げ。</div>
+  </div>
+  <div class="c">
+    <div class="k">WIN 3 ─ 防御</div>
+    <div class="t">“コンプラ安全”が差別化になる</div>
+    <div class="d">競合（口コミ365・※一例）はAI下書き＋抽選/クーポンで規約リスクを内包。SOELは<b>インセンの付け場所を変えるだけで「効く×消えない×規約内」</b>を同時成立。</div>
+  </div>
+</div>
+
+<!-- バリュー再定義 -->
+<h2><span class="n">02</span>コアバリューの再定義</h2>
+<p class="lead">海外勢（GoHighLevel／Podium／Birdeye）は全社「AI返信」を装備＝差別化ゼロ。価値の序列はこう。</p>
+<div class="stack">
+  <div class="row core">
+    <div class="lbl">口コミが増える仕掛け</div>
+    <div class="desc">アンケ→AI下書き→任意投稿で、書けない・面倒という最大の摩擦を消す。本丸。</div>
+    <div class="tier">コア</div>
+  </div>
+  <div class="row core">
+    <div class="lbl">どんな口コミか（診断）</div>
+    <div class="desc">入った声をAIが診断し「直す3点」に変換。微妙な店を底上げするループの起点。</div>
+    <div class="tier">コア</div>
+  </div>
+  <div class="row mid">
+    <div class="lbl">媒体BPO・来店実測</div>
+    <div class="desc">媒体運用の手間を巻き取り、food-logで来店を実測（成果オプション）。</div>
+    <div class="tier">成果/オプション</div>
+  </div>
+  <div class="row low">
+    <div class="lbl">口コミ返信</div>
+    <div class="desc">競合全社が持つコモディティ。やるが、売りにはしない衛生機能。</div>
+    <div class="tier">衛生/格下げ</div>
+  </div>
+</div>
+
+<!-- 仕組み -->
+<h2><span class="n">03</span>プロダクトの仕組み（安全に増やす導線）</h2>
+<p class="lead">全工程が「事業者が口コミの中身を決めない／満足客を選別しない」を満たす設計。これが効く×消えない×規約内の核。</p>
+<div class="flow">
+  <div class="step"><div class="num">STEP 1</div><div class="t">全客に一律の導線</div><div class="d">卓上QR・LINE・会計後の声かけ。満足度で出し分けない</div><div class="safe">✓ ゲーティング回避</div></div>
+  <div class="step"><div class="num">STEP 2</div><div class="t">アンケに回答</div><div class="d">「何が良かった/気になったか」を客の言葉で。体験を引き出す</div><div class="safe">✓ 実体験ベース</div></div>
+  <div class="step"><div class="num">STEP 3</div><div class="t">回答者全員に特典（無条件）</div><div class="d">★低評価でも・投稿しなくても同額。ここで先に渡し切る</div><div class="safe">✓ 投稿の対価にしない</div></div>
+  <div class="step"><div class="num">STEP 4</div><div class="t">AIが下書き生成</div><div class="d">回答を自然文に整えるだけ。★や定型賛辞は入れない</div><div class="safe">✓ 内容を決定しない</div></div>
+</div>
+<p class="lead" style="margin-top:14px">STEP 5：投稿は<b>全員に同じ“2つのドア”</b>を出す。満足な人は自然にA、不満な人は自然にB。＝業者は選別していない（客の自己選択）。</p>
+<div class="doors">
+  <div class="door a"><div class="h">A）公開口コミとして投稿（任意）</div><div class="d">AI下書きを自由に編集→自分の意思で投稿。特典とは無関係。<br>→ 結果的に満足の声が公開に乗る（合法）</div></div>
+  <div class="door b"><div class="h">B）お店への私的フィードバック</div><div class="d">非公開でお店に直接届く。<br>→ 不満をここで全回収＝<b>診断データ＝改善ループの燃料</b></div></div>
+</div>
+<p class="note" style="margin-top:12px">評価を上げる唯一の壊れない方法＝不満を隠すことではなく、Bで拾った不満を改善して“本物の満足”を増やすこと。隠す設計（ゲーティング）は規約・資産防衛・コア価値の全てでマイナス。</p>
+
+<!-- なぜ安全に勝てる -->
+<h2><span class="n">04</span>なぜ“安全に”勝てるか（規約の要点）</h2>
+<div class="twocol">
+  <div class="panel safe">
+    <h3>✅ この設計が守るもの</h3>
+    <ul>
+      <li>インセンは<b>アンケ回答に・全員・無条件</b>（投稿の対価にしない＝Google規約クリア）</li>
+      <li>投稿の誘いは<b>全員一律</b>（満足客選別＝ゲーティングを回避）</li>
+      <li>AI下書きは<b>客の実体験の文章化のみ</b>（★・賛辞を指定しない＝ステマ回避）</li>
+      <li>客が<b>確認・自由編集・任意投稿</b>（＝自主的意思を担保、事業者が内容決定しない）</li>
+    </ul>
+  </div>
+  <div class="panel out">
+    <h3>⛔ 絶対やらないことリスト</h3>
+    <ul>
+      <li>割引・抽選・景品と<b>投稿を引き換え</b>（祐真会・2024-06-06 措置命令の摘発要素／※一例）</li>
+      <li>「★5で」「“◯◯と書いて”」など<b>評価・賛辞の指定</b></li>
+      <li><b>満足客だけ</b>に投稿を促す／不満客に投稿サジェストを出さない</li>
+      <li>客の体験に基づかない<b>自動生成・代筆・やらせ</b></li>
+    </ul>
+  </div>
+</div>
+<div class="vs">
+  <span class="name">対 口コミ365（導入3,000店超・※一例）：</span> AI下書きはコア機能として先行。だが<b>割引クーポン・抽選を併設</b>＝Google規約のインセンティブ禁止（2026改定で抽選も明示禁止域）に抵触しうる。投稿側にインセンを付けると<b>Googleが検知して口コミごと削除</b>＝積み上げた資産が飛ぶ。
+  <b style="color:var(--good)">→ SOELはインセンをアンケ側に置くことで、同じ集客力を使いつつ“消えない本物の口コミ”を積む。</b>
+</div>
+
+<!-- ビジネスモデル -->
+<h2><span class="n">05</span>ビジネスモデル</h2>
+<div class="biz">
+  <div class="b"><div class="h">価格（仮）</div><div class="v">¥3〜5万<span style="font-size:13px">/月</span></div><div class="d">固定＋件数（個数）従量。費用対効果一本足では売らない</div></div>
+  <div class="b"><div class="h">2ティア</div><div class="v">セルフ / おまかせ</div><div class="d">承認を店長がやる（セルフ）／SOEL側が巻き取る（おまかせ）</div></div>
+  <div class="b"><div class="h">粗利目安</div><div class="v">〜80%</div><div class="d">バイト¥1,300×2hで@¥30k想定。AI原価×人の承認</div></div>
+</div>
+<p class="lead" style="margin-top:14px"><b>粗利の急所＝人の承認スループット一点。</b>AIが大半を捌き、判断が微妙な“危険2割”の承認だけ店長に振る＝<b>粗利・ロックイン・責任分散が同時成立</b>。要塞ロックインは追わず、勝ち筋＝<b>AI原価 × ほどほど粘着 × 販路</b>の三角形。</p>
+
+<!-- 販路 -->
+<h2><span class="n">06</span>販路</h2>
+<div class="tblwrap">
+<table>
+<thead><tr><th>フェーズ</th><th>販路</th><th>狙い</th></tr></thead>
+<tbody>
+<tr><td><b>Phase 1</b></td><td>自前 1,400店 → 4,400店へクロスセル</td><td>既存顧客ベース＝フリーミアム成立の前提（大量の無料ベース）を最初から保有</td></tr>
+<tr><td><b>Phase 2</b></td><td>アライアンス</td><td>再販層を作り面を一気に拡大（GoHighLevelのホワイトラベル型を参照）</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- パクった型 -->
+<h2><span class="n">07</span>パクった型（国内外調査より）</h2>
+<p class="lead">「無料配布→面取り→使われた機能を有料化」は3型のみ。SOELが採るのは<b>型C＝フリーミアムAI運用SaaS</b>。サービス中身がそのままSOELのコアで、AI巻き取りも実証済み。</p>
+<div class="tblwrap">
+<table>
+<thead><tr><th>転用する種</th><th>何をパクるか</th><th>SOELへの落とし込み</th></tr></thead>
+<tbody>
+<tr><td><span class="tag t-core">GoHighLevel</span></td><td>ホワイトラベル × AIが運用工程を実行</td><td>機能セットを写経。危険2割の承認だけ人に振る</td></tr>
+<tr><td><span class="tag t-core">SocialPilot</span></td><td>無料/激安で大手の下から崩す（1/10〜1/15）</td><td>日本の中小店の価格帯にAIで差し込む</td></tr>
+<tr><td><span class="tag t-opt">Airレジ</span></td><td>無料で面→周辺で回収（日本の実証）</td><td>口コミ運用を無料の入口、媒体BPO/広告を有料の隣接へ</td></tr>
+<tr><td><span class="tag t-opt">Square/Toast</span></td><td>従量課金（使った分だけ）</td><td>投稿数・承認件数での従量＝粗利の急所と直結</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">詳細は <code>パクれる商材調査_無料配布から有料化.html</code> 参照。固有事例は各社の実装であり、合法/違法を断定する趣旨ではない（※一例）。</p>
+
+<!-- ロードマップ -->
+<h2><span class="n">08</span>実装・検証ロードマップ</h2>
+<ol class="road">
+  <li><b>自前100店 × 3ヶ月 無料テスト</b>で導線とAI下書きの実効性を計測。<span class="w">担当：佐藤／設計中</span></li>
+  <li><b>4指標を計装（仮）</b>：①公開投稿数の増分 ②アンケ→投稿の転換率 ③平均評価/点数の推移 ④私的フィードバック件数＝診断→改善アクション数。来店(food-log)は成果オプションとして併測。<span class="w">担当：要確定</span></li>
+  <li><b>本契約トリガーを定義</b>：どの指標がどこまで動いたら有料化するか（無料→有料の転換点を数字で固定）。<span class="w">担当：佐藤</span></li>
+  <li><b>グレー領域の法務確認</b>：AI下書き×アンケ特典が「事業者の表示」に当たらないか、弁護士/消費者庁照会で固める（本契約前）。<span class="w">担当：要相談</span></li>
+</ol>
+
+<!-- リスク -->
+<h2><span class="n">09</span>リスク・要確認・残タスク</h2>
+<ul class="risk">
+  <li><b>伸び率が未検証。</b>「アンケ特典→任意投稿」の投稿転換率に独立データなし。→ 100店テストでA/B（特典あり/なし）を計測し、自社の出典にする。</li>
+  <li><b>AI下書きのグレーは残る。</b>アンケ導線が実質“口コミ製造機”である以上「投稿の対価では？」と見られる余地。判例未確立。→ 法務照会で固める。</li>
+  <li><b>Google規約は2026年も改定継続中。</b>抽選/景品の紐付け禁止が明示化など。実装前に各公式ページの最新版を再確認。</li>
+  <li><b>競合の実態が一部未確定。</b>クチコミコム/EmEat/Canly/トリドリのプラン・価格・代筆有無は未確証（今回は口コミ365のみ）。→ 次の調査で埋める。</li>
+  <li><b>売る物語（AIO時代）が未着手。</b>「コンプラ安全＝炎上/BANしない口コミ運用」をナラティブに昇格させる（タスク2）。<code>売る物語_口コミ通貨とAIO時代.html</code>に合流。</li>
+</ul>
+
+<!-- 出典 -->
+<h2><span class="n">10</span>根拠・関連ドキュメント</h2>
+<details>
+  <summary>調査出典と関連ファイルを開く</summary>
+  <div class="in">
+    <p><b>本商材案の根拠（同フォルダ）：</b><br>
+      ・<code>パクれる商材調査_無料配布から有料化.html</code>（型A/B/C・転用TOP5）<br>
+      ・<code>規約調査_AI下書きはコアに据えてよいか.html</code>（できる/グレー/アウト・安全設計）<br>
+      ・<code>新商材企画_AI集客運用BPO.html</code>（L0→L6 戦略の企画書）<br>
+      ・<code>売る物語_接点多様化とAIに選ばれる時代.html</code>（ナラティブ）</p>
+    <p><b>一次出典（規約・法令）：</b>
+      <a href="https://support.google.com/business/answer/7400114?hl=ja">Google クチコミ ポリシー</a>・
+      <a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/faq/stealth_marketing/">消費者庁 ステマFAQ</a>・
+      <a href="https://tabelog.com/help/policy/">食べログ 運営ポリシー</a>・
+      <a href="https://365kuchikomi.com/">口コミ365 公式</a></p>
+    <p class="note">検証：両調査とも deep-research（5アングル並列・敵対的3票検証）。価格・規約は変動が速く、AI下書きの可否は一次原則からの演繹（medium信頼・判例未確立）。数字・固有事例は※一例として扱い、本契約前に最新版と法務見解で再確認すること。</p>
+  </div>
+</details>
+
+<div class="footer">
+  商材案 統合まとめ（叩き台）／ 2026-06-16 ／ SOEL 02_横断グロース<br>
+  次アクション：①100店テストの4指標・本契約トリガー確定 ②法務照会 ③競合実態の補完 ④売る物語の言語化
+</div>
+
+</div>
+</body>
+</html>

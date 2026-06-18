@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>売る物語 — 接点の多様化とAIに選ばれる時代（AI集客運用BPO ナラティブ）</title>
+<style>
+  :root{
+    --ink:#1a1d24; --sub:#5b6470; --line:#e3e7ed; --bg:#f6f8fb; --card:#fff;
+    --accent:#2f6df6; --accent2:#0fb37f; --warn:#e8762a; --bad:#d8443c; --pur:#7a52d9;
+    --good-bg:#eafaf3; --warn-bg:#fdf3ea; --bad-bg:#fdecea; --acc-bg:#eef3fe; --pur-bg:#f1ecfb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.78;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 22px 80px}
+  header.hero{background:linear-gradient(135deg,#241b4a,#7a52d9 55%,#2f6df6);color:#fff;border-radius:18px;padding:34px 30px;margin-bottom:10px}
+  header.hero .kicker{font-size:12px;letter-spacing:.18em;opacity:.85;font-weight:700}
+  header.hero h1{margin:8px 0 6px;font-size:26px;line-height:1.4}
+  header.hero p{margin:0;opacity:.92;font-size:14px}
+  header.hero .meta{margin-top:14px;font-size:12px;opacity:.8}
+  section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px;margin-top:18px}
+  h2{font-size:20px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  h2 .num{background:var(--ink);color:#fff;font-size:13px;width:26px;height:26px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  h2 .lv{font-size:11px;color:var(--sub);font-weight:600;border:1px solid var(--line);padding:1px 8px;border-radius:99px}
+  .lead{color:var(--sub);font-size:13.5px;margin:2px 0 18px}
+  h3{font-size:15.5px;margin:22px 0 8px}
+  p{margin:8px 0}
+  strong{color:#11141a}
+  .hl{background:linear-gradient(transparent 58%,#fff2a8 58%);font-weight:700}
+  .hlp{background:linear-gradient(transparent 58%,#e4d7fb 58%);font-weight:700}
+  ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ccard{border:1px solid var(--line);border-radius:13px;padding:16px 16px;background:#fff}
+  .ccard .cn{font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--accent);
+    display:inline-block;padding:2px 10px;border-radius:99px;margin-bottom:8px}
+  .ccard.c2 .cn{background:var(--accent2)} .ccard.c3 .cn{background:var(--pur)} .ccard.c4 .cn{background:var(--warn)}
+  .ccard h4{margin:0 0 6px;font-size:15px}
+  .ccard p{margin:0;font-size:13px;color:var(--sub)}
+  .action{background:var(--acc-bg);border:1px solid #cfe0ff;border-radius:13px;padding:16px 18px;margin-top:16px}
+  .action b{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f1f4f9;font-size:12.5px;color:#33404f}
+  td.c{text-align:center;white-space:nowrap}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px}
+  .t-good{background:var(--good-bg);color:#0a8a5f} .t-warn{background:var(--warn-bg);color:#bb5a17}
+  .t-bad{background:var(--bad-bg);color:#bb352d} .t-acc{background:var(--acc-bg);color:#2256c9}
+  .callout{border-left:4px solid var(--accent);background:#f7faff;padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.good{border-color:var(--accent2);background:var(--good-bg)}
+  .callout.warn{border-color:var(--warn);background:var(--warn-bg)}
+  .callout.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .callout.pur{border-color:var(--pur);background:var(--pur-bg)}
+  .callout .lbl{font-weight:800;font-size:12px;letter-spacing:.05em;display:block;margin-bottom:3px}
+  details{border:1px solid var(--line);border-radius:11px;padding:4px 16px;margin:12px 0;background:#fafbfd}
+  summary{cursor:pointer;font-weight:700;font-size:13.5px;padding:9px 0;color:#33404f}
+  details[open]{padding-bottom:14px}
+  .quote{font-size:12.5px;color:var(--sub);border-left:3px solid var(--line);padding-left:12px;margin:10px 0}
+  .src{font-size:11.5px;color:#8a93a0}
+  .foot{color:var(--sub);font-size:12px;text-align:center;margin-top:30px}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .pill{border:1px solid var(--line);border-radius:99px;padding:4px 13px;font-size:12.5px;background:#fff}
+  .arc{display:flex;flex-direction:column;gap:0;margin:8px 0}
+  .beat{border:1px solid var(--line);border-radius:13px;padding:14px 18px;background:#fff;position:relative}
+  .beat .bn{font-size:11px;font-weight:800;letter-spacing:.08em;color:#fff;padding:2px 10px;border-radius:99px;display:inline-block;margin-bottom:6px}
+  .beat.b1 .bn{background:var(--accent)} .beat.b2 .bn{background:var(--bad)} .beat.b3 .bn{background:var(--warn)} .beat.b4 .bn{background:var(--pur)}
+  .beat h4{margin:0 0 4px;font-size:16px}
+  .beat p{margin:4px 0;font-size:13.5px}
+  .barrow{text-align:center;color:#aab3c0;font-size:16px;line-height:1.2;margin:3px 0}
+  .quote-big{font-size:18px;font-weight:800;line-height:1.6;color:#11141a;margin:6px 0;letter-spacing:.01em}
+  .talk{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:12px 0}
+  .talk .row{display:grid;grid-template-columns:84px 1fr;border-top:1px solid var(--line)}
+  .talk .row:first-child{border-top:none}
+  .talk .who{background:#f1f4f9;font-size:11.5px;font-weight:800;color:#5b6470;padding:11px 10px;text-align:center}
+  .talk .row.soel .who{background:#eef3fe;color:#2256c9}
+  .talk .line{padding:11px 14px;font-size:13.5px}
+  .scoremark{font-weight:800}
+  @media(max-width:680px){.grid3,.grid2{grid-template-columns:1fr}.talk .row{grid-template-columns:64px 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">SOEL ／ 新商材「AI集客運用BPO」 ／ 売るための物語（ナラティブ設計）</div>
+  <h1>口コミは、店の“通貨”になった。<br>でも——もう、買えない。</h1>
+  <p>今＝お客さんとの<strong>接点の多様化</strong>／今後＝<strong>AIに選ばれる世界</strong>。その両方への“対策”として「AI集客運用BPO」を売る物語。事実で裏取り済み／セールス台本付き。</p>
+  <div class="meta">作成：2026-06-16 ／ 姉妹資料：新商材企画_AI集客運用BPO.html ／ 根拠：Web一次調査（TableCheck・トライハッチ・消費者庁・Google・Ahrefs ほか）＊出典は各所＆付録に併記</div>
+</header>
+
+<!-- 1. 結論 -->
+<section>
+  <h2><span class="num">1</span>結論：何を物語として売るか</h2>
+  <p class="lead">候補4案を採点 → 単独「AIO時代」ではなく“融合”が勝ち筋。結論3つ → 使い方。</p>
+  <div class="grid3">
+    <div class="ccard">
+      <span class="cn">結論 01</span>
+      <h4>背骨は「口コミ＝通貨／もう買えない」</h4>
+      <p>今は<strong>接点の多様化</strong>、今後は<strong>AIに選ばれるか</strong>。その両方で効く共通通貨が<strong>口コミ</strong>。やらせは2024年に日本で<strong>摘発</strong>され、近道は塞がれた。残るは<strong>正攻法の運用だけ</strong>——ここが一番硬く刺さる。</p>
+    </div>
+    <div class="ccard c3">
+      <span class="cn">結論 02</span>
+      <h4>AIOは“主役”でなく“登る先”</h4>
+      <p>「日本人がAIで店を探す割合」はまだ日本データが薄い。だから<strong>AIOは緊急性の主役にしない</strong>。「今積む口コミが<strong>AIO時代の資産</strong>になる」と<strong>未来の増幅</strong>として置く。</p>
+    </div>
+    <div class="ccard c2">
+      <span class="cn">結論 03</span>
+      <h4>効果でなく“選ばれる構造”で語る</h4>
+      <p>「売上◯%上がる」は効果一本足の罠に逆戻り。語るのは<strong>「選ばれる店の条件が変わった／続けた店だけが残る」という構造</strong>。効果は継続時の理由に取っておく。</p>
+    </div>
+  </div>
+  <div class="action">
+    <b>▶ この資料の使い方</b>　2章＝なぜこの物語か（採点）。<strong>3章＝物語本体（4幕）</strong>がコア。4章＝刺さる一文・なぜ今・反論処理、<strong>5章＝商談台本</strong>。6章＝事実の出典。商談では3〜5章だけ持てばよい。
+  </div>
+</section>
+
+<!-- 2. 採点 -->
+<section>
+  <h2><span class="num">2</span>なぜこの物語か：候補4案の採点</h2>
+  <p class="lead">「AIO時代」は新規性は最強。ただ“今すぐ感”と“日本の事実”が弱い。横に並べると勝ち筋が見える。</p>
+  <table>
+    <tr><th>候補ナラティブ</th><th>今すぐ感</th><th>日本事実の硬さ</th><th>商材直結</th><th>新規性</th><th>結論</th></tr>
+    <tr>
+      <td><strong>A. AIO時代</strong><br><span class="src">客は検索せずAIに聞く</span></td>
+      <td class="c">△</td><td class="c">△</td><td class="c">○</td><td class="c">◎</td>
+      <td><span class="tag t-acc">→ 第4幕(登る先)へ</span></td>
+    </tr>
+    <tr style="background:#faf7ff">
+      <td><strong>B. 口コミ＝通貨／もう買えない</strong><br><span class="src">やらせ摘発・正攻法しか残らない</span></td>
+      <td class="c"><span class="scoremark">◎</span></td><td class="c"><span class="scoremark">◎</span></td><td class="c"><span class="scoremark">◎</span></td><td class="c">○</td>
+      <td><span class="tag t-good">→ 背骨に採用</span></td>
+    </tr>
+    <tr>
+      <td><strong>C. 人手不足×自動化</strong><br><span class="src">続けたいが時間がない</span></td>
+      <td class="c">○</td><td class="c">○</td><td class="c">◎</td><td class="c">✕</td>
+      <td><span class="tag t-warn">→ 第3幕に吸収</span></td>
+    </tr>
+    <tr>
+      <td><strong>D. 接点の多様化（今）</strong><br><span class="src">食べログ・マップ・SNS・AIが並立</span></td>
+      <td class="c">○</td><td class="c">○</td><td class="c">○</td><td class="c">○</td>
+      <td><span class="tag t-warn">→ 第1幕に吸収</span></td>
+    </tr>
+  </table>
+  <div class="callout pur">
+    <span class="lbl">設計判断：2つの時間軸で立てる</span>
+    1本に絞らず<strong>D→B→C→A の順で編む</strong>。背骨はB。物語は2つの時間軸で立つ——<strong>今＝接点の多様化（D・第1幕）</strong>と<strong>今後＝AIに選ばれる世界（A・第4幕）</strong>。その両方に効く一手が「新鮮な口コミ＋媒体運用の継続」＝商材。<strong>特定1媒体（MEO）の話に矮小化せず、食べログ含む全接点を“運用し続ける”話にする</strong>のが肝。
+  </div>
+</section>
+
+<!-- 3. 物語本体 -->
+<section>
+  <h2><span class="num">3</span>物語本体：4幕構成</h2>
+  <p class="lead">これがコア。商談・LP・提案書の背骨に使う。数字は最小限、構造で語る。</p>
+
+  <div class="arc">
+    <div class="beat b1">
+      <span class="bn">第1幕 ／ 今：接点の多様化</span>
+      <h4>お客さんとの“接点”が、増え続けている</h4>
+      <p>かつての店探しは入口が限られていた。いまは違う。<strong>食べログ、Googleマップ、Instagram</strong>…とお客さんとの接点が増え、人は<strong>複数を併用して</strong>店を選ぶ。さらに最近は<strong>AIに「おすすめは？」と聞く</strong>人まで現れた。どれか一つに収束するのではなく、<strong>接点はこれからも増えていく</strong>。</p>
+      <p>共通点は2つ。①どの接点でも、客は<strong>来る前にオンラインで「もう決めている」</strong>。②その判断材料は、どこでも<strong>口コミと、その情報の新しさ</strong>だ。＝<strong>増えた接点を、すべて新鮮に保つ</strong>必要がある。</p>
+      <p class="src">裏付け：店探しでGoogleマップ 86.1%・グルメサイト 61.3% と複数を併用（TableCheck 2022）／Z世代の 63.5% はInstagramでも店を探す（RECCOO 2023）／SNS経由で店に出会う 80.8%／マップで探した人の 73.5% が来店（トライハッチ 2024, n=1,090）</p>
+    </div>
+    <div class="barrow">↓</div>
+    <div class="beat b2">
+      <span class="bn">第2幕 ／ 通貨が変わった、そして買えなくなった</span>
+      <h4>どの接点でも“通貨”は同じ＝口コミ。だが近道は塞がれた</h4>
+      <p>接点がどれだけ増えても、来店を決める材料は同じ＝口コミと評判。<strong>件数が少ない・点が低い・古い口コミは「無いのと同じ」</strong>。——昔はこれを“買えた”。やらせ、星買い。</p>
+      <p class="hlp">でも2023年10月にステマが違法化、2024年には「特典と引き換えに星5を書かせた」店が<strong>日本で実際に摘発</strong>された。Googleは偽レビューを<strong>年2.9億件</strong>消している。近道は、もう無い。</p>
+      <p class="src">裏付け：来店ボーダーは星3.5〜4.0／10件以上で信頼／56%超が「3か月以内の新しさ」を見る（FINEXT 2026・イクシアス 2025）／ステマ規制2023.10施行・祐真会への措置命令2024.6（消費者庁）／Google偽レビュー削除2.92億件・2025年（Google公表）</p>
+    </div>
+    <div class="barrow">↓</div>
+    <div class="beat b3">
+      <span class="bn">第3幕 ／ 残ったのは“正攻法”、でも続かない</span>
+      <h4>「やらなきゃ」は分かってる。でも、続けられる店がいない</h4>
+      <p>残された道は<strong>「本物の声を、正攻法で、コツコツ集めて返し、各媒体（食べログ等）の情報やSNSも新鮮に保つ」</strong>運用だけ。しかも接点は増え続けるから、手間も増える一方。ほぼ全店が自分で回そうとして——<strong>3〜4割が「何を書くか・続けること・時間がない」で止まる</strong>。人手不足と過去最多の倒産の現場で、店長にその時間は無い。</p>
+      <p class="hl">＝ここに新商材が刺さる。正攻法運用をAIが肩代わりし、店長は“危険な2割”だけ承認する。続けられなかったことが、続く。</p>
+      <p class="src">裏付け：98.6%がSNS自前運用も、課題は投稿内容42.5%・継続性34.4%・作業時間31.6%（飲食店ドットコム 2024, n=393）／飲食店倒産2024年は過去最多894件（帝国データバンク）</p>
+    </div>
+    <div class="barrow">↓</div>
+    <div class="beat b4">
+      <span class="bn">第4幕 ／ 今後：AIに選ばれる世界線</span>
+      <h4>接点の多様化の先に、「AIが店を選ぶ」世界が来る</h4>
+      <p>接点が増える流れは、<strong>“AIに聞く”</strong>という次の接点で極まる。お客さんは“自分で探す”から“AIに選んでもらう”へ動き出した。<strong>AIが店を薦めるとき見ているのも、結局は口コミと評判</strong>。だから——<strong>新鮮で良質な口コミを積み続ける店だけが、人にもAIにも選ばれる</strong>。今日から積む口コミは、AIに選ばれる世界の資産になる。</p>
+      <p class="src">裏付け：AI Overviews日本提供2024.8／日本で検索からサイトへの流入 約37.8%減（Ahrefs 2026）。<strong>※「日本人がAIで店を探す割合」は確かな日本データが未確立＝“先回りの物語”として扱う（断定しない）</strong></p>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="lbl">物語の一行要約（社内合言葉）</span>
+    <strong>「今、お客さんとの接点は増え続け、いずれAIが店を選ぶ。どちらでも効くのは口コミと評判。でも、もう買えない。続けられる店だけが、どこでも・人にもAIにも選ばれる——その“続ける”をAIが肩代わりする。」</strong>
+  </div>
+</section>
+
+<!-- 4. 武器 -->
+<section>
+  <h2><span class="num">4</span>セールス武器：一行・なぜ今・反論処理</h2>
+
+  <h3>① 刺さる一行（フック）— 相手で使い分け</h3>
+  <div class="grid2">
+    <div class="ccard"><h4>恐怖型（守りの客）</h4><p class="quote-big" style="font-size:16px">「口コミは“通貨”になりました。でも、もう買えない時代です。」</p></div>
+    <div class="ccard c2"><h4>機会型（攻めの客）</h4><p class="quote-big" style="font-size:16px">「お客さんは、どこで探しても、来る前に“もう決めて”います。」</p></div>
+    <div class="ccard c3"><h4>未来型（先進の客）</h4><p class="quote-big" style="font-size:16px">「今積む口コミが、AIに薦められる店の“資産”になります。」</p></div>
+    <div class="ccard c4"><h4>共感型（疲れた現場）</h4><p class="quote-big" style="font-size:16px">「“続けなきゃ”は分かってる。続ける手間を、こっちが持ちます。」</p></div>
+  </div>
+
+  <h3>② なぜ“今”か（緊急トリガー3つ）</h3>
+  <div class="grid3">
+    <div class="ccard"><span class="cn">トリガー1</span><h4>規制</h4><p>やらせは違法・摘発される。<strong>正攻法しか残らない</strong>＝今の運用法を見直す動機。</p></div>
+    <div class="ccard c2"><span class="cn">トリガー2</span><h4>接点の多様化</h4><p>接点が食べログ・マップ・SNS・AIへ増殖。<strong>一面の対策では足りず、どこも放置＝見つけてもらえない</strong>。</p></div>
+    <div class="ccard c3"><span class="cn">トリガー3</span><h4>先行者効果</h4><p>口コミは積み上げ資産。<strong>始めた店から差がつき、後発は追いつけない</strong>（＝粘着の裏返し）。</p></div>
+  </div>
+
+  <h3>③ 反論処理（想定オブジェクション）</h3>
+  <table>
+    <tr><th style="width:38%">言われること</th><th>返し方</th></tr>
+    <tr><td><strong>「うちは常連商売、新規広告はいらない」</strong></td><td>これは口コミ運用＝<strong>“選ばれ続ける土台”</strong>の話。新規の入口も検索・SNS・口コミに移っており、放置は機会損失。<span class="src">※特定業態の事情に寄せず「土台」として一般化せず話す</span></td></tr>
+    <tr><td><strong>「自分でやれる／やってる」</strong></td><td>ほぼ全店がやっている。だが<strong>3〜4割が“続かない”で止まる</strong>。価値は「やる」でなく「<strong>続ける手間を外す</strong>」こと。</td></tr>
+    <tr><td><strong>「口コミ代行ってやらせでは？大丈夫？」</strong></td><td>逆です。<strong>来店した本物のお客さんの声</strong>をAIが集めて整える正攻法。やらせ撲滅の時代に残る、唯一の“合法な近道”。</td></tr>
+    <tr><td><strong>「で、売上いくら上がるの？」</strong></td><td>効果を約束する商材ではなく、<strong>“選ばれる条件を満たし続ける”商材</strong>。来店の73.5%が地図経由・閾値（件数/点/鮮度）という構造で「満たさないと選ばれない」を示す。実測は来店計測オプションで。</td></tr>
+    <tr><td><strong>「AIで店探すなんてまだ先でしょ」</strong></td><td>同意。だから<strong>主役にはしない</strong>。今やる理由は規制と接点の多様化（トリガー1・2）。AIは「やがて効いてくる資産」として添える。</td></tr>
+  </table>
+  <div class="callout warn">
+    <span class="lbl">語ってはいけないこと（社内ルール）</span>
+    ①<strong>「売上◯%上がる」と効果を主役にしない</strong>（効果一本足の罠／継続訴求は別途“効果が出ているから”で）。②<strong>特定商談の固有事情を全業態の法則として語らない</strong>。③AIO利用率など<strong>日本データの無い数字を断定しない</strong>（「先回り」と明言）。
+  </div>
+</section>
+
+<!-- 5. 商談台本 -->
+<section>
+  <h2><span class="num">5</span>商談台本（90秒の入り）</h2>
+  <p class="lead">アイスブレイク後、提案に入る“つかみ”。店長相手を想定。数字は1つだけ出す。</p>
+  <div class="talk">
+    <div class="row soel"><div class="who">SOEL</div><div class="line">「最近、お店ってどうやって探されてると思いますか？　食べログ、Googleマップ、Instagram、最近はAIに聞く人まで——<strong>お客さんとの接点がどんどん増えてる</strong>んです。共通してるのは、お客さんが<strong>“来る前に”オンラインでもう決めてる</strong>こと。マップで探した人なんて7割超がそのまま来店してます。」</div></div>
+    <div class="row"><div class="who">店長</div><div class="line">「まあ、確かにいろんなとこで見られてるよね。」</div></div>
+    <div class="row soel"><div class="who">SOEL</div><div class="line">「その“決め手”が口コミなんですが——昔みたいに<strong>口コミを買うのは、もう無理</strong>になりました。2024年に星5を買わせた店が実際に行政処分を受けて、Googleも偽レビューを大量に消してます。<strong>残ったのは、正攻法でコツコツ積む運用だけ</strong>なんです。」</div></div>
+    <div class="row"><div class="who">店長</div><div class="line">「それはそうなんだけど、そこまで手が回らないんだよ。」</div></div>
+    <div class="row soel"><div class="who">SOEL</div><div class="line">「みんなそうなんです。ほとんどの店が自分でやろうとして、続かない。だから<strong>その“続ける手間”を、AIでうちが肩代わりします</strong>。店長は危ないものだけ、スマホでポンと承認するだけ。続けられなかったことが、続くようになります。」</div></div>
+    <div class="row soel"><div class="who">SOEL</div><div class="line">「しかもこれ、<strong>これから“AIが店を薦める時代”の資産</strong>になります。AIが見るのも結局その口コミ。今日から積み始めた店だけが、これから人にもAIにも選ばれます。」</div></div>
+  </div>
+  <div class="callout good">
+    <span class="lbl">台本の型</span>
+    <strong>事実(73.5%) → 恐怖(買えない) → 共感(続かない) → 解決(承認だけ) → 未来(AIO資産)</strong>。出す数字は基本「73.5%」1つ。深掘りされたら付録の出典で裏取りを見せる。
+  </div>
+</section>
+
+<!-- 6. 出典 -->
+<section>
+  <h2><span class="num">6</span>付録：事実の出典（裏取り台帳）</h2>
+  <p class="lead">物語の各主張がどの一次データに立つか。商談で突っ込まれた時の弾。確信度＝高は本文で断定可、中以下は“傾向”として扱う。</p>
+  <details open>
+    <summary>▸ 硬い事実（本文で断定してよい／確信度：高）</summary>
+    <table>
+      <tr><th>主張</th><th>数値</th><th>出典・年</th></tr>
+      <tr><td>店探しは複数接点を併用</td><td>Googleマップ 86.1%・グルメサイト 61.3% を併用</td><td>TableCheck 調査 2022（n=1,100）</td></tr>
+      <tr><td>若年層はSNSも接点に</td><td>Z世代の 63.5% がInstagramでも店探し／SNS経由で店に出会う 80.8%</td><td>RECCOO 2023 ほか</td></tr>
+      <tr><td>マップで探した人が来店</td><td>73.5%</td><td>トライハッチ「MEOチェキ」2024（n=1,090）</td></tr>
+      <tr><td>口コミの来店ボーダー</td><td>星3.5〜4.0／10件以上で信頼／3か月以内重視56%</td><td>イクシアス2025・FINEXT2026</td></tr>
+      <tr><td>ステマ規制施行・初摘発</td><td>2023.10施行／祐真会 措置命令2024.6</td><td>消費者庁</td></tr>
+      <tr><td>Google偽レビュー削除</td><td>年2.92億件（2025）</td><td>Google公表（報道）</td></tr>
+      <tr><td>SNS自前運用と挫折</td><td>98.6%運用／継続34.4%・時間31.6%が課題</td><td>飲食店ドットコム2024（n=393）</td></tr>
+      <tr><td>飲食店倒産</td><td>2024年 過去最多894件（+16.4%）</td><td>帝国データバンク2025.1</td></tr>
+      <tr><td>AI Overviews日本稼働／流入減</td><td>2024.8提供／日本で約37.8%減</td><td>NDLカレントアウェアネス・Ahrefs2026</td></tr>
+    </table>
+  </details>
+  <details>
+    <summary>▸ 弱い／海外のみ（本文で“数字を断定しない”もの）</summary>
+    <table>
+      <tr><th>論点</th><th>状態</th><th>扱い</th></tr>
+      <tr><td>日本人がAI（ChatGPT等）で店を探す割合</td><td class="c"><span class="tag t-bad">日本データなし</span></td><td>「先回りの物語」として定性で。割合は出さない</td></tr>
+      <tr><td>AIが口コミの鮮度・件数を重視する重み</td><td class="c"><span class="tag t-warn">海外・定性</span></td><td>消費者選好データ（FINEXT）で代替補強</td></tr>
+      <tr><td>星1つ↑で売上5〜9%／返信で売上35%</td><td class="c"><span class="tag t-warn">米国Yelp研究</span></td><td>使うなら「米国の研究では」と明示。日本断定NG</td></tr>
+      <tr><td>「6割がマップ経由来店」「返信率→CVR」</td><td class="c"><span class="tag t-bad">一次出典が弱い</span></td><td>本文では使わない</td></tr>
+      <tr><td>飲食店のMEO導入割合・予算移動の定量</td><td class="c"><span class="tag t-bad">日本データなし</span></td><td>市場成長（MEO 2024年108億円+21%・矢野経済）で側面補強のみ</td></tr>
+    </table>
+  </details>
+  <p class="src">注：本資料は社内のナラティブ設計用。顧客提示物に落とす際は、上段（高）の数字のみを本文に置き、下段（弱/海外）は本文に出さず「傾向」止まりにすること。出典の年・サンプル数は提示物にも併記する。</p>
+</section>
+
+<p class="foot">SOEL 新商材ナラティブ ／ 2026-06-16 ／ 2軸＝今(接点の多様化)・今後(AIに選ばれる)への対策。背骨＝「口コミは通貨／もう買えない」。事実は付録の台帳で裏取り。※食べログは“負ける媒体”でなく、運用し続ける接点の一つとして扱う。</p>
+
+</div>
+</body>
+</html>

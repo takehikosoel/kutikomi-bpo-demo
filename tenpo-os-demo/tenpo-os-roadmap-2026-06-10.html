@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>店舗OS構想 — 施策設計（2026-06-10 齋藤さん打ち合わせ起点）</title>
+<style>
+:root{
+  --bg:#f5f6f8;--card:#fff;--line:#e2e5ea;--ink:#1a1d24;--sub:#6b7280;--faint:#9aa3b2;
+  --teal:#14b8a6;--teal-d:#0f766e;--blue:#3b82f6;--blue-d:#1d4ed8;--amber:#f59e0b;--amber-d:#b45309;
+  --red:#ef4444;--red-d:#b91c1c;--violet:#8b5cf6;--violet-d:#6d28d9;--green:#22c55e;--green-d:#15803d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+header h1{font-size:26px;margin:0 0 6px}
+header .sub{color:var(--sub);font-size:14px;margin:0}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.chip{font-size:11px;padding:3px 10px;border-radius:999px;background:rgba(20,184,166,.12);color:var(--teal-d);font-weight:600}
+.chip.gray{background:rgba(107,114,128,.12);color:var(--sub)}
+nav{position:sticky;top:0;z-index:10;background:rgba(245,246,248,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:28px -24px 0;padding:10px 24px}
+nav a{font-size:12.5px;color:var(--sub);text-decoration:none;margin-right:16px;font-weight:600}
+nav a:hover{color:var(--teal-d)}
+section{margin-top:44px}
+h2{font-size:19px;margin:0 0 4px;padding-left:12px;border-left:4px solid var(--teal)}
+.lead{color:var(--sub);font-size:13.5px;margin:0 0 18px;padding-left:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:840px){.g2,.g3,.g4{grid-template-columns:1fr}}
+/* 戦略原則 */
+.pr{border-top:4px solid var(--teal)}
+.pr h3{font-size:14.5px;margin:0 0 6px}
+.pr p{font-size:12.5px;color:var(--sub);margin:0}
+.pr .q{display:block;font-size:11.5px;color:var(--teal-d);background:rgba(20,184,166,.07);border-radius:8px;padding:6px 10px;margin-top:10px}
+/* 進化図 */
+.evo{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.evo .stage{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;position:relative}
+.evo .stage+.stage{margin-left:28px}
+.evo .stage+.stage::before{content:"→";position:absolute;left:-24px;top:50%;transform:translateY(-50%);color:var(--teal);font-size:20px;font-weight:700}
+@media(max-width:840px){.evo .stage+.stage{margin-left:0;margin-top:24px}.evo .stage+.stage::before{content:"↓";left:50%;top:-24px;transform:translateX(-50%)}}
+.evo h3{font-size:14px;margin:0 0 2px}
+.evo .when{font-size:11px;color:var(--faint);margin:0 0 8px}
+.evo ul{margin:0;padding-left:18px;font-size:12px;color:var(--sub)}
+.evo .now{border-top:4px solid var(--faint)}.evo .p1{border-top:4px solid var(--teal)}.evo .p2{border-top:4px solid var(--blue)}.evo .p3{border-top:4px solid var(--violet)}
+/* 機能カード */
+.feat{border-top:4px solid var(--blue);display:flex;flex-direction:column}
+.feat h3{font-size:14.5px;margin:0 0 2px}
+.feat .one{font-size:12px;color:var(--sub);margin:0 0 10px;flex:1}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.b{font-size:10.5px;padding:2px 8px;border-radius:999px;font-weight:600}
+.b.lock{background:rgba(139,92,246,.12);color:var(--violet-d)}
+.b.mendou{background:rgba(245,158,11,.15);color:var(--amber-d)}
+.b.exec{background:rgba(239,68,68,.1);color:var(--red-d)}
+.b.future{background:rgba(59,130,246,.12);color:var(--blue-d)}
+.b.show{background:rgba(34,197,94,.12);color:var(--green-d)}
+.kv{font-size:11.5px;color:var(--sub);border-top:1px dashed var(--line);padding-top:8px;margin-top:auto}
+.kv b{color:var(--ink)}
+.ph{position:absolute;top:14px;right:16px;font-size:11px;font-weight:700;color:#fff;border-radius:999px;padding:2px 10px}
+.ph1{background:var(--teal)}.ph2{background:var(--blue)}.ph3{background:var(--violet)}.ph4{background:var(--faint)}
+.feat{position:relative}
+/* マトリクス */
+.matrix-note{font-size:11.5px;color:var(--faint);margin-top:8px}
+/* ロードマップ */
+.road{border-left:3px solid var(--line);margin-left:8px;padding-left:24px}
+.rstep{position:relative;padding-bottom:26px}
+.rstep::before{content:"";position:absolute;left:-32px;top:4px;width:13px;height:13px;border-radius:50%;background:var(--teal);border:3px solid var(--bg)}
+.rstep.p2::before{background:var(--blue)}.rstep.p3::before{background:var(--violet)}.rstep.p4::before{background:var(--faint)}
+.rstep h3{font-size:14.5px;margin:0}
+.rstep .when{font-size:11.5px;color:var(--teal-d);font-weight:700}
+.rstep.p2 .when{color:var(--blue-d)}.rstep.p3 .when{color:var(--violet-d)}.rstep.p4 .when{color:var(--faint)}
+.rstep ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--sub)}
+.rstep .goal{display:inline-block;font-size:11.5px;background:rgba(34,197,94,.1);color:var(--green-d);border-radius:8px;padding:3px 10px;margin-top:8px;font-weight:600}
+/* 料金 */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:#fafbfc;font-size:12px}
+td .y{color:var(--green-d);font-weight:700}td .n{color:var(--faint)}
+.price{font-size:16px;font-weight:800}
+.price small{font-size:11px;color:var(--sub);font-weight:400}
+/* 注意 */
+.warn{border-left:4px solid var(--amber);background:rgba(245,158,11,.06)}
+.warn h3{font-size:13.5px;margin:0 0 6px;color:var(--amber-d)}
+.warn ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--sub)}
+.foot{color:var(--faint);font-size:12px;margin-top:56px;text-align:center}
+</style></head><body>
+<div class="wrap">
+
+<header>
+  <h1>🏪 店舗OS構想 — ry-dashboards 進化の施策設計</h1>
+  <p class="sub">2026-06-10 齋藤さん打ち合わせの論点を、ry-dashboards（静的ダッシュボード）を起点としたプロダクト戦略に落とし込んだ設計書。</p>
+  <div class="meta">
+    <span class="chip">起点: 齋藤さん打ち合わせ 0610</span>
+    <span class="chip">対象: ry-dashboards → 店舗OS</span>
+    <span class="chip gray">作成: 2026-06-10 / SOEL内部資料</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#principle">① 戦略原則</a>
+  <a href="#evo">② 進化マップ</a>
+  <a href="#features">③ 機能カタログ</a>
+  <a href="#matrix">④ 優先度</a>
+  <a href="#road">⑤ ロードマップ</a>
+  <a href="#show">⑥ 成果の見せ方</a>
+  <a href="#price">⑦ 料金設計</a>
+  <a href="#next">⑧ 次の90日</a>
+</nav>
+
+<!-- ① 戦略原則 -->
+<section id="principle">
+  <h2>① 戦略原則 — 打ち合わせ論点の構造化</h2>
+  <p class="lead">「GMAP→広告はいつか切られる」前提に立ち、切られにくさを4つの設計原則に分解する。以降の全機能はこの原則への寄与で評価する。</p>
+  <div class="grid g4">
+    <div class="card pr">
+      <h3>A. ROIゲームから降りる</h3>
+      <p>飲食の売上はメニュー・競合・価格・シフト・予約在庫で変動し、施策効果の要因特定は経営者にも不可能。費用対効果で比較される土俵に乗らず、「めんどくさいの解消」「意思決定の代替」という比較不能な価値で売る。</p>
+      <span class="q">判定基準：この機能は他社と費用対効果で比較されうるか？</span>
+    </div>
+    <div class="card pr">
+      <h3>B. データロックイン</h3>
+      <p>解約したらデータが消える・取れなくなる構造を意図的に作る。口コミ・アンケート・予約明細・施策履歴など「時間でしか貯まらない資産」を預かるほど解約コストが上がる。</p>
+      <span class="q">判定基準：解約時に顧客が失うものは何か？</span>
+    </div>
+    <div class="card pr">
+      <h3>C. 見るだけ→実行まで</h3>
+      <p>ダッシュボードは見られなくなった瞬間に切られる。媒体編集・広告・インフルエンサー手配まで「代わりにやる」ことで業務プロセスに埋め込まれ、外せなくなる。</p>
+      <span class="q">判定基準：この機能を止めたら誰の手が止まるか？</span>
+    </div>
+    <div class="card pr">
+      <h3>D. 無料で面を取る</h3>
+      <p>口コミ365型ツールを機能モリモリ・無料で配り導入障壁をゼロにする。無料層でデータ蓄積（＝B）を始めさせ、チェーンサマリ・実行系でマネタイズ。¥6万ベースの有料階段へ。</p>
+      <span class="q">判定基準：無料ユーザーが1年後に有料化する理由はあるか？</span>
+    </div>
+  </div>
+</section>
+
+<!-- ② 進化マップ -->
+<section id="evo">
+  <h2>② プロダクト進化マップ</h2>
+  <p class="lead">現状のry-dashboards（店舗別・静的HTML・手動生成）を捨てずに、3段階で「店舗OS」へ育てる。</p>
+  <div class="evo">
+    <div class="stage now">
+      <h3>現状: レポート屋</h3>
+      <p class="when">ry-dashboards（静的HTML / Vercel）</p>
+      <ul>
+        <li>媒体実績・予約明細の月次可視化</li>
+        <li>ガブリ大門・ココリコ上野の2店</li>
+        <li>cc-ops-planningのPythonで手動生成</li>
+        <li><b>弱点：見るだけ＝切られる側</b></li>
+      </ul>
+    </div>
+    <div class="stage p1">
+      <h3>Phase 1: 蓄積が始まる</h3>
+      <p class="when">〜2026/07（90日内）</p>
+      <ul>
+        <li>口コミ蓄積ツールMVP（無料配布の弾）</li>
+        <li>施策タイムライン（成果の見せ方）</li>
+        <li>既存2店で実地検証</li>
+      </ul>
+    </div>
+    <div class="stage p2">
+      <h3>Phase 2: OS化</h3>
+      <p class="when">2026/08〜10</p>
+      <ul>
+        <li>認証付きアプリ（Next.js+DB）へ移行</li>
+        <li>媒体・SNS・台帳の一括可視化（自動）</li>
+        <li>競合モニタ / AIO診断 / チェーンサマリ</li>
+        <li>無料配布開始＝面取り</li>
+      </ul>
+    </div>
+    <div class="stage p3">
+      <h3>Phase 3: 実行の代替</h3>
+      <p class="when">2026/11〜</p>
+      <ul>
+        <li>媒体編集の代行実行（依頼→実施→ログ）</li>
+        <li>広告・インフルエンサー実行の組み込み</li>
+        <li>売上予測 / 不正検知（POS連携後）</li>
+        <li><b>¥6万ベースの本丸</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ③ 機能カタログ -->
+<section id="features">
+  <h2>③ 機能カタログ — 打ち合わせの8機能＋追加2機能</h2>
+  <p class="lead">バッジは戦略原則への寄与（🔒ロックイン / 🙌めんどくさい解消 / ⚡実行系 / 🔮未来対策 / 👁成果の見せ方）。右上はフェーズ。</p>
+  <div class="grid g2">
+
+    <div class="card feat">
+      <span class="ph ph1">P1</span>
+      <h3>1. 口コミ蓄積ツール（口コミ365型）</h3>
+      <p class="one">来店客にQR/LINEでアンケート送付 → 高評価（★4以上）だけGoogleレビューへ遷移、低評価は内部フィードバックとして店に返す。アンケート回答は全件DBに蓄積。<b>無料配布の主砲であり、データロックインの起点。</b></p>
+      <div class="badges"><span class="b lock">🔒 ロックイン大</span><span class="b mendou">🙌 解消大</span></div>
+      <p class="kv"><b>MVP:</b> フォーム＋評価分岐＋蓄積DB＋店舗別QR。<b>データ:</b> 自前で発生（取得依存なし）。<b>コスト:</b> 小（2-3週間）。<b>注意:</b> レビューゲーティングはGoogleポリシー上グレー — 「全員に遷移導線は出すがお願い文言を変える」等の安全設計を仕様段階で確定する。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph1">P1</span>
+      <h3>2. 施策タイムライン（追加提案）</h3>
+      <p class="one">SOELが実施した施策（媒体編集・広告・インフルエンサー・メニュー提案）を日付つきでダッシュボードの売上・予約グラフに重ねて表示。「ウチの施策が効きました」を見せるゲームの盤面そのもの。</p>
+      <div class="badges"><span class="b show">👁 見せ方</span><span class="b mendou">🙌 解消小</span></div>
+      <p class="kv"><b>MVP:</b> 施策ログ(日付/種別/内容)をJSONで持ち既存HTMLに注釈レイヤー追加。<b>コスト:</b> 極小（数日、既存構成のまま可能）。<b>効果:</b> 月次報告の説得力が即上がる。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph2">P2</span>
+      <h3>3. SNS・媒体・台帳 一括可視化</h3>
+      <p class="one">食べログ/ぐるなび/ホットペッパー/Google/Instagram/予約台帳を1画面に。現ダッシュボードの自動更新版。過去データが貯まるほど前年比較ができ、解約＝履歴消失になる。</p>
+      <div class="badges"><span class="b lock">🔒 ロックイン大</span><span class="b mendou">🙌 解消大</span></div>
+      <p class="kv"><b>MVP:</b> 既存Python集計をジョブ化しDB投入、認証付きWebで閲覧。<b>データ:</b> 各媒体の管理画面CSV/スクレイピング（API乏しい前提で運用設計）。<b>コスト:</b> 中。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph2">P2</span>
+      <h3>4. 競合情報モニタ</h3>
+      <p class="one">指定した近隣競合のGoogle評点・口コミ数・新着口コミ・価格帯変化を週次で自動取得し、自店と並べる。経営者が自力では絶対やらない「やった方がいいこと」の代表格。</p>
+      <div class="badges"><span class="b mendou">🙌 解消中</span><span class="b show">👁 見せ方</span></div>
+      <p class="kv"><b>MVP:</b> Google Places APIで競合5店の定点観測→週次サマリ。<b>コスト:</b> 小〜中。<b>備考:</b> 早く出せる差別化。無料層に含めて面取りの撒き餌に。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph2">P2</span>
+      <h3>5. AIO対策（AI検索最適化）</h3>
+      <p class="one">ChatGPT/Gemini等のAI検索で「推薦される店」になるための対策。まず診断レポート（AIに聞いた時に自店がどう出るか・出ないか）から始め、構造化データ整備・口コミ充実（機能1と連動）を実施メニュー化。</p>
+      <div class="badges"><span class="b future">🔮 未来対策</span><span class="b show">👁 見せ方</span></div>
+      <p class="kv"><b>MVP:</b> 主要AIへの定型質問バッテリーで露出スコア化→月次診断。<b>コスト:</b> 小（診断）→中（実施）。<b>備考:</b> 「GMAPの次」を語れる営業ストーリーの核。効果測定不能＝原則Aに合致。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph2">P2</span>
+      <h3>6. チェーンサマリ</h3>
+      <p class="one">複数店舗の横断サマリ（店舗ランキング・媒体効率・口コミ健全度）を本部向けに自動生成。チェーン向けの主要なアップセル軸で、店舗数課金の根拠になる。</p>
+      <div class="badges"><span class="b lock">🔒 ロックイン中</span><span class="b mendou">🙌 解消大</span></div>
+      <p class="kv"><b>MVP:</b> 店舗マスタ＋既存集計の横串ビュー。<b>コスト:</b> 小〜中（3の上に乗る）。<b>備考:</b> RYコーポレーション自体が複数店＝最初の検証先。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph3">P3</span>
+      <h3>7. 媒体編集の代行実行</h3>
+      <p class="one">「見れるだけ」を超える本丸。メニュー改定・写真差替・コース設定変更などを依頼ベースで代行し、実施ログを施策タイムラインに自動反映。業務プロセスに埋まり、切ると現場が困る状態を作る。</p>
+      <div class="badges"><span class="b exec">⚡ 実行系</span><span class="b mendou">🙌 解消特大</span><span class="b lock">🔒 ロックイン大</span></div>
+      <p class="kv"><b>MVP:</b> ツール内「依頼ボタン」→SOELオペレータが実施→完了ログ。最初は人力＋ログで十分（完全自動化は媒体API次第）。<b>コスト:</b> 中（運用体制込み）。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph3">P3</span>
+      <h3>8. インフルエンサー・広告 実行</h3>
+      <p class="one">SOEL既存ケイパビリティ（インフルエンサーDB・広告運用）をツールに組み込み、「ダッシュボードで課題が見える→その場で打ち手を発注できる」導線にする。ツールが受注チャネルになる。</p>
+      <div class="badges"><span class="b exec">⚡ 実行系</span><span class="b show">👁 見せ方</span></div>
+      <p class="kv"><b>MVP:</b> 施策メニューカタログ＋発注フォーム＋実施後の効果を施策タイムラインに表示。<b>コスト:</b> 小（ツール側）。実行は既存事業の人力。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph3">P3</span>
+      <h3>9. 売上予測</h3>
+      <p class="one">予約データ＋曜日・天候・近隣イベントから直近2週間の売上/来客を予測。価値の出口は「シフト・仕入の意思決定の代替」に絞る（精度勝負にしない）。</p>
+      <div class="badges"><span class="b mendou">🙌 解消中</span><span class="b lock">🔒 ロックイン中</span></div>
+      <p class="kv"><b>MVP:</b> 予約リードタイム実績からの単純予測＋信頼区間表示。<b>データ:</b> 予約明細（取得済み領域）＋できればPOS。<b>コスト:</b> 中〜大。精度の期待値管理が必須。</p>
+    </div>
+
+    <div class="card feat">
+      <span class="ph ph4">P4</span>
+      <h3>10. 不正検知（レジ抜き・横領）</h3>
+      <p class="one">POS×予約×仕入の突合で異常パターン（現金比率の急変、特定シフトの客単価低下等）を検知。経営者の隠れた強ニーズだが、POS連携とセンシティブさのため最後発。</p>
+      <div class="badges"><span class="b mendou">🙌 解消大</span><span class="b lock">🔒 ロックイン大</span></div>
+      <p class="kv"><b>前提:</b> POSデータ連携（スマレジ等API有のPOSから）。<b>コスト:</b> 大。<b>注意:</b> 誤検知時のダメージが大きい。「異常の通知」に留め断定しない設計。</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ④ 優先度マトリクス -->
+<section id="matrix">
+  <h2>④ 優先度マトリクス</h2>
+  <p class="lead">縦軸＝切られにくさへの寄与（ロックイン＋めんどくさい解消＋見せ方）、横軸＝実装・運用コスト。左上から着手する。</p>
+  <div class="card">
+    <svg viewBox="0 0 760 460" width="100%" style="max-width:760px;display:block;margin:0 auto" font-family="-apple-system,'Hiragino Kaku Gothic ProN',Meiryo,sans-serif">
+      <!-- axes -->
+      <line x1="70" y1="20" x2="70" y2="400" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="70" y1="400" x2="730" y2="400" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="40" y="30" font-size="11" fill="#6b7280" transform="rotate(-90 40 30)" text-anchor="end">切られにくさへの寄与 →</text>
+      <text x="730" y="425" font-size="11" fill="#6b7280" text-anchor="end">実装・運用コスト →</text>
+      <!-- quadrant guide -->
+      <line x1="400" y1="20" x2="400" y2="400" stroke="#e2e5ea" stroke-dasharray="4 4"/>
+      <line x1="70" y1="210" x2="730" y2="210" stroke="#e2e5ea" stroke-dasharray="4 4"/>
+      <text x="90" y="40" font-size="11" fill="#0f766e" font-weight="700">最優先（すぐ作る）</text>
+      <text x="420" y="40" font-size="11" fill="#6d28d9" font-weight="700">本丸（段階投資）</text>
+      <text x="90" y="394" font-size="11" fill="#9aa3b2">余力で</text>
+      <text x="420" y="394" font-size="11" fill="#9aa3b2">後回し / 前提待ち</text>
+      <!-- points: (cost x, value y) -->
+      <g>
+        <circle cx="120" cy="150" r="9" fill="#22c55e"/><text x="135" y="147" font-size="11.5" fill="#1a1d24" font-weight="600">2. 施策タイムライン</text>
+        <circle cx="200" cy="70" r="11" fill="#14b8a6"/><text x="216" y="67" font-size="11.5" fill="#1a1d24" font-weight="700">1. 口コミ蓄積（主砲）</text>
+        <circle cx="185" cy="245" r="9" fill="#3b82f6"/><text x="200" y="242" font-size="11.5" fill="#1a1d24" font-weight="600">4. 競合モニタ</text>
+        <circle cx="240" cy="200" r="9" fill="#3b82f6"/><text x="255" y="197" font-size="11.5" fill="#1a1d24" font-weight="600">5. AIO診断</text>
+        <circle cx="300" cy="150" r="9" fill="#3b82f6"/><text x="315" y="147" font-size="11.5" fill="#1a1d24" font-weight="600">6. チェーンサマリ</text>
+        <circle cx="430" cy="110" r="10" fill="#3b82f6"/><text x="446" y="107" font-size="11.5" fill="#1a1d24" font-weight="600">3. 一括可視化（自動）</text>
+        <circle cx="380" cy="170" r="9" fill="#8b5cf6"/><text x="395" y="167" font-size="11.5" fill="#1a1d24" font-weight="600">8. 広告・インフル実行</text>
+        <circle cx="540" cy="60" r="11" fill="#8b5cf6"/><text x="556" y="57" font-size="11.5" fill="#1a1d24" font-weight="700">7. 媒体編集の代行実行</text>
+        <circle cx="560" cy="265" r="9" fill="#8b5cf6"/><text x="575" y="262" font-size="11.5" fill="#1a1d24" font-weight="600">9. 売上予測</text>
+        <circle cx="640" cy="225" r="9" fill="#9aa3b2"/><text x="600" y="205" font-size="11.5" fill="#1a1d24" font-weight="600">10. 不正検知</text>
+      </g>
+    </svg>
+    <p class="matrix-note">※ 7（媒体編集実行）は価値最大だがコスト高 — まず「依頼→人力実施→ログ表示」の人力ハイブリッドで右上から左上へ引き寄せる。9・10はデータ前提（POS連携）が整ってから。</p>
+  </div>
+</section>
+
+<!-- ⑤ ロードマップ -->
+<section id="road">
+  <h2>⑤ フェーズドロードマップ</h2>
+  <p class="lead">各フェーズに「商売上のゴール」を1つだけ置く。機能を作ることではなく、切られにくさの状態変化をゴールにする。</p>
+  <div class="card">
+    <div class="road">
+      <div class="rstep">
+        <p class="when">Phase 1｜〜2026/07（90日）</p>
+        <h3>蓄積を始め、見せ方を変える</h3>
+        <ul>
+          <li><b>口コミ蓄積ツールMVP</b>：仕様確定（レビュー遷移の安全設計含む）→実装→ガブリ大門・ココリコ上野で実地稼働</li>
+          <li><b>施策タイムライン</b>：既存ダッシュボードに即追加（静的構成のまま）</li>
+          <li>月次報告フォーマット刷新：「今月SOELが代わりにやったこと N件」を冒頭に</li>
+        </ul>
+        <span class="goal">🎯 ゴール：RY 2店で「解約すると消えるデータ」が貯まり始めている</span>
+      </div>
+      <div class="rstep p2">
+        <p class="when">Phase 2｜2026/08〜10</p>
+        <h3>OS化して無料で面を取る</h3>
+        <ul>
+          <li>認証付きマルチテナント化（Next.js＋Supabase等、店舗マスタ・自動データ取込）</li>
+          <li>一括可視化の自動更新 / 競合モニタ / AIO診断 / チェーンサマリ</li>
+          <li><b>無料プラン配布開始</b>（口コミツール＋競合モニタ＋月次ダッシュボード）— 齋藤さんルート等で配布チャネル設計</li>
+        </ul>
+        <span class="goal">🎯 ゴール：RY外の店舗が無料で使い始めている（面取りの初速検証）</span>
+      </div>
+      <div class="rstep p3">
+        <p class="when">Phase 3｜2026/11〜</p>
+        <h3>実行の代替で¥6万を取る</h3>
+        <ul>
+          <li>媒体編集の代行実行（依頼ボタン→人力実施→ログ自動反映）</li>
+          <li>広告・インフルエンサー発注をツール内に組み込み（受注チャネル化）</li>
+          <li>売上予測β（予約データベース）</li>
+        </ul>
+        <span class="goal">🎯 ゴール：¥6万プランの有償契約 1社目（チェーン本部 or 多店舗オーナー）</span>
+      </div>
+      <div class="rstep p4">
+        <p class="when">Phase 4｜POS連携が取れ次第</p>
+        <h3>意思決定の代替へ</h3>
+        <ul>
+          <li>不正検知（異常通知ベース）／ 売上予測の本格化（シフト・仕入提案）</li>
+        </ul>
+        <span class="goal">🎯 ゴール：「このツールなしで経営判断できない」状態</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ 成果の見せ方 -->
+<section id="show">
+  <h2>⑥ 「成果を見せるゲーム」の設計</h2>
+  <p class="lead">打ち合わせの核心：「いかにウチの施策が効果ありました！を見せるかのゲーム」。ROIを証明するのではなく、貢献の体感を設計する。</p>
+  <div class="grid g3">
+    <div class="card">
+      <h3 style="font-size:14px;margin:0 0 6px">施策を売上に重ねて見せる</h3>
+      <p style="font-size:12.5px;color:var(--sub);margin:0">売上・予約グラフ上に施策実施日をマーカー表示。因果は主張せず、ただ同じ画面に置く。見た人が勝手に因果を感じる構図を作る（要因特定が不可能なことを逆手に取る）。</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin:0 0 6px">ROIでなく工数で語る</h3>
+      <p style="font-size:12.5px;color:var(--sub);margin:0">月次サマリの冒頭は「今月代わりにやったこと 12件／削減した手間 約8時間」。費用対効果の問いが立つ前に、めんどくさい解消の量を提示する。比較対象は他業者ではなく「自分でやる場合」になる。</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin:0 0 6px">未来への備えを定点で見せる</h3>
+      <p style="font-size:12.5px;color:var(--sub);margin:0">AIO露出スコア・口コミ蓄積数・競合との差分を毎月のスコアカードに。「効果が出たか」ではなく「備えが進んだか」を進捗で見せる — 測れない領域に独自のものさしを置いた者が勝つ。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ 料金設計 -->
+<section id="price">
+  <h2>⑦ 料金設計（たたき台）</h2>
+  <p class="lead">「機能の選択で金額を変えるにせよ、¥6万ベース」を3段の階段に。<b>金額はすべて1店舗あたり・ボリュームディスカウントあり</b>。無料→有料の昇格理由を機能でなくデータと実行で作る。</p>
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table>
+      <tr><th style="width:30%"></th>
+        <th>Free（面取り）<br><span class="price">¥0</span></th>
+        <th>Standard<br><span class="price">¥30,000<small>/月・1店舗</small></span></th>
+        <th>Pro（本丸）<br><span class="price">¥60,000<small>/月・1店舗</small></span></th></tr>
+      <tr><td>口コミ蓄積ツール</td><td><span class="y">✔</span></td><td><span class="y">✔</span></td><td><span class="y">✔</span></td></tr>
+      <tr><td>月次ダッシュボード</td><td><span class="y">✔</span>（当月のみ閲覧）</td><td><span class="y">✔</span> 全履歴＋自動更新</td><td><span class="y">✔</span> 全履歴＋自動更新</td></tr>
+      <tr><td>競合モニタ</td><td><span class="y">✔</span> 3店まで</td><td><span class="y">✔</span> 10店＋週次レポート</td><td><span class="y">✔</span> 同左</td></tr>
+      <tr><td>AIO診断・対策</td><td><span class="n">診断のみ年1回</span></td><td><span class="y">✔</span> 月次診断</td><td><span class="y">✔</span> 診断＋対策実施</td></tr>
+      <tr><td>施策タイムライン</td><td><span class="n">—</span></td><td><span class="y">✔</span></td><td><span class="y">✔</span></td></tr>
+      <tr><td>媒体編集の代行実行</td><td><span class="n">—</span></td><td><span class="n">月2件まで</span></td><td><span class="y">✔</span> 実質無制限</td></tr>
+      <tr><td>広告・インフルエンサー実行</td><td><span class="n">—</span></td><td><span class="n">都度見積</span></td><td><span class="y">✔</span> 優先手配＋効果反映</td></tr>
+      <tr><td>チェーンサマリ（本部ビュー）</td><td><span class="n">—</span></td><td><span class="n">—</span></td><td><span class="y">✔</span> 複数店契約で自動付帯</td></tr>
+      <tr><td>売上予測 / 不正検知</td><td><span class="n">—</span></td><td><span class="n">—</span></td><td><span class="y">✔</span> 提供開始後</td></tr>
+      <tr><td>ボリュームディスカウント</td><td colspan="2" style="color:var(--sub)">たたき台：5店舗以上 −10% ／ 10店舗以上 −20% ／ 20店舗以上は個別見積</td><td style="color:var(--sub)">同左（Standard・Pro共通）</td></tr>
+    </table>
+  </div>
+  <div class="card warn" style="margin-top:14px">
+    <h3>料金設計の論点（齋藤さんと要すり合わせ）</h3>
+    <ul>
+      <li><b>Freeの過去データ閲覧制限</b>が昇格圧力の主動力。「データはあるのに見られない」状態を意図的に作る — 制限しすぎると面取りの拡散が鈍るためバランスを実地で調整</li>
+      <li>Proの¥6万/店は「媒体編集を自分でやる場合の人件費」と比較される設計（時給換算で月10時間分以上の代行量を担保）</li>
+      <li><b>ボリュームディスカウントの刻み</b>：チェーンサマリの価値は店舗数が増えるほど上がるため、割引と価値増のバランスをどこに置くか（−10%/−20%は仮置き）</li>
+      <li>GMAP広告の既存顧客への移行パス（広告費の中にStandard相当を含めて見せるか、別建てか）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ⑧ 次の90日 -->
+<section id="next">
+  <h2>⑧ 次の90日 — 具体アクション</h2>
+  <p class="lead">Phase 1の分解。実装に入る前に仕様の全パターン確定（PSB: Plan→Setup→Build）。</p>
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table>
+      <tr><th style="width:14%">時期</th><th>アクション</th><th style="width:18%">担当（案）</th></tr>
+      <tr><td>Week 1-2</td><td>① 口コミ365ほか競合ツールの機能・価格を調査し、無料配布版の機能セットを確定<br>② 口コミツールMVPの仕様確定（アンケート設問・評価分岐ロジック・レビュー遷移の安全設計・店舗別QR）<br>③ 施策タイムラインをry-dashboardsに実装（施策ログJSON＋グラフ注釈）</td><td>佐藤＋CC<br>③は即日着手可</td></tr>
+      <tr><td>Week 3-6</td><td>④ 口コミツールMVP実装（フォーム＋分岐＋蓄積DB。Supabase＋Vercel想定）<br>⑤ ガブリ大門で実地テスト開始（卓上QR・レシートQR）</td><td>佐藤＋CC<br>店舗側は齋藤さん経由</td></tr>
+      <tr><td>Week 7-10</td><td>⑥ ココリコ上野へ横展開、アンケート回収率と★分布を計測<br>⑦ 月次報告フォーマット刷新（施策件数・工数サマリを冒頭に）<br>⑧ Phase 2の技術設計（マルチテナント化・データ取込ジョブ）</td><td>佐藤＋CC</td></tr>
+      <tr><td>Week 11-13</td><td>⑨ 無料配布の営業パッケージ化（LP・デモ・料金表）と配布チャネルの合意<br>⑩ Phase 1振り返り→Phase 2着手判断</td><td>佐藤＋齋藤さん</td></tr>
+    </table>
+  </div>
+  <div class="card warn" style="margin-top:14px">
+    <h3>先に潰すべきリスク</h3>
+    <ul>
+      <li><b>レビューゲーティング規約</b>：Googleは「高評価者だけにレビュー依頼」を禁止。全員に導線を出しつつ体験を変える設計（業界の通例とポリシーの線引き）を仕様段階で確定する — MVP着手前の最重要論点</li>
+      <li><b>媒体データの取得経路</b>：食べログ等は公式APIが乏しい。管理画面CSVの定期取得を店舗側オペとして握れるか（握れないと機能3の自動化が崩れる）</li>
+      <li><b>無料配布のサポートコスト</b>：面取りは取った後の問い合わせ対応が地味に重い。無料層はセルフサーブ前提のUI/FAQを最初から設計</li>
+      <li><b>個人情報</b>：アンケートが連絡先を持ち始めた瞬間に現行の「個人情報を含まない」前提が崩れる。プライバシーポリシーとDB分離をPhase 1で整備</li>
+    </ul>
+  </div>
+</section>
+
+<p class="foot">SOEL 内部資料 ／ 起点: 齋藤さん打ち合わせ 2026-06-10 ／ 生成: Claude Code</p>
+</div>
+</body></html>
