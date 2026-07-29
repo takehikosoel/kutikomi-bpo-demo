@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow">
+<title>炭火ダイニング 灯 -AKARI- 新橋店 ダッシュボード（デモ）</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f4;--card:#ffffff;--card2:#f1f3f7;--line:#e2e5ea;--txt:#1a1d24;--mut:#6b7280;
+--accent:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#3b82f6;--pink:#ec4899;--teal:#0d9488;--purple:#7c3aed;
+/* Notion design tokens（サマリ表紙＝静かな紙面・構造アクセントは青1色・カラーは装飾のみ） */
+--n-canvas:#f6f5f4;--n-surface:#ffffff;--n-ink:#1a1a19;--n-ink2:#31302e;--n-mut:#615d59;--n-faint:#a39e98;--n-line:#e6e4e1;
+--n-blue:#0075de;--n-blue-press:#005bab;--n-indigo:#213183;
+--n-sky:#62aef0;--n-purple:#b388e6;--n-pink:#ff64c8;--n-orange:#dd5b00;--n-teal:#2a9d99;--n-green:#1aae39;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Inter",-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-size:14px;line-height:1.5}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10}
+.top h1{font-size:18px;margin:0}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.badge.ops{background:rgba(20,184,166,.12);border-color:#5eead4;color:#0f766e}
+.badge.media{background:rgba(245,158,11,.15);border-color:#fcd34d;color:#b45309}
+.exec{max-width:1280px;margin:16px auto 0;padding:0 20px}
+.exec-in{background:linear-gradient(110deg,#0f766e,#0d9488);color:#fff;border-radius:14px;padding:14px 20px;display:flex;flex-wrap:wrap;gap:18px 26px;align-items:center;box-shadow:0 4px 14px rgba(13,148,136,.25)}
+.exec-in .lead{font-weight:700;font-size:14px;margin-right:4px;opacity:.95}
+.exec-in .e{display:flex;flex-direction:column;line-height:1.25}
+.exec-in .e .v{font-size:19px;font-weight:700}
+.exec-in .e .l{font-size:10px;opacity:.85}
+.exec-in .e .d{font-size:11px;font-weight:700}
+.up{color:#bbf7d0}.dn{color:#fecaca}
+main{max-width:1280px;margin:0 auto;padding:18px 20px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.sec-h{grid-column:span 12;margin:6px 2px -4px;font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.04em;border-left:3px solid var(--teal);padding-left:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.span12{grid-column:span 12}.span6{grid-column:span 6}.span8{grid-column:span 8}.span4{grid-column:span 4}
+@media(max-width:880px){.span6,.span8,.span4{grid-column:span 12}}
+.card h2{font-size:15px;margin:0 0 4px}
+.card h2 small{font-size:11px;color:var(--mut);font-weight:400;margin-left:6px}
+.note{font-size:11px;color:var(--mut);margin:8px 0 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--card2);border-radius:10px;padding:12px 14px;border-left:3px solid var(--teal)}
+.kpi.media{border-left-color:var(--accent)}
+.kpi .l{font-size:11px;color:var(--mut);display:block}
+.kpi .v{font-size:22px;font-weight:700;display:block;margin-top:2px}
+.kpi .s{font-size:11px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600;font-size:11px}
+tr.hl{background:rgba(245,158,11,.08)}
+.tag{font-size:10px;padding:1px 7px;border-radius:999px}
+.tag.metered{background:rgba(236,72,153,.15);color:#be185d}
+.tag.owned{background:rgba(13,148,136,.15);color:#0f766e}
+.pos{color:var(--good)}.neg{color:var(--bad)}
+.ctrl{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut);margin:8px 0}
+.ctrl input{width:90px;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:4px 7px;font-size:13px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-left:8px}
+.seg button{background:var(--card2);color:var(--mut);border:0;padding:4px 10px;font-size:11px;cursor:pointer}
+.seg button.on{background:var(--teal);color:#fff;font-weight:700}
+canvas{max-height:300px}
+.heat td{text-align:center;font-variant-numeric:tabular-nums}
+.heat td.lbl{text-align:left;color:var(--txt)}
+.qbar{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:9px 14px;font-size:12px;color:#7f1d1d;margin-top:6px}
+.qbar b{color:#b91c1c}
+.gap{border:1px dashed #cbd5e1;background:repeating-linear-gradient(45deg,#fffbeb,#fffbeb 8px,#fff7e0 8px,#fff7e0 16px)}
+.gap h2{color:#b45309}
+.funnel{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.frow{display:flex;align-items:center;gap:10px}
+.fbar{height:30px;border-radius:6px;display:flex;align-items:center;padding:0 10px;color:#fff;font-weight:700;font-size:13px;white-space:nowrap;min-width:60px}
+.fmeta{font-size:11px;color:var(--mut)}
+.filterbar{max-width:1280px;margin:12px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filterbar .ttl{font-weight:700;color:var(--txt);font-size:13px}
+.fld{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.fld select{border:0;background:transparent;font-size:13px;color:var(--txt);font-weight:700;cursor:pointer;outline:none}
+.qbtn{font-size:11px;border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:999px;padding:4px 11px;cursor:pointer}
+.qbtn.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:700}
+.badge.tsu{background:rgba(100,116,139,.1);border-color:#cbd5e1;color:#475569}
+.tsuflag{font-size:10px;font-weight:700;color:#475569;background:rgba(100,116,139,.1);border:1px solid #cbd5e1;border-radius:999px;padding:1px 7px;margin-left:6px}
+.sumcard{border-left:4px solid var(--teal);background:linear-gradient(180deg,#fbfffe,#fff)}
+.sum-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin:8px 0 12px}
+.sum-kpis .k{background:var(--card2);border-radius:9px;padding:9px 11px}
+.sum-kpis .k .l{font-size:10px;color:var(--mut);display:block}
+.sum-kpis .k .v{font-size:18px;font-weight:700}
+.sumgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+@media(max-width:880px){.sumgrid{grid-template-columns:1fr}}
+.evlist{margin:4px 0 0;padding:0;list-style:none;font-size:12.5px}
+.evlist li{padding:5px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px;align-items:baseline}
+.evlist li .dot{width:9px;height:9px;border-radius:50%;flex:none;align-self:center}
+.evlist li .dot.ok{background:var(--good)}.evlist li .dot.warn{background:var(--accent)}.evlist li .dot.bad{background:var(--bad)}
+.acts{display:grid;gap:8px;margin-top:2px}
+.act{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:9px;padding:9px 12px;background:#fffdf7}
+.act .tg{font-size:10px;font-weight:700;color:#b45309;background:rgba(245,158,11,.15);padding:1px 7px;border-radius:999px;margin-right:6px}
+.act.urgent{border-left-color:var(--bad)}.act.urgent .tg{color:#b91c1c;background:rgba(239,68,68,.13)}
+.act .ti{font-weight:700;font-size:13px}
+.act .ds{font-size:12px;color:var(--mut);margin-top:2px}
+.bar-prog{height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin-top:6px;position:relative}
+.bar-prog>i{display:block;height:100%;border-radius:6px}
+.bar-prog>.tgt{position:absolute;top:-3px;bottom:-3px;width:2px;background:#1a1d24}
+.footer{max-width:1280px;margin:0 auto;padding:8px 20px 32px;color:var(--mut);font-size:11px}
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .top{position:static}
+  .card,.exec-in{break-inside:avoid;box-shadow:none}
+  .seg,.ctrl,.filterbar .qbtn{display:none}
+  main{gap:10px}
+  .sidebar{display:none}
+}
+/* ===== サイドバー & ビュー切替（Notion app-shell：静かな紙面・青のアクティブ指標） ===== */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:240px;flex:none;background:var(--n-canvas);color:var(--n-ink2);border-right:1px solid var(--n-line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:22px 14px;z-index:30}
+.sb-brand{font-size:15px;font-weight:700;line-height:1.3;color:var(--n-ink);letter-spacing:-.01em}
+.sb-brand small{display:block;font-size:12px;font-weight:400;color:var(--n-mut);margin-top:4px;letter-spacing:0}
+.sb-brand .tag{display:inline-block;margin-top:11px;font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--n-mut);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:3px 10px}
+.sb-nav{display:flex;flex-direction:column;gap:4px;margin-top:24px}
+.sb-btn{display:flex;align-items:center;gap:9px;text-align:left;background:transparent;border:1px solid transparent;color:var(--n-ink2);font-size:14px;font-weight:500;border-radius:6px;padding:9px 11px;cursor:pointer;transition:.12s;font-family:inherit}
+.sb-btn:hover{background:rgba(0,0,0,.045)}
+.sb-btn.on{background:rgba(0,117,222,.10);color:var(--n-blue);font-weight:600}
+.sb-foot{margin-top:auto;font-size:11px;color:var(--n-faint);line-height:1.55}
+.content{flex:1;min-width:0}
+@media(max-width:880px){
+  .layout{flex-direction:column}
+  .sidebar{width:auto;height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px}
+  .sb-brand{font-size:13px}.sb-brand small,.sb-brand .tag,.sb-foot{display:none}
+  .sb-nav{flex-direction:row;margin-top:0;gap:6px}
+  .sb-btn{padding:8px 11px;font-size:12px}
+}
+/* ===== サマリ表紙（cover）— Notion準拠：暖かい紙面・近黒のInter見出し・装飾は控えめ ===== */
+#view-cover{max-width:1080px;margin:0 auto;padding:34px 30px 60px;background:var(--n-canvas);color:var(--n-ink)}
+#view-cover b{font-weight:600}
+.cv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--n-line)}
+.cv-head h1{font-size:28px;margin:0;font-weight:700;line-height:1.2;letter-spacing:-.5px;color:var(--n-ink)}
+.cv-head .sub{font-size:14px;color:var(--n-mut);margin-top:8px;line-height:1.5}
+.cv-conf{border:1px solid var(--n-line);background:var(--n-surface);color:var(--n-mut);font-size:11px;font-weight:600;letter-spacing:.02em;padding:4px 11px;border-radius:999px;white-space:nowrap}
+/* hero：白い面 + ヘアライン + Notionの「ほぼ無い」多層シャドウ */
+.hero{background:var(--n-surface);border:1px solid var(--n-line);border-radius:16px;padding:28px 30px;
+  box-shadow:0 .175px 1.04px rgba(0,0,0,.01),0 .8px 2.93px rgba(0,0,0,.02),0 2.03px 7.85px rgba(0,0,0,.027),0 4px 18px rgba(0,0,0,.04)}
+.hero-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.hero-top .t{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--n-mut)}
+.hero-top .pd{font-size:12px;color:var(--n-faint)}
+.hero-main{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center}
+@media(max-width:760px){.hero-main{grid-template-columns:1fr}}
+.land .lbl{font-size:13px;color:var(--n-mut);font-weight:500}
+.land .big{font-size:64px;font-weight:700;line-height:1.0;margin:6px 0 8px;letter-spacing:-2.125px;color:var(--n-ink);font-variant-numeric:tabular-nums}
+.land .big .u{font-size:22px;color:var(--n-faint);letter-spacing:-.5px}
+.land .meta{font-size:13px;color:var(--n-mut);line-height:1.55}.land .meta b{color:var(--n-ink2)}
+.land .yen{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--n-ink);background:var(--n-canvas);border:1px solid var(--n-line);padding:6px 13px;border-radius:8px}
+/* gauge：将来フックのプレースホルダ。装飾用パープルのみ・neon/dashedは廃止 */
+.gauge{background:var(--n-canvas);border:1px solid var(--n-line);border-radius:12px;padding:18px;position:relative}
+.gauge .pill{position:absolute;top:-11px;right:14px;background:var(--n-surface);border:1px solid var(--n-line);color:var(--n-mut);font-size:11px;font-weight:600;padding:3px 11px;border-radius:999px}
+.gauge .gl{font-size:13px;font-weight:600;color:var(--n-ink2)}
+.gauge .gbar{height:10px;border-radius:999px;background:#ece9e6;margin:12px 0 8px;overflow:hidden}
+.gauge .gbar i{display:block;height:100%;width:34%;background:var(--n-purple)}
+.gauge .gn{font-size:12px;color:var(--n-mut);line-height:1.55}
+/* KPI：白カード + カテゴリは小さな色ドット（装飾）・数値は近黒 */
+.cv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+@media(max-width:760px){.cv-kpis{grid-template-columns:1fr 1fr}}
+.cv-kpi{background:var(--n-surface);border:1px solid var(--n-line);border-radius:12px;padding:16px}
+.cv-kpi .l{font-size:12px;color:var(--n-mut);display:flex;align-items:center;gap:7px}
+.cv-kpi .l::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--n-teal);flex:none}
+.cv-kpi.media .l::before{background:var(--n-orange)}.cv-kpi.rep .l::before{background:var(--n-purple)}.cv-kpi.ops .l::before{background:var(--n-sky)}
+.cv-kpi .v{font-size:28px;font-weight:700;margin:9px 0 5px;letter-spacing:-1px;color:var(--n-ink);font-variant-numeric:tabular-nums}
+.cv-kpi .d{font-size:12px;font-weight:600}
+/* セクション見出し：Notion heading-2（重く静か・色帯は廃止） */
+.cv-sec{font-size:26px;font-weight:700;margin:48px 0 6px;letter-spacing:-.625px;line-height:1.23;color:var(--n-ink)}
+.cv-note{font-size:14px;color:var(--n-mut);margin:8px 0 18px;line-height:1.55;max-width:880px}
+/* 優先アクション：白カード + ヘアライン・状態はドットだけが色を持つ */
+.cv-acts{display:flex;flex-direction:column;gap:10px}
+.cv-act{background:var(--n-surface);border:1px solid var(--n-line);border-radius:12px;padding:18px 20px}
+.cv-act .bdg{font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--n-mut)}
+.cv-act.now .bdg{color:var(--bad)}.cv-act.today .bdg{color:var(--n-orange)}
+.cv-act .bdg::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.cv-act h4{font-size:17px;margin:9px 0 5px;font-weight:600;letter-spacing:-.2px;line-height:1.4;color:var(--n-ink)}
+.cv-act h4 em{font-style:normal;color:var(--n-ink2);font-weight:700;margin-right:5px}
+.cv-act .ds{font-size:14px;color:var(--n-mut);line-height:1.55}
+/* 将来フック：紙面に溶け込む白カード・パープルは装飾の点のみ */
+.fut-note{background:var(--n-surface);border:1px solid var(--n-line);border-radius:12px;padding:14px 18px;font-size:14px;color:var(--n-ink2);margin-bottom:16px;line-height:1.6}
+.fut-note b{color:var(--n-ink);font-weight:600}
+.fut-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.fut-grid{grid-template-columns:1fr}}
+.fut{background:var(--n-surface);border:1px solid var(--n-line);border-radius:12px;padding:18px;position:relative}
+.fut .pill{display:inline-flex;align-items:center;gap:6px;background:var(--n-canvas);border:1px solid var(--n-line);color:var(--n-mut);font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px}
+.fut .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--n-purple)}
+.fut .lock{position:absolute;top:16px;right:16px;font-size:14px;opacity:.4}
+.fut h4{font-size:18px;margin:12px 0 5px;font-weight:600;letter-spacing:-.25px;line-height:1.27;color:var(--n-ink)}
+.fut .lead{font-size:13.5px;color:var(--n-mut);line-height:1.55}
+.fut .need{margin-top:12px;font-size:12.5px;font-weight:500;color:var(--n-ink2);background:var(--n-canvas);border:1px solid var(--n-line);border-radius:8px;padding:9px 12px;line-height:1.5}
+.fut .need .key{color:var(--n-ink);font-weight:600}
+.fut .ghost{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;opacity:.6}
+.fut .ghost .g{flex:1;min-width:64px;background:var(--n-canvas);border:1px solid var(--n-line);border-radius:8px;padding:9px 7px;text-align:center}
+.fut .ghost .g .gv{font-size:16px;font-weight:700;color:var(--n-faint)}
+.fut .ghost .g .gl{font-size:10px;color:var(--n-faint)}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-brand">炭火ダイニング 灯 -AKARI-<small>新橋店</small><span class="tag">店舗OS ／ SOEL</span></div>
+    <nav class="sb-nav">
+      <button class="sb-btn on" data-view="cover">サマリ</button>
+      <button class="sb-btn" data-view="detail">詳細データ（21カード）</button>
+    </nav>
+    <div class="sb-foot">本部<br>Confidential</div>
+  </aside>
+  <div class="content">
+
+  <!-- ===== サマリ表紙 ===== -->
+  <section id="view-cover">
+    <div class="cv-head">
+      <div><h1>炭火ダイニング 灯 -AKARI- 新橋店</h1><div class="sub">媒体 × オペレーション × MEO ｜ 今どこにいて、次に何をやるか</div></div>
+      <span class="cv-conf">Confidential</span>
+    </div>
+    <div id="cover-dyn"></div>
+
+    <h2 class="cv-sec fut">登る先（今後）— このデータをいただければ、ここまで出せます</h2>
+    <p class="cv-note">下記は現状まだ表示できません。必要データを連携いただければ自動で解放されます（Dinii相当の日次PLまで到達可能）。</p>
+    <div class="fut-note"><b>考え方：</b>いまの画面は「媒体・予約・MEO」で作っています。これに <b>①目標・予算</b> と <b>②POSの売上原価</b> が加わると、下の4ブロックがそのまま埋まります。</div>
+    <div class="fut-grid">
+      <div class="fut"><span class="pill">要：目標・予算</span><h4>予算達成確度ゲージ</h4><div class="lead">月間目標に対する着地確度を信号で表示。「残◯日で日平均◯人必要／達成は容易・困難」まで自動で示唆出し。</div><div class="need">いただくデータ：<span class="key">月間 売上目標・客数目標</span>（数値1行でOK）</div><div class="ghost"><div class="g"><div class="gv">●●%</div><div class="gl">達成確度</div></div><div class="g"><div class="gv">◯人</div><div class="gl">必要日平均</div></div><div class="g"><div class="gv">−¥◯</div><div class="gl">目標差分</div></div></div></div>
+      <div class="fut"><span class="pill">要：目標</span><h4>日次／週次／月次／Q 目標 vs 実績</h4><div class="lead">期間ごとに目標と実績を並べ、ペース遅れを早期に警告。四半期の予実までドリルダウン。</div><div class="need">いただくデータ：<span class="key">各期間の目標値</span>（日・週・月・四半期）</div><div class="ghost"><div class="g"><div class="gv">日</div><div class="gl">予実</div></div><div class="g"><div class="gv">週</div><div class="gl">予実</div></div><div class="g"><div class="gv">月</div><div class="gl">予実</div></div><div class="g"><div class="gv">Q</div><div class="gl">予実</div></div></div></div>
+      <div class="fut"><span class="pill">要：POS＋仕入</span><h4>食材比率・営業利益の日次PL</h4><div class="lead">売上だけでなく原価まで含めた日次PLを着地予測。Dinii相当の「黒字／赤字着地」判定まで。</div><div class="need">いただくデータ：<span class="key">POS売上・仕入実績</span>（日次 or 月次）</div><div class="ghost"><div class="g"><div class="gv">●●%</div><div class="gl">食材比率</div></div><div class="g"><div class="gv">¥●</div><div class="gl">売上総利益</div></div><div class="g"><div class="gv">¥●</div><div class="gl">営業利益</div></div></div></div>
+      <div class="fut"><span class="pill">要：シフト時間</span><h4>人時売上高・人件費率</h4><div class="lead">投入人時あたりの売上＝生産性を可視化。「人時売上 ¥◯目標／1時間あたりノルマ」までブレイクダウン。</div><div class="need">いただくデータ：<span class="key">シフト実績（労働時間）</span></div><div class="ghost"><div class="g"><div class="gv">¥●</div><div class="gl">人時売上</div></div><div class="g"><div class="gv">●●%</div><div class="gl">人件費率</div></div><div class="g"><div class="gv">◯h</div><div class="gl">投入人時</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 詳細データ（既存18カード） ===== -->
+  <section id="view-detail">
+    <div class="top">
+      <h1>炭火ダイニング 灯 -AKARI- 新橋店 <span style="color:var(--mut);font-size:13px;font-weight:400">媒体×オペ×MEO ダッシュボード</span></h1>
+      <div class="badges">
+        <span class="badge media"><b>DEMO — 数値はすべてダミーデータ</b></span>
+        <span class="badge ops">オペ通期 = <b id="b-ops"></b></span>
+        <span class="badge media">媒体実績 = <b id="b-media"></b>(最新)</span>
+        <span class="badge">本部</span>
+      </div>
+    </div>
+    <div class="exec"><div class="exec-in" id="exec"></div></div>
+    <div class="filterbar" id="filterbar"></div>
+    <main id="root"></main>
+    <div class="footer" id="footer"></div>
+  </section>
+
+  </div>
+</div>
+
+<script>
+const DATA = {"store":"炭火ダイニング 灯 -AKARI- 新橋店","period_ops":"2025年07月01日〜2026年06月30日","period_media":"2026年05月","kyaku":3800,"months":["2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05"],"media_series":{"食べログ":{"label":"食べログ","access":[63568,68541,87223,77289,74690,67766,73460,71967,69848,60579,68632,62455,61713,78909,91163,82021,76742,76688,95979,75113,79976,68723,67570,64840,69004,76558,85081,90157,86420,72175,88280,73821,87622],"reservations":[1141,1038,1110,1058,1380,1101,901,1102,1061,1079,1248,1033,1175,1203,1268,1654,1400,1256,1680,1380,1346,1112,1233,1266,1341,1533,1537,1916,1469,1176,1597,1724,1698],"cost":[233816,224572,280398,299908,306019,229796,213948,235880,234577,252524,257334,228717,231282,223618,255593,334735,254325,260146,292098,274636,263217,219000,237772,240438,255586,294407,261492,348877,275982,220067,305273,299789,353493],"revenue":[4859724,5016533,4858224,5275527,5322561,4235170,3937907,4539880,4892274,5132728,5340116,4277185,4898505,5288705,6024215,7566165,5464626,5059970,6857848,6058936,5714133,4834741,5053231,5216850,5891406,6779102,6606009,7889062,5936080,5275062,7635363,6932486,8031904]},"一休":{"label":"一休","access":[36904,36373,54916,34739,22329,19791,21145,24273,16729,24084,19794,9596,17053,18333,21961,26284,15735,15866,27300,19892,12631,7210,8635,10809,10560,14148,18903,18163,13545,11064,20673,9043,7891],"reservations":[332,340,433,373,201,109,180,116,90,148,162,90,102,117,258,277,197,135,299,340,156,25,35,110,128,114,154,293,188,115,252,133,68],"cost":[58712,63925,84285,107828,56921,31749,72830,36658,29582,50744,62426,36481,35839,38061,53827,72877,56565,45873,85997,93818,34158,4498,10596,31717,29259,27211,50820,84459,57153,32633,66618,33918,15084],"revenue":[1499849,1482618,1863489,1652219,909452,539593,733365,526549,404203,669849,707446,373518,421992,461124,1236633,1200061,960711,585246,1235717,1522833,629088,104440,159349,447757,587646,491407,728539,1209402,754245,512408,1091335,607652,313558]},"ホームページ（サイト）":{"label":"ホームページ（サイト）","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,0,0,0,0,0,0,0,0],"reservations":[229,346,298,405,265,297,331,286,296,217,201,232,192,228,293,296,357,318,219,296,338,272,255,373,null,62,72,99,321,311,266,275,290],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,0,0,0,0,0,0,0,0],"revenue":[948230,1457053,1340022,1881492,1123957,1324337,1368265,1309643,1258498,933768,888656,1153726,787700,1132966,1363770,1144106,1562024,1324659,946893,1202171,1561121,1251330,1160237,1492849,0,261116,326477,413746,1351561,1226216,1040194,1123473,1221095]},"Google":{"label":"Google","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,0,0,0,0,0,0],"reservations":[126,138,142,154,157,115,175,198,192,151,156,179,146,141,153,84,111,186,202,168,246,180,144,163,null,null,null,18,150,117,159,124,116],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,0,0,0,0,0,0],"revenue":[601531,573919,663058,611301,653486,515099,752539,856776,802245,596684,756095,740890,639541,596266,703068,363488,481701,862659,845056,701567,1099299,756947,607001,750390,0,0,0,77139,614299,495401,699653,568789,548619]},"AIレセプション":{"label":"AIレセプション","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"reservations":[0,0,0,0,0,0,0,0,0,2,3,6,0,4,6,6,11,2,8,4,13,4,0,0,null,null,null,null,null,null,null,null,null],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"revenue":[0,0,0,0,0,0,0,0,0,7592,11043,27020,0,18223,26777,24665,56115,7070,36460,18488,54746,14866,0,0,0,0,0,0,0,0,0,0,0]},"LINE":{"label":"LINE","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"reservations":[2,0,2,0,2,2,0,0,0,2,0,0,0,0,0,6,0,0,2,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"revenue":[8055,0,12086,0,7561,11188,0,0,0,7651,0,0,0,0,0,27103,0,0,7962,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},"PayPayグルメ":{"label":"PayPayグルメ","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,0,0,0,0,null,0,null,0],"reservations":[2,7,7,9,5,6,4,7,4,3,4,7,5,4,11,19,17,3,0,0,0,0,0,0,null,21,26,15,2,null,4,null,6],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,0,0,0,0,null,0,null,0],"revenue":[7075,30934,36750,38682,23408,24904,19866,32234,18668,15364,19600,30761,21880,15658,43751,86767,74035,16310,0,0,0,0,0,0,0,92132,130752,64755,8245,0,15040,0,26993]},"自社アプリ":{"label":"自社アプリ","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"reservations":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,20,19,21,17,11,35,41,26,23,null,null,null,null,null,null,null,null,null],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,null,null,null,null],"revenue":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,33428,90064,79717,102686,72442,42689,160802,185407,106486,105251,0,0,0,0,0,0,0,0,0]},"Instagram":{"label":"Instagram","access":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,0,0,null,null],"reservations":[0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,3,0,0,2,0,0,0,null,null,null,null,null,3,null,null,null],"cost":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,0,0,null,null],"revenue":[0,0,0,0,0,18727,0,0,0,0,0,0,0,0,0,0,0,12220,0,0,7732,0,0,0,0,0,0,0,0,11826,0,0,0]},"Yahoo":{"label":"Yahoo","access":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,null,null,null,null,null,0,0,0,0],"reservations":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2,0,0,0,0,0,null,null,null,null,null,2,26,34,22],"cost":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,null,null,null,null,null,0,0,0,0],"revenue":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7601,0,0,0,0,0,0,0,0,0,0,8093,109783,141847,99178]},"ResReserve（総計）":{"label":"ResReserve（総計）","access":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,0,0],"reservations":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,64,79,124,479,427,472,444,410],"cost":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,0,0],"revenue":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0,0,0,267022,321777,508024,2060262,1719363,1851976,1799792,1652277]}},"media_latest":[{"label":"食べログ","access":79888,"reservations":1694,"revenue":7974427,"cost":320925,"roi":24.85,"cpa":189.45,"owned":false},{"label":"ResReserve（総計）","access":0,"reservations":408,"revenue":1821629,"cost":0,"roi":null,"cpa":null,"owned":true},{"label":"ホームページ（サイト）","access":0,"reservations":261,"revenue":1181910,"cost":0,"roi":null,"cpa":null,"owned":true},{"label":"Google","access":0,"reservations":109,"revenue":522848,"cost":0,"roi":null,"cpa":null,"owned":true},{"label":"一休","access":8786,"reservations":73,"revenue":290459,"cost":14941,"roi":19.44,"cpa":204.67,"owned":false},{"label":"Yahoo","access":0,"reservations":22,"revenue":94839,"cost":0,"roi":null,"cpa":null,"owned":true},{"label":"PayPayグルメ","access":0,"reservations":6,"revenue":28681,"cost":0,"roi":null,"cpa":null,"owned":true}],"agg":{"access_all":92317,"access_media":87900,"access_owned":0,"rsv_all":2214,"rsv_media":1926,"rsv_owned":411,"cost_all":342908,"cost_media":343931,"cost_owned":0,"rev_all":9700727,"rev_media":8088824,"rev_owned":1679129},"roi_trend":{"食べログ":{"roi":[21.96,21.94,19.04,18.58,19.91,21.66,20.36,21.85,22.65,22.2,22.84,20.2,23.25,22.99,24.01,23.14,23.73,23.62,25.89,23.14,23.93,22.33,21.7,23.92,23.46,25.56,26.93,24.55,26.34,25.97,26.57,25.48,26.31],"cpa":[193,198,219,217,207,176,219,196,190,201,175,189,168,187,169,189,191,166,153,177,163,204,189,185,176,171,158,169,151,153,148,161,160]},"一休":{"roi":[24.83,26.47,24.25,14.57,16.76,16.72,12.35,14.45,15.1,13.96,11.79,10.56,14.61,13.0,22.62,17.01,16.57,15.84,15.58,16.78,19.65,25.42,15.67,16.51,22.88,19.72,15.01,15.53,16.45,15.39,18.67,19.04,23.25],"cpa":[163,148,163,310,266,273,336,290,257,302,355,368,282,321,194,248,248,254,286,268,225,161,277,239,189,223,298,284,244,291,223,226,174]}},"ops":{"daily":[{"date":"2025年07月01日(火)","ym":"2025-07","count":8,"guests":18,"lunch_c":3,"lunch_g":5,"dinner_c":5,"dinner_g":15,"cancel_c":0},{"date":"2025年07月02日(水)","ym":"2025-07","count":8,"guests":27,"lunch_c":2,"lunch_g":8,"dinner_c":5,"dinner_g":17,"cancel_c":1},{"date":"2025年07月03日(木)","ym":"2025-07","count":9,"guests":26,"lunch_c":5,"lunch_g":11,"dinner_c":5,"dinner_g":18,"cancel_c":0},{"date":"2025年07月04日(金)","ym":"2025-07","count":15,"guests":54,"lunch_c":6,"lunch_g":14,"dinner_c":8,"dinner_g":41,"cancel_c":2},{"date":"2025年07月05日(土)","ym":"2025-07","count":23,"guests":68,"lunch_c":11,"lunch_g":32,"dinner_c":14,"dinner_g":32,"cancel_c":4},{"date":"2025年07月06日(日)","ym":"2025-07","count":16,"guests":50,"lunch_c":12,"lunch_g":34,"dinner_c":4,"dinner_g":14,"cancel_c":5},{"date":"2025年07月07日(月)","ym":"2025-07","count":6,"guests":11,"lunch_c":2,"lunch_g":6,"dinner_c":3,"dinner_g":5,"cancel_c":1},{"date":"2025年07月08日(火)","ym":"2025-07","count":4,"guests":11,"lunch_c":2,"lunch_g":6,"dinner_c":2,"dinner_g":6,"cancel_c":0},{"date":"2025年07月09日(水)","ym":"2025-07","count":7,"guests":49,"lunch_c":4,"lunch_g":18,"dinner_c":4,"dinner_g":34,"cancel_c":0},{"date":"2025年07月10日(木)","ym":"2025-07","count":7,"guests":28,"lunch_c":2,"lunch_g":4,"dinner_c":5,"dinner_g":23,"cancel_c":3},{"date":"2025年07月11日(金)","ym":"2025-07","count":11,"guests":43,"lunch_c":3,"lunch_g":8,"dinner_c":9,"dinner_g":38,"cancel_c":1},{"date":"2025年07月12日(土)","ym":"2025-07","count":21,"guests":69,"lunch_c":11,"lunch_g":35,"dinner_c":13,"dinner_g":42,"cancel_c":4},{"date":"2025年07月13日(日)","ym":"2025-07","count":18,"guests":48,"lunch_c":11,"lunch_g":35,"dinner_c":7,"dinner_g":15,"cancel_c":2},{"date":"2025年07月14日(月)","ym":"2025-07","count":8,"guests":23,"lunch_c":3,"lunch_g":7,"dinner_c":5,"dinner_g":15,"cancel_c":1},{"date":"2025年07月15日(火)","ym":"2025-07","count":6,"guests":27,"lunch_c":4,"lunch_g":17,"dinner_c":3,"dinner_g":7,"cancel_c":1},{"date":"2025年07月16日(水)","ym":"2025-07","count":8,"guests":31,"lunch_c":2,"lunch_g":4,"dinner_c":6,"dinner_g":28,"cancel_c":1},{"date":"2025年07月17日(木)","ym":"2025-07","count":10,"guests":43,"lunch_c":3,"lunch_g":8,"dinner_c":6,"dinner_g":33,"cancel_c":1},{"date":"2025年07月18日(金)","ym":"2025-07","count":17,"guests":50,"lunch_c":6,"lunch_g":18,"dinner_c":11,"dinner_g":34,"cancel_c":1},{"date":"2025年07月19日(土)","ym":"2025-07","count":19,"guests":60,"lunch_c":11,"lunch_g":27,"dinner_c":10,"dinner_g":33,"cancel_c":1},{"date":"2025年07月20日(日)","ym":"2025-07","count":16,"guests":46,"lunch_c":8,"lunch_g":24,"dinner_c":7,"dinner_g":19,"cancel_c":2},{"date":"2025年07月21日(月)","ym":"2025-07","count":26,"guests":71,"lunch_c":19,"lunch_g":54,"dinner_c":7,"dinner_g":14,"cancel_c":3},{"date":"2025年07月22日(火)","ym":"2025-07","count":8,"guests":21,"lunch_c":3,"lunch_g":7,"dinner_c":6,"dinner_g":15,"cancel_c":0},{"date":"2025年07月23日(水)","ym":"2025-07","count":7,"guests":37,"lunch_c":3,"lunch_g":6,"dinner_c":4,"dinner_g":31,"cancel_c":1},{"date":"2025年07月24日(木)","ym":"2025-07","count":11,"guests":28,"lunch_c":6,"lunch_g":14,"dinner_c":5,"dinner_g":15,"cancel_c":2},{"date":"2025年07月25日(金)","ym":"2025-07","count":11,"guests":60,"lunch_c":5,"lunch_g":19,"dinner_c":6,"dinner_g":41,"cancel_c":2},{"date":"2025年07月26日(土)","ym":"2025-07","count":22,"guests":51,"lunch_c":14,"lunch_g":30,"dinner_c":9,"dinner_g":23,"cancel_c":11},{"date":"2025年07月27日(日)","ym":"2025-07","count":20,"guests":48,"lunch_c":13,"lunch_g":36,"dinner_c":5,"dinner_g":12,"cancel_c":6},{"date":"2025年07月28日(月)","ym":"2025-07","count":7,"guests":19,"lunch_c":4,"lunch_g":11,"dinner_c":3,"dinner_g":7,"cancel_c":0},{"date":"2025年07月29日(火)","ym":"2025-07","count":9,"guests":20,"lunch_c":5,"lunch_g":13,"dinner_c":4,"dinner_g":8,"cancel_c":0},{"date":"2025年07月30日(水)","ym":"2025-07","count":13,"guests":38,"lunch_c":5,"lunch_g":16,"dinner_c":7,"dinner_g":27,"cancel_c":1},{"date":"2025年07月31日(木)","ym":"2025-07","count":9,"guests":28,"lunch_c":5,"lunch_g":15,"dinner_c":4,"dinner_g":11,"cancel_c":4},{"date":"2025年08月01日(金)","ym":"2025-08","count":15,"guests":43,"lunch_c":4,"lunch_g":10,"dinner_c":11,"dinner_g":32,"cancel_c":4},{"date":"2025年08月02日(土)","ym":"2025-08","count":20,"guests":61,"lunch_c":9,"lunch_g":34,"dinner_c":10,"dinner_g":23,"cancel_c":4},{"date":"2025年08月03日(日)","ym":"2025-08","count":24,"guests":72,"lunch_c":17,"lunch_g":47,"dinner_c":4,"dinner_g":26,"cancel_c":4},{"date":"2025年08月04日(月)","ym":"2025-08","count":6,"guests":20,"lunch_c":6,"lunch_g":18,"dinner_c":0,"dinner_g":0,"cancel_c":0},{"date":"2025年08月05日(火)","ym":"2025-08","count":7,"guests":20,"lunch_c":3,"lunch_g":8,"dinner_c":4,"dinner_g":12,"cancel_c":1},{"date":"2025年08月06日(水)","ym":"2025-08","count":10,"guests":34,"lunch_c":5,"lunch_g":13,"dinner_c":6,"dinner_g":22,"cancel_c":0},{"date":"2025年08月07日(木)","ym":"2025-08","count":10,"guests":35,"lunch_c":8,"lunch_g":25,"dinner_c":3,"dinner_g":11,"cancel_c":0},{"date":"2025年08月08日(金)","ym":"2025-08","count":15,"guests":61,"lunch_c":7,"lunch_g":19,"dinner_c":8,"dinner_g":39,"cancel_c":1},{"date":"2025年08月09日(土)","ym":"2025-08","count":21,"guests":53,"lunch_c":11,"lunch_g":27,"dinner_c":10,"dinner_g":27,"cancel_c":5},{"date":"2025年08月10日(日)","ym":"2025-08","count":16,"guests":46,"lunch_c":12,"lunch_g":36,"dinner_c":3,"dinner_g":9,"cancel_c":7},{"date":"2025年08月11日(月)","ym":"2025-08","count":20,"guests":63,"lunch_c":16,"lunch_g":50,"dinner_c":4,"dinner_g":16,"cancel_c":4},{"date":"2025年08月12日(火)","ym":"2025-08","count":9,"guests":26,"lunch_c":8,"lunch_g":21,"dinner_c":2,"dinner_g":4,"cancel_c":3},{"date":"2025年08月13日(水)","ym":"2025-08","count":13,"guests":38,"lunch_c":10,"lunch_g":30,"dinner_c":2,"dinner_g":10,"cancel_c":0},{"date":"2025年08月14日(木)","ym":"2025-08","count":13,"guests":43,"lunch_c":10,"lunch_g":38,"dinner_c":2,"dinner_g":5,"cancel_c":3},{"date":"2025年08月15日(金)","ym":"2025-08","count":22,"guests":61,"lunch_c":10,"lunch_g":38,"dinner_c":10,"dinner_g":26,"cancel_c":3},{"date":"2025年08月16日(土)","ym":"2025-08","count":27,"guests":76,"lunch_c":19,"lunch_g":45,"dinner_c":7,"dinner_g":31,"cancel_c":3},{"date":"2025年08月17日(日)","ym":"2025-08","count":14,"guests":38,"lunch_c":11,"lunch_g":30,"dinner_c":3,"dinner_g":7,"cancel_c":0},{"date":"2025年08月18日(月)","ym":"2025-08","count":5,"guests":26,"lunch_c":3,"lunch_g":8,"dinner_c":2,"dinner_g":19,"cancel_c":0},{"date":"2025年08月19日(火)","ym":"2025-08","count":5,"guests":12,"lunch_c":1,"lunch_g":2,"dinner_c":3,"dinner_g":9,"cancel_c":1},{"date":"2025年08月20日(水)","ym":"2025-08","count":10,"guests":31,"lunch_c":4,"lunch_g":13,"dinner_c":6,"dinner_g":20,"cancel_c":2},{"date":"2025年08月21日(木)","ym":"2025-08","count":4,"guests":17,"lunch_c":1,"lunch_g":4,"dinner_c":3,"dinner_g":12,"cancel_c":2},{"date":"2025年08月22日(金)","ym":"2025-08","count":12,"guests":42,"lunch_c":3,"lunch_g":6,"dinner_c":11,"dinner_g":34,"cancel_c":1},{"date":"2025年08月23日(土)","ym":"2025-08","count":19,"guests":53,"lunch_c":17,"lunch_g":42,"dinner_c":3,"dinner_g":15,"cancel_c":4},{"date":"2025年08月24日(日)","ym":"2025-08","count":24,"guests":75,"lunch_c":15,"lunch_g":46,"dinner_c":7,"dinner_g":30,"cancel_c":3},{"date":"2025年08月25日(月)","ym":"2025-08","count":7,"guests":28,"lunch_c":2,"lunch_g":6,"dinner_c":5,"dinner_g":23,"cancel_c":1},{"date":"2025年08月26日(火)","ym":"2025-08","count":6,"guests":13,"lunch_c":3,"lunch_g":5,"dinner_c":4,"dinner_g":9,"cancel_c":0},{"date":"2025年08月27日(水)","ym":"2025-08","count":17,"guests":51,"lunch_c":8,"lunch_g":32,"dinner_c":8,"dinner_g":18,"cancel_c":0},{"date":"2025年08月28日(木)","ym":"2025-08","count":0,"guests":0,"lunch_c":0,"lunch_g":0,"dinner_c":0,"dinner_g":0,"cancel_c":0},{"date":"2025年08月29日(金)","ym":"2025-08","count":12,"guests":56,"lunch_c":5,"lunch_g":11,"dinner_c":7,"dinner_g":39,"cancel_c":2},{"date":"2025年08月30日(土)","ym":"2025-08","count":22,"guests":64,"lunch_c":13,"lunch_g":33,"dinner_c":10,"dinner_g":33,"cancel_c":7},{"date":"2025年08月31日(日)","ym":"2025-08","count":21,"guests":76,"lunch_c":14,"lunch_g":42,"dinner_c":8,"dinner_g":26,"cancel_c":1},{"date":"2025年09月01日(月)","ym":"2025-09","count":6,"guests":34,"lunch_c":2,"lunch_g":4,"dinner_c":4,"dinner_g":28,"cancel_c":0},{"date":"2025年09月02日(火)","ym":"2025-09","count":7,"guests":32,"lunch_c":1,"lunch_g":2,"dinner_c":6,"dinner_g":30,"cancel_c":0},{"date":"2025年09月03日(水)","ym":"2025-09","count":8,"guests":39,"lunch_c":4,"lunch_g":12,"dinner_c":4,"dinner_g":30,"cancel_c":3},{"date":"2025年09月04日(木)","ym":"2025-09","count":11,"guests":41,"lunch_c":6,"lunch_g":16,"dinner_c":5,"dinner_g":23,"cancel_c":0},{"date":"2025年09月05日(金)","ym":"2025-09","count":9,"guests":37,"lunch_c":5,"lunch_g":14,"dinner_c":6,"dinner_g":18,"cancel_c":4},{"date":"2025年09月06日(土)","ym":"2025-09","count":26,"guests":66,"lunch_c":15,"lunch_g":35,"dinner_c":11,"dinner_g":29,"cancel_c":5},{"date":"2025年09月07日(日)","ym":"2025-09","count":17,"guests":50,"lunch_c":11,"lunch_g":32,"dinner_c":5,"dinner_g":21,"cancel_c":3},{"date":"2025年09月08日(月)","ym":"2025-09","count":8,"guests":26,"lunch_c":3,"lunch_g":7,"dinner_c":5,"dinner_g":20,"cancel_c":1},{"date":"2025年09月09日(火)","ym":"2025-09","count":8,"guests":25,"lunch_c":3,"lunch_g":9,"dinner_c":5,"dinner_g":16,"cancel_c":1},{"date":"2025年09月10日(水)","ym":"2025-09","count":5,"guests":16,"lunch_c":3,"lunch_g":7,"dinner_c":3,"dinner_g":9,"cancel_c":0},{"date":"2025年09月11日(木)","ym":"2025-09","count":8,"guests":21,"lunch_c":2,"lunch_g":4,"dinner_c":7,"dinner_g":16,"cancel_c":1},{"date":"2025年09月12日(金)","ym":"2025-09","count":12,"guests":32,"lunch_c":5,"lunch_g":10,"dinner_c":6,"dinner_g":20,"cancel_c":3},{"date":"2025年09月13日(土)","ym":"2025-09","count":14,"guests":40,"lunch_c":15,"lunch_g":38,"dinner_c":0,"dinner_g":0,"cancel_c":2},{"date":"2025年09月14日(日)","ym":"2025-09","count":22,"guests":69,"lunch_c":16,"lunch_g":47,"dinner_c":6,"dinner_g":26,"cancel_c":0},{"date":"2025年09月15日(月)","ym":"2025-09","count":25,"guests":75,"lunch_c":21,"lunch_g":54,"dinner_c":4,"dinner_g":25,"cancel_c":6},{"date":"2025年09月16日(火)","ym":"2025-09","count":14,"guests":48,"lunch_c":4,"lunch_g":10,"dinner_c":9,"dinner_g":36,"cancel_c":2},{"date":"2025年09月17日(水)","ym":"2025-09","count":9,"guests":29,"lunch_c":5,"lunch_g":9,"dinner_c":4,"dinner_g":19,"cancel_c":0},{"date":"2025年09月18日(木)","ym":"2025-09","count":12,"guests":43,"lunch_c":5,"lunch_g":10,"dinner_c":8,"dinner_g":33,"cancel_c":1},{"date":"2025年09月19日(金)","ym":"2025-09","count":10,"guests":44,"lunch_c":3,"lunch_g":6,"dinner_c":7,"dinner_g":39,"cancel_c":3},{"date":"2025年09月20日(土)","ym":"2025-09","count":21,"guests":77,"lunch_c":14,"lunch_g":55,"dinner_c":6,"dinner_g":21,"cancel_c":3},{"date":"2025年09月21日(日)","ym":"2025-09","count":20,"guests":55,"lunch_c":11,"lunch_g":31,"dinner_c":7,"dinner_g":23,"cancel_c":2},{"date":"2025年09月22日(月)","ym":"2025-09","count":19,"guests":62,"lunch_c":10,"lunch_g":32,"dinner_c":8,"dinner_g":27,"cancel_c":5},{"date":"2025年09月23日(火)","ym":"2025-09","count":17,"guests":51,"lunch_c":17,"lunch_g":52,"dinner_c":2,"dinner_g":4,"cancel_c":5},{"date":"2025年09月24日(水)","ym":"2025-09","count":23,"guests":66,"lunch_c":11,"lunch_g":24,"dinner_c":14,"dinner_g":37,"cancel_c":3},{"date":"2025年09月25日(木)","ym":"2025-09","count":65,"guests":133,"lunch_c":47,"lunch_g":89,"dinner_c":13,"dinner_g":42,"cancel_c":3},{"date":"2025年09月26日(金)","ym":"2025-09","count":83,"guests":188,"lunch_c":49,"lunch_g":88,"dinner_c":43,"dinner_g":103,"cancel_c":4},{"date":"2025年09月27日(土)","ym":"2025-09","count":95,"guests":248,"lunch_c":53,"lunch_g":153,"dinner_c":34,"dinner_g":89,"cancel_c":10},{"date":"2025年09月28日(日)","ym":"2025-09","count":91,"guests":222,"lunch_c":53,"lunch_g":152,"dinner_c":30,"dinner_g":68,"cancel_c":8},{"date":"2025年09月29日(月)","ym":"2025-09","count":35,"guests":91,"lunch_c":26,"lunch_g":56,"dinner_c":11,"dinner_g":40,"cancel_c":4},{"date":"2025年09月30日(火)","ym":"2025-09","count":57,"guests":162,"lunch_c":44,"lunch_g":96,"dinner_c":16,"dinner_g":62,"cancel_c":1},{"date":"2025年10月01日(水)","ym":"2025-10","count":47,"guests":116,"lunch_c":38,"lunch_g":98,"dinner_c":11,"dinner_g":31,"cancel_c":2},{"date":"2025年10月02日(木)","ym":"2025-10","count":63,"guests":167,"lunch_c":45,"lunch_g":94,"dinner_c":24,"dinner_g":81,"cancel_c":5},{"date":"2025年10月03日(金)","ym":"2025-10","count":70,"guests":170,"lunch_c":40,"lunch_g":87,"dinner_c":24,"dinner_g":70,"cancel_c":6},{"date":"2025年10月04日(土)","ym":"2025-10","count":86,"guests":226,"lunch_c":49,"lunch_g":139,"dinner_c":29,"dinner_g":75,"cancel_c":9},{"date":"2025年10月05日(日)","ym":"2025-10","count":80,"guests":190,"lunch_c":57,"lunch_g":142,"dinner_c":25,"dinner_g":67,"cancel_c":7},{"date":"2025年10月06日(月)","ym":"2025-10","count":36,"guests":79,"lunch_c":24,"lunch_g":47,"dinner_c":11,"dinner_g":27,"cancel_c":4},{"date":"2025年10月07日(火)","ym":"2025-10","count":54,"guests":118,"lunch_c":39,"lunch_g":85,"dinner_c":11,"dinner_g":37,"cancel_c":2},{"date":"2025年10月08日(水)","ym":"2025-10","count":60,"guests":126,"lunch_c":40,"lunch_g":88,"dinner_c":17,"dinner_g":42,"cancel_c":4},{"date":"2025年10月09日(木)","ym":"2025-10","count":58,"guests":142,"lunch_c":42,"lunch_g":91,"dinner_c":19,"dinner_g":44,"cancel_c":3},{"date":"2025年10月10日(金)","ym":"2025-10","count":73,"guests":182,"lunch_c":39,"lunch_g":75,"dinner_c":33,"dinner_g":105,"cancel_c":6},{"date":"2025年10月11日(土)","ym":"2025-10","count":90,"guests":233,"lunch_c":63,"lunch_g":141,"dinner_c":31,"dinner_g":92,"cancel_c":14},{"date":"2025年10月12日(日)","ym":"2025-10","count":91,"guests":259,"lunch_c":65,"lunch_g":156,"dinner_c":30,"dinner_g":82,"cancel_c":9},{"date":"2025年10月13日(月)","ym":"2025-10","count":81,"guests":192,"lunch_c":62,"lunch_g":150,"dinner_c":15,"dinner_g":41,"cancel_c":9},{"date":"2025年10月14日(火)","ym":"2025-10","count":49,"guests":119,"lunch_c":43,"lunch_g":85,"dinner_c":8,"dinner_g":34,"cancel_c":1},{"date":"2025年10月15日(水)","ym":"2025-10","count":56,"guests":115,"lunch_c":42,"lunch_g":88,"dinner_c":14,"dinner_g":30,"cancel_c":3},{"date":"2025年10月16日(木)","ym":"2025-10","count":53,"guests":120,"lunch_c":35,"lunch_g":77,"dinner_c":13,"dinner_g":42,"cancel_c":1},{"date":"2025年10月17日(金)","ym":"2025-10","count":70,"guests":199,"lunch_c":35,"lunch_g":83,"dinner_c":35,"dinner_g":106,"cancel_c":6},{"date":"2025年10月18日(土)","ym":"2025-10","count":87,"guests":247,"lunch_c":69,"lunch_g":181,"dinner_c":25,"dinner_g":74,"cancel_c":11},{"date":"2025年10月19日(日)","ym":"2025-10","count":70,"guests":199,"lunch_c":54,"lunch_g":161,"dinner_c":19,"dinner_g":47,"cancel_c":6},{"date":"2025年10月20日(月)","ym":"2025-10","count":49,"guests":115,"lunch_c":35,"lunch_g":67,"dinner_c":16,"dinner_g":42,"cancel_c":4},{"date":"2025年10月21日(火)","ym":"2025-10","count":57,"guests":128,"lunch_c":45,"lunch_g":93,"dinner_c":11,"dinner_g":27,"cancel_c":1},{"date":"2025年10月22日(水)","ym":"2025-10","count":56,"guests":130,"lunch_c":37,"lunch_g":71,"dinner_c":24,"dinner_g":63,"cancel_c":1},{"date":"2025年10月23日(木)","ym":"2025-10","count":62,"guests":137,"lunch_c":47,"lunch_g":88,"dinner_c":13,"dinner_g":48,"cancel_c":3},{"date":"2025年10月24日(金)","ym":"2025-10","count":72,"guests":165,"lunch_c":49,"lunch_g":100,"dinner_c":21,"dinner_g":72,"cancel_c":6},{"date":"2025年10月25日(土)","ym":"2025-10","count":77,"guests":221,"lunch_c":47,"lunch_g":123,"dinner_c":29,"dinner_g":73,"cancel_c":3},{"date":"2025年10月26日(日)","ym":"2025-10","count":82,"guests":220,"lunch_c":55,"lunch_g":166,"dinner_c":23,"dinner_g":58,"cancel_c":7},{"date":"2025年10月27日(月)","ym":"2025-10","count":53,"guests":120,"lunch_c":36,"lunch_g":72,"dinner_c":17,"dinner_g":49,"cancel_c":2},{"date":"2025年10月28日(火)","ym":"2025-10","count":43,"guests":122,"lunch_c":29,"lunch_g":78,"dinner_c":13,"dinner_g":52,"cancel_c":3},{"date":"2025年10月29日(水)","ym":"2025-10","count":72,"guests":155,"lunch_c":55,"lunch_g":123,"dinner_c":19,"dinner_g":41,"cancel_c":2},{"date":"2025年10月30日(木)","ym":"2025-10","count":54,"guests":164,"lunch_c":47,"lunch_g":94,"dinner_c":13,"dinner_g":59,"cancel_c":2},{"date":"2025年10月31日(金)","ym":"2025-10","count":59,"guests":152,"lunch_c":31,"lunch_g":79,"dinner_c":30,"dinner_g":84,"cancel_c":6},{"date":"2025年11月01日(土)","ym":"2025-11","count":78,"guests":219,"lunch_c":53,"lunch_g":142,"dinner_c":20,"dinner_g":75,"cancel_c":13},{"date":"2025年11月02日(日)","ym":"2025-11","count":73,"guests":224,"lunch_c":54,"lunch_g":143,"dinner_c":25,"dinner_g":82,"cancel_c":5},{"date":"2025年11月03日(月)","ym":"2025-11","count":84,"guests":198,"lunch_c":66,"lunch_g":144,"dinner_c":18,"dinner_g":53,"cancel_c":5},{"date":"2025年11月04日(火)","ym":"2025-11","count":45,"guests":80,"lunch_c":35,"lunch_g":64,"dinner_c":7,"dinner_g":14,"cancel_c":1},{"date":"2025年11月05日(水)","ym":"2025-11","count":60,"guests":149,"lunch_c":46,"lunch_g":103,"dinner_c":16,"dinner_g":38,"cancel_c":4},{"date":"2025年11月06日(木)","ym":"2025-11","count":56,"guests":175,"lunch_c":34,"lunch_g":106,"dinner_c":17,"dinner_g":69,"cancel_c":3},{"date":"2025年11月07日(金)","ym":"2025-11","count":62,"guests":153,"lunch_c":42,"lunch_g":85,"dinner_c":19,"dinner_g":60,"cancel_c":1},{"date":"2025年11月08日(土)","ym":"2025-11","count":105,"guests":263,"lunch_c":62,"lunch_g":146,"dinner_c":33,"dinner_g":87,"cancel_c":17},{"date":"2025年11月09日(日)","ym":"2025-11","count":64,"guests":219,"lunch_c":39,"lunch_g":138,"dinner_c":23,"dinner_g":57,"cancel_c":13},{"date":"2025年11月10日(月)","ym":"2025-11","count":50,"guests":115,"lunch_c":27,"lunch_g":58,"dinner_c":22,"dinner_g":65,"cancel_c":3},{"date":"2025年11月11日(火)","ym":"2025-11","count":62,"guests":155,"lunch_c":51,"lunch_g":114,"dinner_c":10,"dinner_g":28,"cancel_c":3},{"date":"2025年11月12日(水)","ym":"2025-11","count":73,"guests":173,"lunch_c":44,"lunch_g":98,"dinner_c":27,"dinner_g":78,"cancel_c":2},{"date":"2025年11月13日(木)","ym":"2025-11","count":44,"guests":108,"lunch_c":28,"lunch_g":57,"dinner_c":15,"dinner_g":55,"cancel_c":3},{"date":"2025年11月14日(金)","ym":"2025-11","count":77,"guests":198,"lunch_c":54,"lunch_g":117,"dinner_c":28,"dinner_g":92,"cancel_c":4},{"date":"2025年11月15日(土)","ym":"2025-11","count":82,"guests":235,"lunch_c":58,"lunch_g":165,"dinner_c":28,"dinner_g":71,"cancel_c":8},{"date":"2025年11月16日(日)","ym":"2025-11","count":72,"guests":190,"lunch_c":54,"lunch_g":148,"dinner_c":18,"dinner_g":50,"cancel_c":8},{"date":"2025年11月17日(月)","ym":"2025-11","count":30,"guests":72,"lunch_c":22,"lunch_g":51,"dinner_c":9,"dinner_g":24,"cancel_c":4},{"date":"2025年11月18日(火)","ym":"2025-11","count":62,"guests":147,"lunch_c":43,"lunch_g":88,"dinner_c":17,"dinner_g":56,"cancel_c":3},{"date":"2025年11月19日(水)","ym":"2025-11","count":45,"guests":101,"lunch_c":39,"lunch_g":92,"dinner_c":6,"dinner_g":17,"cancel_c":5},{"date":"2025年11月20日(木)","ym":"2025-11","count":61,"guests":138,"lunch_c":36,"lunch_g":83,"dinner_c":20,"dinner_g":56,"cancel_c":4},{"date":"2025年11月21日(金)","ym":"2025-11","count":82,"guests":210,"lunch_c":47,"lunch_g":112,"dinner_c":41,"dinner_g":115,"cancel_c":5},{"date":"2025年11月22日(土)","ym":"2025-11","count":86,"guests":253,"lunch_c":57,"lunch_g":174,"dinner_c":21,"dinner_g":82,"cancel_c":14},{"date":"2025年11月23日(日)","ym":"2025-11","count":95,"guests":240,"lunch_c":59,"lunch_g":172,"dinner_c":31,"dinner_g":83,"cancel_c":13},{"date":"2025年11月24日(月)","ym":"2025-11","count":78,"guests":198,"lunch_c":55,"lunch_g":167,"dinner_c":15,"dinner_g":35,"cancel_c":9},{"date":"2025年11月25日(火)","ym":"2025-11","count":37,"guests":85,"lunch_c":21,"lunch_g":43,"dinner_c":13,"dinner_g":41,"cancel_c":4},{"date":"2025年11月26日(水)","ym":"2025-11","count":61,"guests":155,"lunch_c":41,"lunch_g":86,"dinner_c":18,"dinner_g":67,"cancel_c":2},{"date":"2025年11月27日(木)","ym":"2025-11","count":65,"guests":137,"lunch_c":47,"lunch_g":100,"dinner_c":18,"dinner_g":40,"cancel_c":2},{"date":"2025年11月28日(金)","ym":"2025-11","count":78,"guests":182,"lunch_c":47,"lunch_g":120,"dinner_c":29,"dinner_g":80,"cancel_c":10},{"date":"2025年11月29日(土)","ym":"2025-11","count":97,"guests":235,"lunch_c":61,"lunch_g":153,"dinner_c":35,"dinner_g":106,"cancel_c":12},{"date":"2025年11月30日(日)","ym":"2025-11","count":84,"guests":212,"lunch_c":49,"lunch_g":151,"dinner_c":27,"dinner_g":58,"cancel_c":4},{"date":"2025年12月01日(月)","ym":"2025-12","count":35,"guests":65,"lunch_c":18,"lunch_g":24,"dinner_c":16,"dinner_g":41,"cancel_c":0},{"date":"2025年12月02日(火)","ym":"2025-12","count":54,"guests":134,"lunch_c":36,"lunch_g":78,"dinner_c":17,"dinner_g":46,"cancel_c":2},{"date":"2025年12月03日(水)","ym":"2025-12","count":62,"guests":151,"lunch_c":38,"lunch_g":86,"dinner_c":21,"dinner_g":68,"cancel_c":3},{"date":"2025年12月04日(木)","ym":"2025-12","count":68,"guests":146,"lunch_c":55,"lunch_g":103,"dinner_c":17,"dinner_g":46,"cancel_c":6},{"date":"2025年12月05日(金)","ym":"2025-12","count":73,"guests":214,"lunch_c":38,"lunch_g":78,"dinner_c":38,"dinner_g":128,"cancel_c":3},{"date":"2025年12月06日(土)","ym":"2025-12","count":80,"guests":1150,"lunch_c":52,"lunch_g":1102,"dinner_c":24,"dinner_g":99,"cancel_c":9},{"date":"2025年12月07日(日)","ym":"2025-12","count":70,"guests":209,"lunch_c":54,"lunch_g":141,"dinner_c":19,"dinner_g":53,"cancel_c":12},{"date":"2025年12月08日(月)","ym":"2025-12","count":46,"guests":119,"lunch_c":25,"lunch_g":62,"dinner_c":19,"dinner_g":65,"cancel_c":3},{"date":"2025年12月09日(火)","ym":"2025-12","count":51,"guests":139,"lunch_c":33,"lunch_g":82,"dinner_c":12,"dinner_g":60,"cancel_c":6},{"date":"2025年12月10日(水)","ym":"2025-12","count":66,"guests":194,"lunch_c":46,"lunch_g":111,"dinner_c":23,"dinner_g":76,"cancel_c":1},{"date":"2025年12月11日(木)","ym":"2025-12","count":71,"guests":191,"lunch_c":48,"lunch_g":96,"dinner_c":24,"dinner_g":83,"cancel_c":8},{"date":"2025年12月12日(金)","ym":"2025-12","count":71,"guests":202,"lunch_c":37,"lunch_g":94,"dinner_c":27,"dinner_g":125,"cancel_c":7},{"date":"2025年12月13日(土)","ym":"2025-12","count":103,"guests":1199,"lunch_c":55,"lunch_g":956,"dinner_c":39,"dinner_g":125,"cancel_c":14},{"date":"2025年12月14日(日)","ym":"2025-12","count":86,"guests":1136,"lunch_c":55,"lunch_g":988,"dinner_c":26,"dinner_g":64,"cancel_c":10},{"date":"2025年12月15日(月)","ym":"2025-12","count":50,"guests":138,"lunch_c":31,"lunch_g":73,"dinner_c":19,"dinner_g":65,"cancel_c":3},{"date":"2025年12月16日(火)","ym":"2025-12","count":67,"guests":167,"lunch_c":41,"lunch_g":85,"dinner_c":24,"dinner_g":97,"cancel_c":7},{"date":"2025年12月17日(水)","ym":"2025-12","count":63,"guests":175,"lunch_c":37,"lunch_g":75,"dinner_c":31,"dinner_g":89,"cancel_c":4},{"date":"2025年12月18日(木)","ym":"2025-12","count":66,"guests":204,"lunch_c":34,"lunch_g":93,"dinner_c":30,"dinner_g":108,"cancel_c":8},{"date":"2025年12月19日(金)","ym":"2025-12","count":53,"guests":162,"lunch_c":32,"lunch_g":63,"dinner_c":23,"dinner_g":82,"cancel_c":11},{"date":"2025年12月20日(土)","ym":"2025-12","count":97,"guests":250,"lunch_c":47,"lunch_g":134,"dinner_c":41,"dinner_g":119,"cancel_c":17},{"date":"2025年12月21日(日)","ym":"2025-12","count":81,"guests":1117,"lunch_c":59,"lunch_g":1109,"dinner_c":20,"dinner_g":61,"cancel_c":7},{"date":"2025年12月22日(月)","ym":"2025-12","count":37,"guests":127,"lunch_c":20,"lunch_g":42,"dinner_c":20,"dinner_g":76,"cancel_c":3},{"date":"2025年12月23日(火)","ym":"2025-12","count":78,"guests":210,"lunch_c":44,"lunch_g":103,"dinner_c":36,"dinner_g":100,"cancel_c":4},{"date":"2025年12月24日(水)","ym":"2025-12","count":77,"guests":169,"lunch_c":33,"lunch_g":68,"dinner_c":44,"dinner_g":85,"cancel_c":6},{"date":"2025年12月25日(木)","ym":"2025-12","count":80,"guests":188,"lunch_c":33,"lunch_g":74,"dinner_c":39,"dinner_g":120,"cancel_c":7},{"date":"2025年12月26日(金)","ym":"2025-12","count":59,"guests":170,"lunch_c":26,"lunch_g":53,"dinner_c":32,"dinner_g":120,"cancel_c":7},{"date":"2025年12月27日(土)","ym":"2025-12","count":111,"guests":1254,"lunch_c":56,"lunch_g":958,"dinner_c":45,"dinner_g":137,"cancel_c":12},{"date":"2025年12月28日(日)","ym":"2025-12","count":70,"guests":1045,"lunch_c":52,"lunch_g":1113,"dinner_c":23,"dinner_g":84,"cancel_c":9},{"date":"2025年12月29日(月)","ym":"2025-12","count":63,"guests":197,"lunch_c":39,"lunch_g":120,"dinner_c":25,"dinner_g":91,"cancel_c":2},{"date":"2025年12月30日(火)","ym":"2025-12","count":49,"guests":137,"lunch_c":41,"lunch_g":95,"dinner_c":13,"dinner_g":37,"cancel_c":3},{"date":"2025年12月31日(水)","ym":"2025-12","count":56,"guests":119,"lunch_c":26,"lunch_g":64,"dinner_c":28,"dinner_g":55,"cancel_c":4},{"date":"2026年01月01日(木)","ym":"2026-01","count":61,"guests":161,"lunch_c":46,"lunch_g":114,"dinner_c":20,"dinner_g":50,"cancel_c":2},{"date":"2026年01月02日(金)","ym":"2026-01","count":73,"guests":193,"lunch_c":48,"lunch_g":128,"dinner_c":20,"dinner_g":48,"cancel_c":4},{"date":"2026年01月03日(土)","ym":"2026-01","count":93,"guests":211,"lunch_c":61,"lunch_g":135,"dinner_c":30,"dinner_g":64,"cancel_c":10},{"date":"2026年01月04日(日)","ym":"2026-01","count":83,"guests":212,"lunch_c":60,"lunch_g":178,"dinner_c":23,"dinner_g":52,"cancel_c":4},{"date":"2026年01月05日(月)","ym":"2026-01","count":25,"guests":79,"lunch_c":16,"lunch_g":43,"dinner_c":11,"dinner_g":26,"cancel_c":1},{"date":"2026年01月06日(火)","ym":"2026-01","count":48,"guests":97,"lunch_c":36,"lunch_g":78,"dinner_c":9,"dinner_g":24,"cancel_c":1},{"date":"2026年01月07日(水)","ym":"2026-01","count":53,"guests":105,"lunch_c":35,"lunch_g":73,"dinner_c":14,"dinner_g":29,"cancel_c":3},{"date":"2026年01月08日(木)","ym":"2026-01","count":50,"guests":95,"lunch_c":36,"lunch_g":66,"dinner_c":15,"dinner_g":32,"cancel_c":0},{"date":"2026年01月09日(金)","ym":"2026-01","count":66,"guests":170,"lunch_c":35,"lunch_g":86,"dinner_c":33,"dinner_g":94,"cancel_c":3},{"date":"2026年01月10日(土)","ym":"2026-01","count":87,"guests":230,"lunch_c":60,"lunch_g":146,"dinner_c":28,"dinner_g":77,"cancel_c":8},{"date":"2026年01月11日(日)","ym":"2026-01","count":80,"guests":242,"lunch_c":61,"lunch_g":154,"dinner_c":31,"dinner_g":77,"cancel_c":9},{"date":"2026年01月12日(月)","ym":"2026-01","count":80,"guests":173,"lunch_c":61,"lunch_g":150,"dinner_c":20,"dinner_g":39,"cancel_c":6},{"date":"2026年01月13日(火)","ym":"2026-01","count":32,"guests":84,"lunch_c":15,"lunch_g":37,"dinner_c":16,"dinner_g":44,"cancel_c":5},{"date":"2026年01月14日(水)","ym":"2026-01","count":54,"guests":124,"lunch_c":40,"lunch_g":76,"dinner_c":16,"dinner_g":51,"cancel_c":5},{"date":"2026年01月15日(木)","ym":"2026-01","count":51,"guests":123,"lunch_c":36,"lunch_g":86,"dinner_c":16,"dinner_g":49,"cancel_c":4},{"date":"2026年01月16日(金)","ym":"2026-01","count":71,"guests":183,"lunch_c":48,"lunch_g":95,"dinner_c":23,"dinner_g":82,"cancel_c":8},{"date":"2026年01月17日(土)","ym":"2026-01","count":98,"guests":293,"lunch_c":56,"lunch_g":150,"dinner_c":40,"dinner_g":121,"cancel_c":3},{"date":"2026年01月18日(日)","ym":"2026-01","count":86,"guests":245,"lunch_c":58,"lunch_g":150,"dinner_c":29,"dinner_g":69,"cancel_c":5},{"date":"2026年01月19日(月)","ym":"2026-01","count":35,"guests":79,"lunch_c":31,"lunch_g":66,"dinner_c":7,"dinner_g":19,"cancel_c":0},{"date":"2026年01月20日(火)","ym":"2026-01","count":51,"guests":118,"lunch_c":42,"lunch_g":100,"dinner_c":10,"dinner_g":22,"cancel_c":0},{"date":"2026年01月21日(水)","ym":"2026-01","count":47,"guests":126,"lunch_c":38,"lunch_g":69,"dinner_c":13,"dinner_g":52,"cancel_c":3},{"date":"2026年01月22日(木)","ym":"2026-01","count":37,"guests":103,"lunch_c":22,"lunch_g":55,"dinner_c":18,"dinner_g":50,"cancel_c":3},{"date":"2026年01月23日(金)","ym":"2026-01","count":60,"guests":164,"lunch_c":33,"lunch_g":72,"dinner_c":31,"dinner_g":100,"cancel_c":5},{"date":"2026年01月24日(土)","ym":"2026-01","count":83,"guests":274,"lunch_c":55,"lunch_g":149,"dinner_c":38,"dinner_g":120,"cancel_c":14},{"date":"2026年01月25日(日)","ym":"2026-01","count":61,"guests":190,"lunch_c":49,"lunch_g":141,"dinner_c":16,"dinner_g":58,"cancel_c":10},{"date":"2026年01月26日(月)","ym":"2026-01","count":38,"guests":89,"lunch_c":30,"lunch_g":69,"dinner_c":7,"dinner_g":27,"cancel_c":2},{"date":"2026年01月27日(火)","ym":"2026-01","count":46,"guests":119,"lunch_c":33,"lunch_g":71,"dinner_c":13,"dinner_g":46,"cancel_c":5},{"date":"2026年01月28日(水)","ym":"2026-01","count":63,"guests":147,"lunch_c":45,"lunch_g":94,"dinner_c":17,"dinner_g":51,"cancel_c":4},{"date":"2026年01月29日(木)","ym":"2026-01","count":56,"guests":166,"lunch_c":40,"lunch_g":105,"dinner_c":19,"dinner_g":54,"cancel_c":0},{"date":"2026年01月30日(金)","ym":"2026-01","count":68,"guests":171,"lunch_c":51,"lunch_g":109,"dinner_c":16,"dinner_g":67,"cancel_c":2},{"date":"2026年01月31日(土)","ym":"2026-01","count":77,"guests":225,"lunch_c":53,"lunch_g":144,"dinner_c":30,"dinner_g":79,"cancel_c":8},{"date":"2026年02月01日(日)","ym":"2026-02","count":80,"guests":202,"lunch_c":54,"lunch_g":149,"dinner_c":23,"dinner_g":52,"cancel_c":14},{"date":"2026年02月02日(月)","ym":"2026-02","count":39,"guests":100,"lunch_c":28,"lunch_g":54,"dinner_c":10,"dinner_g":57,"cancel_c":1},{"date":"2026年02月03日(火)","ym":"2026-02","count":41,"guests":110,"lunch_c":30,"lunch_g":63,"dinner_c":7,"dinner_g":45,"cancel_c":2},{"date":"2026年02月04日(水)","ym":"2026-02","count":48,"guests":104,"lunch_c":34,"lunch_g":75,"dinner_c":12,"dinner_g":37,"cancel_c":4},{"date":"2026年02月05日(木)","ym":"2026-02","count":61,"guests":131,"lunch_c":39,"lunch_g":98,"dinner_c":16,"dinner_g":29,"cancel_c":3},{"date":"2026年02月06日(金)","ym":"2026-02","count":62,"guests":150,"lunch_c":45,"lunch_g":99,"dinner_c":19,"dinner_g":51,"cancel_c":8},{"date":"2026年02月07日(土)","ym":"2026-02","count":70,"guests":245,"lunch_c":52,"lunch_g":146,"dinner_c":18,"dinner_g":101,"cancel_c":10},{"date":"2026年02月08日(日)","ym":"2026-02","count":61,"guests":149,"lunch_c":55,"lunch_g":132,"dinner_c":15,"dinner_g":36,"cancel_c":33},{"date":"2026年02月09日(月)","ym":"2026-02","count":40,"guests":92,"lunch_c":25,"lunch_g":56,"dinner_c":10,"dinner_g":35,"cancel_c":2},{"date":"2026年02月10日(火)","ym":"2026-02","count":58,"guests":138,"lunch_c":42,"lunch_g":78,"dinner_c":20,"dinner_g":63,"cancel_c":5},{"date":"2026年02月11日(水)","ym":"2026-02","count":72,"guests":198,"lunch_c":62,"lunch_g":143,"dinner_c":16,"dinner_g":33,"cancel_c":7},{"date":"2026年02月12日(木)","ym":"2026-02","count":56,"guests":127,"lunch_c":37,"lunch_g":81,"dinner_c":20,"dinner_g":39,"cancel_c":4},{"date":"2026年02月13日(金)","ym":"2026-02","count":81,"guests":189,"lunch_c":52,"lunch_g":86,"dinner_c":32,"dinner_g":97,"cancel_c":2},{"date":"2026年02月14日(土)","ym":"2026-02","count":81,"guests":207,"lunch_c":63,"lunch_g":147,"dinner_c":21,"dinner_g":67,"cancel_c":11},{"date":"2026年02月15日(日)","ym":"2026-02","count":90,"guests":237,"lunch_c":58,"lunch_g":156,"dinner_c":26,"dinner_g":70,"cancel_c":19},{"date":"2026年02月16日(月)","ym":"2026-02","count":0,"guests":0,"lunch_c":0,"lunch_g":0,"dinner_c":0,"dinner_g":0,"cancel_c":0},{"date":"2026年02月17日(火)","ym":"2026-02","count":0,"guests":0,"lunch_c":0,"lunch_g":0,"dinner_c":0,"dinner_g":0,"cancel_c":0},{"date":"2026年02月18日(水)","ym":"2026-02","count":56,"guests":129,"lunch_c":43,"lunch_g":90,"dinner_c":11,"dinner_g":34,"cancel_c":1},{"date":"2026年02月19日(木)","ym":"2026-02","count":53,"guests":138,"lunch_c":38,"lunch_g":81,"dinner_c":17,"dinner_g":59,"cancel_c":4},{"date":"2026年02月20日(金)","ym":"2026-02","count":58,"guests":188,"lunch_c":30,"lunch_g":76,"dinner_c":31,"dinner_g":108,"cancel_c":9},{"date":"2026年02月21日(土)","ym":"2026-02","count":74,"guests":219,"lunch_c":53,"lunch_g":147,"dinner_c":22,"dinner_g":68,"cancel_c":10},{"date":"2026年02月22日(日)","ym":"2026-02","count":84,"guests":272,"lunch_c":56,"lunch_g":161,"dinner_c":33,"dinner_g":92,"cancel_c":12},{"date":"2026年02月23日(月)","ym":"2026-02","count":75,"guests":203,"lunch_c":58,"lunch_g":158,"dinner_c":20,"dinner_g":56,"cancel_c":9},{"date":"2026年02月24日(火)","ym":"2026-02","count":50,"guests":129,"lunch_c":38,"lunch_g":76,"dinner_c":13,"dinner_g":52,"cancel_c":1},{"date":"2026年02月25日(水)","ym":"2026-02","count":34,"guests":73,"lunch_c":17,"lunch_g":36,"dinner_c":15,"dinner_g":42,"cancel_c":2},{"date":"2026年02月26日(木)","ym":"2026-02","count":35,"guests":109,"lunch_c":25,"lunch_g":63,"dinner_c":11,"dinner_g":58,"cancel_c":4},{"date":"2026年02月27日(金)","ym":"2026-02","count":59,"guests":168,"lunch_c":21,"lunch_g":50,"dinner_c":36,"dinner_g":111,"cancel_c":4},{"date":"2026年02月28日(土)","ym":"2026-02","count":77,"guests":222,"lunch_c":57,"lunch_g":139,"dinner_c":23,"dinner_g":63,"cancel_c":5},{"date":"2026年03月01日(日)","ym":"2026-03","count":70,"guests":205,"lunch_c":48,"lunch_g":151,"dinner_c":25,"dinner_g":52,"cancel_c":7},{"date":"2026年03月02日(月)","ym":"2026-03","count":32,"guests":77,"lunch_c":19,"lunch_g":42,"dinner_c":15,"dinner_g":35,"cancel_c":1},{"date":"2026年03月03日(火)","ym":"2026-03","count":44,"guests":85,"lunch_c":29,"lunch_g":54,"dinner_c":14,"dinner_g":30,"cancel_c":1},{"date":"2026年03月04日(水)","ym":"2026-03","count":42,"guests":105,"lunch_c":22,"lunch_g":52,"dinner_c":20,"dinner_g":51,"cancel_c":4},{"date":"2026年03月05日(木)","ym":"2026-03","count":60,"guests":131,"lunch_c":45,"lunch_g":96,"dinner_c":18,"dinner_g":51,"cancel_c":3},{"date":"2026年03月06日(金)","ym":"2026-03","count":59,"guests":132,"lunch_c":35,"lunch_g":75,"dinner_c":20,"dinner_g":70,"cancel_c":1},{"date":"2026年03月07日(土)","ym":"2026-03","count":77,"guests":217,"lunch_c":46,"lunch_g":139,"dinner_c":29,"dinner_g":76,"cancel_c":7},{"date":"2026年03月08日(日)","ym":"2026-03","count":64,"guests":177,"lunch_c":57,"lunch_g":139,"dinner_c":16,"dinner_g":54,"cancel_c":6},{"date":"2026年03月09日(月)","ym":"2026-03","count":42,"guests":87,"lunch_c":22,"lunch_g":45,"dinner_c":19,"dinner_g":44,"cancel_c":2},{"date":"2026年03月10日(火)","ym":"2026-03","count":40,"guests":104,"lunch_c":30,"lunch_g":67,"dinner_c":11,"dinner_g":33,"cancel_c":5},{"date":"2026年03月11日(水)","ym":"2026-03","count":50,"guests":127,"lunch_c":36,"lunch_g":79,"dinner_c":19,"dinner_g":56,"cancel_c":5},{"date":"2026年03月12日(木)","ym":"2026-03","count":51,"guests":131,"lunch_c":36,"lunch_g":65,"dinner_c":17,"dinner_g":64,"cancel_c":7},{"date":"2026年03月13日(金)","ym":"2026-03","count":57,"guests":133,"lunch_c":33,"lunch_g":66,"dinner_c":28,"dinner_g":72,"cancel_c":8},{"date":"2026年03月14日(土)","ym":"2026-03","count":81,"guests":232,"lunch_c":44,"lunch_g":133,"dinner_c":36,"dinner_g":88,"cancel_c":10},{"date":"2026年03月15日(日)","ym":"2026-03","count":64,"guests":204,"lunch_c":54,"lunch_g":166,"dinner_c":16,"dinner_g":44,"cancel_c":21},{"date":"2026年03月16日(月)","ym":"2026-03","count":37,"guests":91,"lunch_c":22,"lunch_g":52,"dinner_c":12,"dinner_g":35,"cancel_c":5},{"date":"2026年03月17日(火)","ym":"2026-03","count":53,"guests":153,"lunch_c":37,"lunch_g":92,"dinner_c":15,"dinner_g":62,"cancel_c":1},{"date":"2026年03月18日(水)","ym":"2026-03","count":58,"guests":142,"lunch_c":43,"lunch_g":85,"dinner_c":16,"dinner_g":52,"cancel_c":3},{"date":"2026年03月19日(木)","ym":"2026-03","count":71,"guests":166,"lunch_c":39,"lunch_g":80,"dinner_c":24,"dinner_g":89,"cancel_c":4},{"date":"2026年03月20日(金)","ym":"2026-03","count":96,"guests":236,"lunch_c":58,"lunch_g":158,"dinner_c":31,"dinner_g":79,"cancel_c":14},{"date":"2026年03月21日(土)","ym":"2026-03","count":79,"guests":209,"lunch_c":55,"lunch_g":161,"dinner_c":30,"dinner_g":66,"cancel_c":13},{"date":"2026年03月22日(日)","ym":"2026-03","count":80,"guests":238,"lunch_c":51,"lunch_g":153,"dinner_c":24,"dinner_g":78,"cancel_c":8},{"date":"2026年03月23日(月)","ym":"2026-03","count":51,"guests":148,"lunch_c":38,"lunch_g":74,"dinner_c":19,"dinner_g":64,"cancel_c":7},{"date":"2026年03月24日(火)","ym":"2026-03","count":76,"guests":209,"lunch_c":45,"lunch_g":127,"dinner_c":28,"dinner_g":101,"cancel_c":6},{"date":"2026年03月25日(水)","ym":"2026-03","count":81,"guests":205,"lunch_c":47,"lunch_g":121,"dinner_c":30,"dinner_g":97,"cancel_c":10},{"date":"2026年03月26日(木)","ym":"2026-03","count":55,"guests":174,"lunch_c":38,"lunch_g":98,"dinner_c":20,"dinner_g":70,"cancel_c":9},{"date":"2026年03月27日(金)","ym":"2026-03","count":73,"guests":271,"lunch_c":50,"lunch_g":116,"dinner_c":23,"dinner_g":135,"cancel_c":11},{"date":"2026年03月28日(土)","ym":"2026-03","count":75,"guests":251,"lunch_c":42,"lunch_g":149,"dinner_c":28,"dinner_g":113,"cancel_c":11},{"date":"2026年03月29日(日)","ym":"2026-03","count":93,"guests":249,"lunch_c":57,"lunch_g":152,"dinner_c":31,"dinner_g":88,"cancel_c":16},{"date":"2026年03月30日(月)","ym":"2026-03","count":69,"guests":197,"lunch_c":47,"lunch_g":107,"dinner_c":19,"dinner_g":87,"cancel_c":8},{"date":"2026年03月31日(火)","ym":"2026-03","count":65,"guests":179,"lunch_c":40,"lunch_g":107,"dinner_c":22,"dinner_g":82,"cancel_c":8},{"date":"2026年04月01日(水)","ym":"2026-04","count":53,"guests":162,"lunch_c":40,"lunch_g":126,"dinner_c":13,"dinner_g":51,"cancel_c":6},{"date":"2026年04月02日(木)","ym":"2026-04","count":62,"guests":155,"lunch_c":38,"lunch_g":101,"dinner_c":23,"dinner_g":68,"cancel_c":3},{"date":"2026年04月03日(金)","ym":"2026-04","count":80,"guests":227,"lunch_c":51,"lunch_g":128,"dinner_c":31,"dinner_g":89,"cancel_c":9},{"date":"2026年04月04日(土)","ym":"2026-04","count":76,"guests":252,"lunch_c":50,"lunch_g":158,"dinner_c":31,"dinner_g":102,"cancel_c":15},{"date":"2026年04月05日(日)","ym":"2026-04","count":83,"guests":217,"lunch_c":58,"lunch_g":152,"dinner_c":27,"dinner_g":70,"cancel_c":13},{"date":"2026年04月06日(月)","ym":"2026-04","count":37,"guests":92,"lunch_c":18,"lunch_g":38,"dinner_c":21,"dinner_g":50,"cancel_c":4},{"date":"2026年04月07日(火)","ym":"2026-04","count":57,"guests":129,"lunch_c":33,"lunch_g":77,"dinner_c":24,"dinner_g":67,"cancel_c":4},{"date":"2026年04月08日(水)","ym":"2026-04","count":55,"guests":155,"lunch_c":46,"lunch_g":98,"dinner_c":12,"dinner_g":47,"cancel_c":3},{"date":"2026年04月09日(木)","ym":"2026-04","count":48,"guests":136,"lunch_c":38,"lunch_g":73,"dinner_c":15,"dinner_g":62,"cancel_c":2},{"date":"2026年04月10日(金)","ym":"2026-04","count":52,"guests":147,"lunch_c":30,"lunch_g":65,"dinner_c":22,"dinner_g":72,"cancel_c":5},{"date":"2026年04月11日(土)","ym":"2026-04","count":90,"guests":226,"lunch_c":56,"lunch_g":161,"dinner_c":26,"dinner_g":84,"cancel_c":11},{"date":"2026年04月12日(日)","ym":"2026-04","count":64,"guests":178,"lunch_c":43,"lunch_g":128,"dinner_c":20,"dinner_g":55,"cancel_c":9},{"date":"2026年04月13日(月)","ym":"2026-04","count":37,"guests":97,"lunch_c":25,"lunch_g":59,"dinner_c":12,"dinner_g":47,"cancel_c":2},{"date":"2026年04月14日(火)","ym":"2026-04","count":56,"guests":156,"lunch_c":34,"lunch_g":78,"dinner_c":17,"dinner_g":79,"cancel_c":0},{"date":"2026年04月15日(水)","ym":"2026-04","count":53,"guests":127,"lunch_c":38,"lunch_g":78,"dinner_c":17,"dinner_g":62,"cancel_c":2},{"date":"2026年04月16日(木)","ym":"2026-04","count":59,"guests":142,"lunch_c":34,"lunch_g":81,"dinner_c":20,"dinner_g":59,"cancel_c":3},{"date":"2026年04月17日(金)","ym":"2026-04","count":82,"guests":206,"lunch_c":41,"lunch_g":109,"dinner_c":35,"dinner_g":98,"cancel_c":4},{"date":"2026年04月18日(土)","ym":"2026-04","count":83,"guests":235,"lunch_c":53,"lunch_g":152,"dinner_c":27,"dinner_g":80,"cancel_c":11},{"date":"2026年04月19日(日)","ym":"2026-04","count":72,"guests":188,"lunch_c":49,"lunch_g":157,"dinner_c":18,"dinner_g":50,"cancel_c":3},{"date":"2026年04月20日(月)","ym":"2026-04","count":24,"guests":76,"lunch_c":13,"lunch_g":32,"dinner_c":12,"dinner_g":48,"cancel_c":2},{"date":"2026年04月21日(火)","ym":"2026-04","count":48,"guests":107,"lunch_c":31,"lunch_g":73,"dinner_c":12,"dinner_g":30,"cancel_c":2},{"date":"2026年04月22日(水)","ym":"2026-04","count":55,"guests":146,"lunch_c":39,"lunch_g":90,"dinner_c":13,"dinner_g":56,"cancel_c":3},{"date":"2026年04月23日(木)","ym":"2026-04","count":56,"guests":149,"lunch_c":35,"lunch_g":89,"dinner_c":15,"dinner_g":63,"cancel_c":4},{"date":"2026年04月24日(金)","ym":"2026-04","count":69,"guests":177,"lunch_c":33,"lunch_g":66,"dinner_c":31,"dinner_g":113,"cancel_c":7},{"date":"2026年04月25日(土)","ym":"2026-04","count":79,"guests":197,"lunch_c":49,"lunch_g":126,"dinner_c":31,"dinner_g":73,"cancel_c":11},{"date":"2026年04月26日(日)","ym":"2026-04","count":77,"guests":212,"lunch_c":63,"lunch_g":150,"dinner_c":17,"dinner_g":51,"cancel_c":16},{"date":"2026年04月27日(月)","ym":"2026-04","count":36,"guests":117,"lunch_c":25,"lunch_g":56,"dinner_c":12,"dinner_g":55,"cancel_c":4},{"date":"2026年04月28日(火)","ym":"2026-04","count":60,"guests":135,"lunch_c":31,"lunch_g":56,"dinner_c":25,"dinner_g":69,"cancel_c":3},{"date":"2026年04月29日(水)","ym":"2026-04","count":64,"guests":173,"lunch_c":54,"lunch_g":151,"dinner_c":13,"dinner_g":30,"cancel_c":7},{"date":"2026年04月30日(木)","ym":"2026-04","count":36,"guests":143,"lunch_c":15,"lunch_g":108,"dinner_c":19,"dinner_g":46,"cancel_c":0},{"date":"2026年05月01日(金)","ym":"2026-05","count":55,"guests":144,"lunch_c":33,"lunch_g":80,"dinner_c":23,"dinner_g":62,"cancel_c":8},{"date":"2026年05月02日(土)","ym":"2026-05","count":69,"guests":207,"lunch_c":49,"lunch_g":149,"dinner_c":21,"dinner_g":57,"cancel_c":3},{"date":"2026年05月03日(日)","ym":"2026-05","count":80,"guests":231,"lunch_c":51,"lunch_g":165,"dinner_c":20,"dinner_g":74,"cancel_c":8},{"date":"2026年05月04日(月)","ym":"2026-05","count":85,"guests":251,"lunch_c":59,"lunch_g":184,"dinner_c":32,"dinner_g":81,"cancel_c":4},{"date":"2026年05月05日(火)","ym":"2026-05","count":99,"guests":249,"lunch_c":60,"lunch_g":162,"dinner_c":33,"dinner_g":81,"cancel_c":7},{"date":"2026年05月06日(水)","ym":"2026-05","count":66,"guests":185,"lunch_c":49,"lunch_g":123,"dinner_c":17,"dinner_g":46,"cancel_c":7},{"date":"2026年05月07日(木)","ym":"2026-05","count":43,"guests":103,"lunch_c":24,"lunch_g":48,"dinner_c":20,"dinner_g":58,"cancel_c":0},{"date":"2026年05月08日(金)","ym":"2026-05","count":40,"guests":126,"lunch_c":29,"lunch_g":57,"dinner_c":17,"dinner_g":60,"cancel_c":3},{"date":"2026年05月09日(土)","ym":"2026-05","count":86,"guests":198,"lunch_c":52,"lunch_g":129,"dinner_c":27,"dinner_g":63,"cancel_c":10},{"date":"2026年05月10日(日)","ym":"2026-05","count":75,"guests":204,"lunch_c":56,"lunch_g":133,"dinner_c":20,"dinner_g":56,"cancel_c":8},{"date":"2026年05月11日(月)","ym":"2026-05","count":33,"guests":106,"lunch_c":27,"lunch_g":75,"dinner_c":10,"dinner_g":24,"cancel_c":5},{"date":"2026年05月12日(火)","ym":"2026-05","count":40,"guests":142,"lunch_c":33,"lunch_g":115,"dinner_c":9,"dinner_g":23,"cancel_c":2},{"date":"2026年05月13日(水)","ym":"2026-05","count":41,"guests":95,"lunch_c":28,"lunch_g":58,"dinner_c":16,"dinner_g":50,"cancel_c":0},{"date":"2026年05月14日(木)","ym":"2026-05","count":45,"guests":128,"lunch_c":28,"lunch_g":75,"dinner_c":16,"dinner_g":39,"cancel_c":3},{"date":"2026年05月15日(金)","ym":"2026-05","count":62,"guests":166,"lunch_c":38,"lunch_g":97,"dinner_c":28,"dinner_g":74,"cancel_c":7},{"date":"2026年05月16日(土)","ym":"2026-05","count":86,"guests":257,"lunch_c":57,"lunch_g":148,"dinner_c":29,"dinner_g":84,"cancel_c":3},{"date":"2026年05月17日(日)","ym":"2026-05","count":84,"guests":243,"lunch_c":76,"lunch_g":196,"dinner_c":16,"dinner_g":44,"cancel_c":15},{"date":"2026年05月18日(月)","ym":"2026-05","count":35,"guests":93,"lunch_c":20,"lunch_g":56,"dinner_c":12,"dinner_g":43,"cancel_c":1},{"date":"2026年05月19日(火)","ym":"2026-05","count":61,"guests":123,"lunch_c":43,"lunch_g":86,"dinner_c":14,"dinner_g":30,"cancel_c":6},{"date":"2026年05月20日(水)","ym":"2026-05","count":56,"guests":170,"lunch_c":42,"lunch_g":91,"dinner_c":18,"dinner_g":87,"cancel_c":3},{"date":"2026年05月21日(木)","ym":"2026-05","count":49,"guests":123,"lunch_c":32,"lunch_g":50,"dinner_c":20,"dinner_g":70,"cancel_c":3},{"date":"2026年05月22日(金)","ym":"2026-05","count":62,"guests":161,"lunch_c":33,"lunch_g":64,"dinner_c":25,"dinner_g":86,"cancel_c":3},{"date":"2026年05月23日(土)","ym":"2026-05","count":86,"guests":254,"lunch_c":61,"lunch_g":156,"dinner_c":29,"dinner_g":84,"cancel_c":8},{"date":"2026年05月24日(日)","ym":"2026-05","count":73,"guests":230,"lunch_c":61,"lunch_g":156,"dinner_c":19,"dinner_g":73,"cancel_c":5},{"date":"2026年05月25日(月)","ym":"2026-05","count":29,"guests":75,"lunch_c":15,"lunch_g":49,"dinner_c":13,"dinner_g":36,"cancel_c":6},{"date":"2026年05月26日(火)","ym":"2026-05","count":51,"guests":139,"lunch_c":43,"lunch_g":91,"dinner_c":10,"dinner_g":55,"cancel_c":1},{"date":"2026年05月27日(水)","ym":"2026-05","count":49,"guests":111,"lunch_c":28,"lunch_g":55,"dinner_c":20,"dinner_g":57,"cancel_c":2},{"date":"2026年05月28日(木)","ym":"2026-05","count":51,"guests":141,"lunch_c":33,"lunch_g":80,"dinner_c":18,"dinner_g":61,"cancel_c":4},{"date":"2026年05月29日(金)","ym":"2026-05","count":72,"guests":171,"lunch_c":43,"lunch_g":86,"dinner_c":30,"dinner_g":86,"cancel_c":6},{"date":"2026年05月30日(土)","ym":"2026-05","count":113,"guests":287,"lunch_c":71,"lunch_g":164,"dinner_c":38,"dinner_g":101,"cancel_c":16},{"date":"2026年05月31日(日)","ym":"2026-05","count":85,"guests":223,"lunch_c":57,"lunch_g":167,"dinner_c":24,"dinner_g":49,"cancel_c":8},{"date":"2026年06月01日(月)","ym":"2026-06","count":37,"guests":83,"lunch_c":29,"lunch_g":65,"dinner_c":9,"dinner_g":21,"cancel_c":1},{"date":"2026年06月02日(火)","ym":"2026-06","count":49,"guests":103,"lunch_c":37,"lunch_g":69,"dinner_c":10,"dinner_g":31,"cancel_c":3},{"date":"2026年06月03日(水)","ym":"2026-06","count":20,"guests":38,"lunch_c":9,"lunch_g":14,"dinner_c":11,"dinner_g":26,"cancel_c":15},{"date":"2026年06月04日(木)","ym":"2026-06","count":60,"guests":157,"lunch_c":38,"lunch_g":80,"dinner_c":19,"dinner_g":62,"cancel_c":3},{"date":"2026年06月05日(金)","ym":"2026-06","count":69,"guests":172,"lunch_c":46,"lunch_g":98,"dinner_c":29,"dinner_g":69,"cancel_c":13},{"date":"2026年06月06日(土)","ym":"2026-06","count":92,"guests":257,"lunch_c":64,"lunch_g":172,"dinner_c":32,"dinner_g":90,"cancel_c":11},{"date":"2026年06月07日(日)","ym":"2026-06","count":74,"guests":203,"lunch_c":56,"lunch_g":168,"dinner_c":19,"dinner_g":45,"cancel_c":11},{"date":"2026年06月08日(月)","ym":"2026-06","count":46,"guests":105,"lunch_c":33,"lunch_g":68,"dinner_c":17,"dinner_g":44,"cancel_c":5},{"date":"2026年06月09日(火)","ym":"2026-06","count":57,"guests":109,"lunch_c":42,"lunch_g":90,"dinner_c":14,"dinner_g":34,"cancel_c":1},{"date":"2026年06月10日(水)","ym":"2026-06","count":69,"guests":174,"lunch_c":41,"lunch_g":83,"dinner_c":22,"dinner_g":80,"cancel_c":5},{"date":"2026年06月11日(木)","ym":"2026-06","count":66,"guests":159,"lunch_c":50,"lunch_g":102,"dinner_c":17,"dinner_g":58,"cancel_c":2},{"date":"2026年06月12日(金)","ym":"2026-06","count":58,"guests":144,"lunch_c":31,"lunch_g":76,"dinner_c":29,"dinner_g":83,"cancel_c":10},{"date":"2026年06月13日(土)","ym":"2026-06","count":108,"guests":277,"lunch_c":63,"lunch_g":173,"dinner_c":44,"dinner_g":101,"cancel_c":10},{"date":"2026年06月14日(日)","ym":"2026-06","count":81,"guests":247,"lunch_c":58,"lunch_g":167,"dinner_c":21,"dinner_g":74,"cancel_c":13},{"date":"2026年06月15日(月)","ym":"2026-06","count":47,"guests":126,"lunch_c":37,"lunch_g":86,"dinner_c":11,"dinner_g":43,"cancel_c":4},{"date":"2026年06月16日(火)","ym":"2026-06","count":59,"guests":165,"lunch_c":42,"lunch_g":88,"dinner_c":18,"dinner_g":68,"cancel_c":3},{"date":"2026年06月17日(水)","ym":"2026-06","count":63,"guests":151,"lunch_c":42,"lunch_g":83,"dinner_c":25,"dinner_g":68,"cancel_c":5},{"date":"2026年06月18日(木)","ym":"2026-06","count":60,"guests":132,"lunch_c":39,"lunch_g":82,"dinner_c":17,"dinner_g":55,"cancel_c":2},{"date":"2026年06月19日(金)","ym":"2026-06","count":65,"guests":174,"lunch_c":42,"lunch_g":86,"dinner_c":25,"dinner_g":96,"cancel_c":3},{"date":"2026年06月20日(土)","ym":"2026-06","count":92,"guests":251,"lunch_c":64,"lunch_g":184,"dinner_c":29,"dinner_g":62,"cancel_c":7},{"date":"2026年06月21日(日)","ym":"2026-06","count":62,"guests":205,"lunch_c":40,"lunch_g":140,"dinner_c":27,"dinner_g":58,"cancel_c":8},{"date":"2026年06月22日(月)","ym":"2026-06","count":23,"guests":74,"lunch_c":17,"lunch_g":57,"dinner_c":7,"dinner_g":21,"cancel_c":4},{"date":"2026年06月23日(火)","ym":"2026-06","count":7,"guests":23,"lunch_c":4,"lunch_g":11,"dinner_c":3,"dinner_g":13,"cancel_c":1},{"date":"2026年06月24日(水)","ym":"2026-06","count":13,"guests":42,"lunch_c":8,"lunch_g":18,"dinner_c":6,"dinner_g":23,"cancel_c":0},{"date":"2026年06月25日(木)","ym":"2026-06","count":11,"guests":54,"lunch_c":9,"lunch_g":25,"dinner_c":3,"dinner_g":29,"cancel_c":2},{"date":"2026年06月26日(金)","ym":"2026-06","count":14,"guests":56,"lunch_c":3,"lunch_g":8,"dinner_c":9,"dinner_g":43,"cancel_c":5},{"date":"2026年06月27日(土)","ym":"2026-06","count":31,"guests":98,"lunch_c":27,"lunch_g":78,"dinner_c":5,"dinner_g":16,"cancel_c":5},{"date":"2026年06月28日(日)","ym":"2026-06","count":16,"guests":68,"lunch_c":13,"lunch_g":56,"dinner_c":4,"dinner_g":12,"cancel_c":4},{"date":"2026年06月29日(月)","ym":"2026-06","count":6,"guests":26,"lunch_c":3,"lunch_g":10,"dinner_c":3,"dinner_g":18,"cancel_c":0},{"date":"2026年06月30日(火)","ym":"2026-06","count":4,"guests":8,"lunch_c":3,"lunch_g":7,"dinner_c":1,"dinner_g":2,"cancel_c":0}],"period":"2025年07月01日〜2026年06月30日","daypart":{"all":{"count":17220,"guests":57689,"est_rev":217877855},"lunch":{"count":11381,"guests":35439,"est_rev":141858839},"dinner":{"count":6175,"guests":17687,"est_rev":88368065},"cancel":{"count":1822,"guests":0,"est_rev":0}},"courses":[{"name":"旬彩コース","price":4418,"sold":7,"amount":32100,"lunch_sold":0,"dinner_sold":7},{"name":"炭火焼き宴会コース","price":6119,"sold":15,"amount":105820,"lunch_sold":2,"dinner_sold":15},{"name":"フリードリンク付定番宴会","price":1433,"sold":76,"amount":111104,"lunch_sold":49,"dinner_sold":20},{"name":"季節の贅沢コース","price":2679,"sold":274,"amount":935394,"lunch_sold":282,"dinner_sold":0},{"name":"ランチ御膳A","price":3910,"sold":93,"amount":399992,"lunch_sold":92,"dinner_sold":0},{"name":"灯のおすすめコース","price":2577,"sold":62,"amount":174994,"lunch_sold":61,"dinner_sold":0},{"name":"炉端満喫プラン","price":1765,"sold":37,"amount":86634,"lunch_sold":0,"dinner_sold":41},{"name":"早割カジュアル宴会","price":4165,"sold":254,"amount":1342341,"lunch_sold":0,"dinner_sold":264},{"name":"旬魚と炭火のコース","price":5815,"sold":78,"amount":462769,"lunch_sold":0,"dinner_sold":75},{"name":"乾杯ドリンク付コース","price":4325,"sold":10,"amount":44923,"lunch_sold":0,"dinner_sold":9},{"name":"お料理当日選択プラン","price":3795,"sold":3,"amount":10993,"lunch_sold":0,"dinner_sold":3},{"name":"二次会お手軽コース","price":2220,"sold":4,"amount":10065,"lunch_sold":0,"dinner_sold":4},{"name":"炭火名物コース","price":4648,"sold":395,"amount":2157959,"lunch_sold":0,"dinner_sold":394},{"name":"ゆったり3時間宴会","price":5156,"sold":141,"amount":842635,"lunch_sold":0,"dinner_sold":140},{"name":"選べるドリンクコース","price":3570,"sold":17,"amount":78241,"lunch_sold":0,"dinner_sold":17},{"name":"定番お料理コース","price":3352,"sold":20,"amount":73738,"lunch_sold":0,"dinner_sold":19},{"name":"平日限定ロング宴会","price":6263,"sold":4,"amount":22938,"lunch_sold":0,"dinner_sold":3},{"name":"当日メニュー選択予約","price":0,"sold":1721,"amount":0,"lunch_sold":1135,"dinner_sold":669},{"name":"当日メニュー選択予約","price":0,"sold":244,"amount":0,"lunch_sold":242,"dinner_sold":26}],"routes":[{"name":"直接予約","count":61,"guests":5718,"amount":0,"lunch_g":5060,"dinner_g":46},{"name":"電話予約","count":1259,"guests":6012,"amount":45131,"lunch_g":3001,"dinner_g":2742},{"name":"ウォークイン","count":9596,"guests":19699,"amount":0,"lunch_g":13705,"dinner_g":6987},{"name":"一休.comレストラン","count":551,"guests":1668,"amount":653969,"lunch_g":640,"dinner_g":1064},{"name":"食べログ","count":355,"guests":1134,"amount":0,"lunch_g":552,"dinner_g":598},{"name":"不明","count":10,"guests":27,"amount":0,"lunch_g":23,"dinner_g":8},{"name":"ResReserve","count":936,"guests":2837,"amount":660508,"lunch_g":1965,"dinner_g":879},{"name":"食べログ","count":5273,"guests":16349,"amount":6484400,"lunch_g":9673,"dinner_g":6167}],"net":[{"site":"一休.comレストラン","channel":"サイト","count":468,"guests":1787,"amount":594628},{"site":"PayPayグルメ","channel":"サイト","count":17,"guests":78,"amount":45562},{"site":"食べログ","channel":"サイト","count":353,"guests":1203,"amount":0},{"site":"ResReserve","channel":"サイト","count":567,"guests":1787,"amount":642463},{"site":"ResReserve","channel":"Google","count":309,"guests":816,"amount":0},{"site":"ResReserve","channel":"Instagram","count":1,"guests":3,"amount":0},{"site":"ResReserve","channel":"Yahoo!マップ","count":33,"guests":108,"amount":107463},{"site":"食べログ","channel":"サイト","count":5482,"guests":15365,"amount":6446433}],"repeat":{"all":{"first":8535,"r2":258,"r3":59,"r4":18,"r5":9,"r6":25,"rate":4.25},"lunch":{"first":4685,"r2":154,"r3":25,"r4":9,"r5":5,"r6":11,"rate":4.25},"dinner":{"first":2997,"r2":107,"r3":30,"r4":7,"r5":4,"r6":14,"rate":4.81}},"repeat_monthly":[{"ym":"2025-07","first":401,"r2":3,"r3":0,"r4":0,"r5":0,"r6":0,"rate":0.42},{"ym":"2025-08","first":389,"r2":6,"r3":2,"r4":0,"r5":0,"r6":0,"rate":2.2},{"ym":"2025-09","first":464,"r2":9,"r3":1,"r4":1,"r5":0,"r6":0,"rate":2.07},{"ym":"2025-10","first":703,"r2":19,"r3":4,"r4":3,"r5":3,"r6":0,"rate":4.24},{"ym":"2025-11","first":742,"r2":20,"r3":3,"r4":1,"r5":2,"r6":5,"rate":4.19},{"ym":"2025-12","first":917,"r2":20,"r3":4,"r4":2,"r5":0,"r6":4,"rate":2.92},{"ym":"2026-01","first":693,"r2":38,"r3":5,"r4":0,"r5":3,"r6":2,"rate":5.87},{"ym":"2026-02","first":660,"r2":26,"r3":5,"r4":1,"r5":0,"r6":1,"rate":4.49},{"ym":"2026-03","first":826,"r2":25,"r3":6,"r4":3,"r5":0,"r6":3,"rate":4.06},{"ym":"2026-04","first":799,"r2":32,"r3":7,"r4":2,"r5":1,"r6":3,"rate":5.58},{"ym":"2026-05","first":790,"r2":44,"r3":10,"r4":2,"r5":2,"r6":4,"rate":6.91},{"ym":"2026-06","first":613,"r2":24,"r3":9,"r4":3,"r5":0,"r6":5,"rate":5.7}],"leadtime":[{"label":"当日","all":11104,"lunch":7644,"dinner":3834},{"label":"1日前","all":1497,"lunch":955,"dinner":547},{"label":"2日前","all":823,"lunch":501,"dinner":293},{"label":"3日前","all":644,"lunch":399,"dinner":212},{"label":"4日前","all":489,"lunch":345,"dinner":181},{"label":"5日前","all":441,"lunch":313,"dinner":150},{"label":"6日前","all":438,"lunch":272,"dinner":134},{"label":"7日前","all":399,"lunch":258,"dinner":109},{"label":"8-15日前","all":1526,"lunch":1010,"dinner":519},{"label":"16-30日前","all":866,"lunch":523,"dinner":337},{"label":"31日以上","all":300,"lunch":203,"dinner":114}],"booked_hour":{"hours":["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],"counts":[211,78,30,17,13,29,69,175,292,339,529,2650,2196,2241,1339,727,715,1367,1096,1091,1045,1123,674,470]}},"monthly":[{"ym":"2025-07","count":384,"guests":1279,"lunch_g":561,"dinner_g":671,"est_rev":5504547,"partial":false},{"ym":"2025-08","count":433,"guests":1223,"lunch_g":786,"dinner_g":611,"est_rev":5582032,"partial":false},{"ym":"2025-09","count":807,"guests":2005,"lunch_g":1136,"dinner_g":978,"est_rev":8574855,"partial":false},{"ym":"2025-10","count":2058,"guests":4869,"lunch_g":3438,"dinner_g":1862,"est_rev":20752301,"partial":false},{"ym":"2025-11","count":2016,"guests":4939,"lunch_g":3520,"dinner_g":1846,"est_rev":23500783,"partial":false},{"ym":"2025-12","count":2187,"guests":10695,"lunch_g":8650,"dinner_g":2423,"est_rev":45952665,"partial":false},{"ym":"2026-01","count":1822,"guests":4672,"lunch_g":3372,"dinner_g":1810,"est_rev":22899563,"partial":false},{"ym":"2026-02","count":1500,"guests":4170,"lunch_g":2545,"dinner_g":1545,"est_rev":19423111,"partial":false},{"ym":"2026-03","count":2031,"guests":4852,"lunch_g":3320,"dinner_g":1970,"est_rev":21482211,"partial":false},{"ym":"2026-04","count":1907,"guests":4623,"lunch_g":2805,"dinner_g":1894,"est_rev":20397280,"partial":false},{"ym":"2026-05","count":2039,"guests":5189,"lunch_g":3425,"dinner_g":1909,"est_rev":22001571,"partial":false},{"ym":"2026-06","count":1587,"guests":3622,"lunch_g":2506,"dinner_g":1494,"est_rev":16079215,"partial":true}],"asof":"2026-06-22","forecast":{"ym":"2026-06","elapsed":22,"days":30,"complete":false,"guests":3497,"count":1387,"proj_guests":4802,"proj_count":1815,"est_rev":20053164,"prev_ym":"2026-05","prev_guests":5269},"course_media":{"months":["2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05"],"courses":["昼の自由注文予約","自由注文プラン","彩りランチ御膳","定番宴会プラン","早割グループ宴会","季節フェアプラン","記念日デザートプラン","単品フリードリンク"],"media":["ウォークイン","食べログ","電話予約","自社HP","一休.comレストラン","Google","その他経路","Yahoo!マップ","Instagram"],"rows":[[0,7,1,395,1244],[0,7,4,14,37],[1,7,4,34,106],[1,7,1,367,1229],[2,7,1,365,1299],[2,7,4,40,139],[2,7,2,18,0],[2,7,6,34,0],[2,7,0,284,0],[3,7,0,1290,0],[3,7,2,139,0],[3,7,6,18,0],[3,0,1,408,1149],[3,1,4,19,54],[3,1,1,24,88],[3,1,3,6,12],[3,3,1,48,238],[3,3,4,19,69],[3,3,3,11,47],[3,4,4,4,12],[3,4,1,3,14],[3,4,3,1,3],[3,5,1,2,9],[4,7,0,1205,0],[4,7,2,148,0],[4,1,4,26,65],[4,1,1,26,85],[4,1,3,8,26],[4,0,1,428,1246],[4,3,3,13,42],[4,3,4,24,91],[4,3,1,38,147],[4,4,3,1,4],[4,4,1,4,18],[4,4,4,8,34],[4,6,1,1,3],[4,5,1,1,2],[5,7,0,1087,0],[5,7,2,230,0],[5,7,6,8,0],[5,1,4,37,111],[5,1,3,8,27],[5,1,1,40,121],[5,0,1,464,1153],[5,0,3,7,16],[5,0,5,5,19],[5,2,1,47,322],[5,2,3,11,44],[5,2,4,40,147],[5,3,1,21,127],[5,3,3,1,3],[5,3,4,1,2],[5,6,4,4,18],[5,4,1,33,78],[5,4,4,16,29],[5,4,3,4,7],[6,7,0,1128,0],[6,7,2,127,0],[6,0,1,386,1172],[6,0,3,79,259],[6,0,5,60,158],[6,1,1,30,97],[6,1,4,19,72],[6,1,3,11,40],[6,2,1,22,121],[6,2,3,4,16],[6,2,4,27,113],[6,3,1,15,60],[6,6,1,2,14],[6,4,1,1,4],[7,0,3,81,275],[7,0,1,354,1051],[7,0,5,41,121],[7,0,8,1,2],[7,0,7,1,2],[7,7,2,141,0],[7,7,0,838,0],[7,7,6,3,0],[7,1,1,30,95],[7,1,4,10,21],[7,1,3,3,15],[7,3,1,8,62],[7,2,4,13,81],[7,2,1,27,101],[7,2,3,4,22],[7,6,1,1,4],[8,1,1,34,91],[8,1,4,33,101],[8,1,3,4,11],[8,0,1,456,1317],[8,0,3,77,245],[8,0,7,11,27],[8,0,5,52,179],[8,0,4,6,12],[8,7,0,1090,0],[8,7,2,162,0],[8,7,6,2,0],[8,2,1,60,234],[8,2,4,26,127],[8,6,1,6,14],[8,6,4,1,4],[8,3,1,14,84],[8,5,1,4,14],[9,0,1,387,1206],[9,0,5,42,117],[9,0,3,65,199],[9,0,4,12,35],[9,0,7,7,24],[9,7,2,141,0],[9,7,0,925,0],[9,7,6,1,0],[9,1,3,6,26],[9,1,4,21,66],[9,1,1,24,93],[9,1,7,1,5],[9,3,1,22,116],[9,6,1,4,15],[9,6,3,1,8],[9,2,4,12,44],[9,2,1,40,202],[9,2,3,9,24],[9,2,7,1,4],[9,5,1,8,31],[10,0,3,76,241],[10,0,1,454,1257],[10,0,5,42,126],[10,0,7,4,15],[10,0,4,6,19],[10,1,7,2,7],[10,1,4,6,20],[10,1,1,29,84],[10,1,3,4,14],[10,7,0,1148,0],[10,7,2,153,0],[10,7,6,1,0],[10,2,1,39,259],[10,2,3,4,8],[10,2,4,10,31],[10,5,1,9,32],[10,3,1,14,112],[10,3,3,2,4],[10,6,1,5,18],[10,6,3,1,2]],"total":15659,"deduped":0,"no_plan":12573,"other_raw":[],"period":"2025-07〜2026-05"},"meo":{"weeks":["2025/06/30","2025/07/07","2025/07/14","2025/07/21","2025/07/28","2025/08/04","2025/08/11","2025/08/18","2025/08/25","2025/09/01","2025/09/08","2025/09/15","2025/09/22","2025/09/29","2025/10/06","2025/10/13","2025/10/20","2025/10/27","2025/11/03","2025/11/10","2025/11/17","2025/11/24","2025/12/01","2025/12/08","2025/12/15","2025/12/22","2025/12/29","2026/01/05","2026/01/12","2026/01/19","2026/01/26","2026/02/02","2026/02/09","2026/02/16","2026/02/23","2026/03/02","2026/03/09","2026/03/16","2026/03/23","2026/03/30","2026/04/06","2026/04/13","2026/04/20","2026/04/27","2026/05/04","2026/05/11","2026/05/18","2026/05/25","2026/06/01","2026/06/08","2026/06/15","2026/06/22"],"months":["2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"series":{"views_all":[26233,26268,29828,32286,33083,29092,32732,27624,29892,30329,29752,29446,34120,27018,30849,24605,22421,27029,24823,20204,20647,17321,17579,17968,18074,17279,15935,17161,18875,17239,20542,14711,19080,16546,16069,14949,17854,25112,26482,23192,18281,19195,18188,22153,19833,19640,23381,23021,21975,26615,15972,0],"search_pc":[494,599,706,790,888,867,830,849,1063,1202,1099,1126,994,1147,1046,852,1057,1001,878,936,931,626,749,929,1220,855,336,734,845,920,885,696,658,838,564,642,775,855,1159,833,905,1103,1159,1111,798,1180,906,942,792,819,419,0],"search_mb":[5809,6620,7253,10692,11063,10385,11148,9711,9834,10109,11289,12504,12409,11008,11198,9221,8538,9562,9755,9109,8325,7531,7611,7409,8095,7110,5618,6774,6775,6117,6416,6259,6779,6551,6529,6085,7501,8857,11273,9583,6668,6935,6613,8377,7437,6721,7004,7183,6971,7534,2981,0],"map_pc":[351,469,518,402,399,381,326,323,356,462,460,392,372,351,342,415,369,363,288,303,331,265,306,350,382,250,142,281,305,340,319,337,314,304,267,314,275,312,437,393,374,471,575,528,349,525,452,441,422,478,295,0],"map_mb":[17204,20836,18776,20202,20266,17686,22082,16341,16102,16466,16644,17841,17926,14959,17277,14718,14971,14304,13888,12266,10571,9600,7750,9021,11178,10230,10136,10034,11651,11156,13150,8733,9108,9304,8454,8728,9563,14850,15475,12568,10566,11476,10345,11131,13015,13147,12869,13866,13091,18657,12379,0],"react":[581,460,468,439,510,358,445,435,377,493,410,438,544,452,492,443,440,494,429,520,472,388,421,501,506,417,282,310,372,348,360,331,385,380,352,378,435,509,563,468,370,389,443,415,392,399,432,457,419,514,260,0],"web":[325,231,239,263,245,217,216,220,186,252,249,225,232,238,271,246,216,245,254,264,262,155,175,235,239,172,132,178,178,166,140,130,136,158,141,187,234,313,271,225,176,141,194,220,170,229,185,203,222,275,134,0],"route":[201,214,172,175,167,136,183,173,181,197,163,222,233,190,193,173,172,223,170,224,210,178,198,235,213,205,148,135,176,160,198,160,174,196,185,157,182,194,256,211,168,227,199,149,199,170,216,192,189,234,99,0],"tel":[40,39,36,34,69,36,24,32,23,25,39,28,60,36,42,20,29,39,39,51,44,42,48,51,75,69,16,18,32,40,24,19,33,31,37,35,28,49,52,47,23,24,31,22,21,24,27,23,22,41,15,0],"reserve":[10,16,11,13,10,6,17,9,8,10,16,10,14,1,1,0,0,0,0,0,0,0,0,0,0,3,11,10,13,12,14,8,15,11,3,10,11,9,16,11,8,15,7,8,14,10,8,8,14,17,10,0],"menu":[511,482,445,518,462,415,489,436,383,451,464,543,615,517,592,412,445,498,529,486,524,438,403,437,373,308,247,345,291,319,345,317,387,331,302,376,362,451,458,396,388,336,336,302,340,391,417,395,424,475,140,0],"order":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"posts":[1,1,1,1,1,0,0,0,6,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]},"monthly":{"views_all":[25472,114799,127413,159355,106878,82798,95261,75907,67430,104442,74330,90159,66935],"search_pc":[475,3125,3762,5736,3861,3450,3945,3353,2906,4024,4042,4067,2015],"search_mb":[6561,36513,40032,56802,37688,34077,35637,24682,25642,44098,29426,27248,18170],"map_pc":[349,1702,1483,1997,1444,1260,1390,1202,1239,1685,1865,1925,1144],"map_mb":[18215,81026,70886,86371,58010,46316,49642,41552,36620,60927,40526,48947,41483],"react":[579,1838,1555,2550,1944,1921,2310,1345,1326,2529,1584,1684,1253],"web":[288,928,776,1122,926,852,941,640,587,1147,707,834,676],"route":[202,679,734,1019,783,741,1065,628,684,1052,766,741,579],"tel":[45,167,111,207,129,168,279,107,117,200,110,103,78],"reserve":[10,52,38,47,1,0,16,52,38,58,34,42,42],"menu":[586,1971,1742,2578,1875,2049,1802,1264,1278,1934,1251,1547,1055],"order":[0,0,0,0,0,0,0,0,0,0,0,0,0],"posts":[1,5,5,5,4,6,5,4,4,6,5,4,3]},"funnel":{"impr":1184426,"search":449294,"map":708650,"pc":63018,"mb":1101547,"react":21858,"web":10729,"route":9600,"tel":1750,"reserve":436,"menu":20601,"order":0,"posts":59,"react_rate":2.66},"period":"2025/06/30〜2026/06/22"},"sns":{"months":["2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"posts":[9,11,8,13,12,15,10,14,16,12,15,13],"reach":[28000,31200,30500,35800,39100,42700,41900,46800,50200,54800,57900,62000],"followers":[4200,4380,4590,4810,5050,5310,5560,5820,6080,6360,6640,6900],"profile_views":[812,967,854,1146,1173,1409,1215,1451,1707,1644,1853,2046],"link_clicks":[195,242,196,298,293,380,292,363,444,395,500,512],"est_reserve":[33,44,31,57,53,76,50,65,84,67,100,92]}};
+const yen = n => n==null?"—":"¥"+Math.round(n).toLocaleString("ja-JP");
+const yk  = n => n==null?"—":"¥"+(Math.round(n/1000)).toLocaleString("ja-JP")+"k";
+const num = n => n==null?"—":Number(n).toLocaleString("ja-JP");
+const pct = (a,b)=> b?((a/b)*100):0;
+const mlabel = ym => ym?ym.slice(2).replace("-","/"):"";
+const arrow = d => d==null?"":(d>=0?`<span class="pos">▲+${d.toFixed(1)}%</span>`:`<span class="neg">▼${d.toFixed(1)}%</span>`);
+const earrow = d => d==null?"":(d>=0?`<span class="up">▲+${d.toFixed(0)}%</span>`:`<span class="dn">▼${d.toFixed(0)}%</span>`);
+const C = {ops:"#0d9488", media:"#f59e0b", lunch:"#fbbf24", dinner:"#3b82f6",
+  tabelog:"#f97316", ikkyu:"#ef4444", owned:"#14b8a6", wi:"#a78bfa", tel:"#84cc16",
+  course:"#f59e0b", ala:"#94a3b8", green:"#22c55e", pink:"#ec4899", purple:"#7c3aed",
+  teal:"#14b8a6", blue:"#3b82f6", red:"#ef4444", slate:"#475569"};
+const SITEC={"食べログ":"#f97316","一休":"#ef4444","一休.comレストラン":"#ef4444","ResReserve":"#14b8a6",
+  "ResReserve（総計）":"#14b8a6","Google":"#22c55e","ホームページ（サイト）":"#3b82f6","PayPayグルメ":"#e11d48",
+  "ウォークイン":"#a78bfa","電話予約":"#84cc16","直接予約":"#64748b","食べログ予約":"#f97316",
+  "自社HP":"#3b82f6","Yahoo!マップ":"#7c3aed","Instagram":"#ec4899","その他経路":"#64748b"};
+Chart.defaults.color="#475569"; Chart.defaults.borderColor="#e2e5ea";
+Chart.defaults.font.family="-apple-system,sans-serif";
+const charts={};
+function mk(id,cfg){ const el=document.getElementById(id); if(!el)return; if(charts[id])charts[id].destroy(); charts[id]=new Chart(el,cfg); }
+
+document.getElementById("b-ops").textContent=DATA.period_ops;
+document.getElementById("b-media").textContent=DATA.period_media;
+
+const ops=DATA.ops, dp=ops.daypart, K=DATA.kyaku;
+const route=name=>ops.routes.find(r=>r.name===name)||{count:0,guests:0,amount:0,lunch_g:0,dinner_g:0};
+const wi=route("ウォークイン"), tel=route("電話予約");
+const courseLunch=ops.courses.reduce((s,c)=>s+c.lunch_sold,0);
+const courseDinner=ops.courses.reduce((s,c)=>s+c.dinner_sold,0);
+const ml=DATA.media_latest;
+const months=DATA.months, li=months.length-1;
+// 媒体 想定売上 MoM
+const sum=(s,i)=>Object.values(DATA.media_series).reduce((a,m)=>a+((m[s]&&m[s][i])||0),0);
+const revNow=sum("revenue",li), revPrev=sum("revenue",li-1);
+const rsvNow=sum("reservations",li), rsvPrev=sum("reservations",li-1);
+const revYoY=li>=12?sum("revenue",li-12):null;
+const momRev=revPrev?((revNow-revPrev)/revPrev*100):null;
+const yoyRev=revYoY?((revNow-revYoY)/revYoY*100):null;
+const meo=DATA.meo, fc=DATA.forecast;
+
+/* ===== 期間ウィンドウ基盤（期間セレクタ連動） ===== */
+const wiRate=pct(wi.guests,dp.all.guests);
+const MO=DATA.monthly;
+const cm=DATA.course_media, M_CM=cm?cm.months:[];
+const M_MEDIA=DATA.months, M_OPS=DATA.monthly.map(m=>m.ym), M_MEO=meo?meo.months:[];
+const MASTER=[...new Set([...M_MEDIA,...M_OPS,...M_MEO,...M_CM])].sort();
+let WIN={start:(M_OPS[0]||MASTER[0]), end:MASTER[MASTER.length-1]};
+let curRoi="roi", curTrend="revenue", curMeo="impr";
+const inWin=ym=>ym>=WIN.start&&ym<=WIN.end;
+const idxIn=mo=>mo.map((m,i)=>inWin(m)?i:-1).filter(i=>i>=0);
+const setSub=(id,t)=>{const e=document.getElementById(id); if(e)e.textContent=t;};
+// 任意期間 [s,e]（既定は選択期間 WIN）で集計。前年同期は ymShift(-12) で算出
+const ymShift=(ym,d)=>{let y=+ym.slice(0,4),m=+ym.slice(5,7)+d;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return `${y}-${String(m).padStart(2,"0")}`;};
+const inR=(ym,s,e)=>ym>=s&&ym<=e;
+const idxR=(mo,s,e)=>mo.map((m,i)=>inR(m,s,e)?i:-1).filter(i=>i>=0);
+function mediaWin(s=WIN.start,e=WIN.end){
+  const ix=idxR(M_MEDIA,s,e), out=[];
+  for(const k in DATA.media_series){const m=DATA.media_series[k];
+    let rev=0,cost=0,rsv=0,acc=0,paid=false;
+    ix.forEach(i=>{rev+=(m.revenue&&m.revenue[i])||0;cost+=(m.cost&&m.cost[i])||0;
+      rsv+=(m.reservations&&m.reservations[i])||0;acc+=(m.access&&m.access[i])||0;
+      if((m.cost&&m.cost[i])>0)paid=true;});
+    if(rev||cost||rsv||acc)out.push({label:k,revenue:rev,cost:cost,reservations:rsv,access:acc,
+      roi:cost?rev/cost:null,cpa:(cost&&rsv)?cost/rsv:null,cvr:acc?rsv/acc:null,owned:!paid});
+  }
+  return out.sort((a,b)=>b.revenue-a.revenue);
+}
+function opsWin(s=WIN.start,e=WIN.end){const ix=idxR(M_OPS,s,e);let g=0,l=0,d=0,er=0;
+  ix.forEach(i=>{const m=DATA.monthly[i];g+=m.guests;l+=m.lunch_g;d+=m.dinner_g;er+=m.est_rev;});
+  return {guests:g,lunch:l,dinner:d,est_rev:er};}
+function repWin(s=WIN.start,e=WIN.end){let f=0,r=0;DATA.ops.repeat_monthly.forEach(m=>{if(inR(m.ym,s,e)){f+=m.first;r+=m.r2+m.r3+m.r4+m.r5+m.r6;}});
+  const t=f+r;return {first:f,rep:r,total:t,rate:t?r/t*100:0};}
+function meoWin(s=WIN.start,e=WIN.end){if(!meo)return null;const ix=idxR(M_MEO,s,e);
+  const g=k=>ix.reduce((a,i)=>a+((meo.monthly[k]&&meo.monthly[k][i])||0),0);
+  const impr=g("search_pc")+g("search_mb")+g("map_pc")+g("map_mb");
+  return {impr,react:g("react"),web:g("web"),route:g("route"),tel:g("tel"),reserve:g("reserve"),
+    menu:g("menu"),posts:g("posts"),react_rate:impr?g("react")/impr*100:0};}
+function cmWin(s=WIN.start,e=WIN.end){if(!cm)return null;
+  const agg={};let total=0,noPlan=0;
+  cm.rows.forEach(([m,c,x,n,g])=>{if(!inR(cm.months[m],s,e))return;
+    total+=n; const co=cm.courses[c];
+    if(co==="単品フリードリンク"){noPlan+=n;return;}
+    const a=agg[co]=agg[co]||{}; const cell=a[cm.media[x]]=a[cm.media[x]]||[0,0];
+    cell[0]+=n; cell[1]+=g;});
+  return {agg,total,noPlan};}
+// 前年同期レンジ＋YoY%（前年データが無ければ null）
+function pyRange(){return [ymShift(WIN.start,-12), ymShift(WIN.end,-12)];}
+const yoy=(cur,prev)=>(prev&&prev>0)?((cur-prev)/prev*100):null;
+const yoyTag=d=>d==null?'<span class="tsuflag">前年比 —</span>':`前年比 ${arrow(d)}`;
+// 推移カードは選択が狭くても最低 TREND_MIN ヶ月を表示（文脈確保）。選択期間は濃色で強調
+let TREND_MIN=12;
+const ymDiff=(a,b)=>(+b.slice(0,4)-+a.slice(0,4))*12+(+b.slice(5,7)-+a.slice(5,7));
+function trendRange(){const span=ymDiff(WIN.start,WIN.end)+1;
+  return span>=TREND_MIN?[WIN.start,WIN.end]:[ymShift(WIN.end,-(TREND_MIN-1)),WIN.end];}
+const ptR=mo=>i=>inWin(mo[i])?3.5:0;            // 折れ線：選択期間のみ点を表示
+const barOp=(ym,full,faint)=>inWin(ym)?full:faint;  // 棒：選択外は淡色
+function mediaMoM(){const ix=idxIn(M_MEDIA),last=ix[ix.length-1],prev=last-1;
+  const rL=last>=0?sum("revenue",last):null, rP=prev>=0?sum("revenue",prev):null;
+  return {rL,mom:(rP&&prev>=0)?((rL-rP)/rP*100):null, lastYm:last>=0?M_MEDIA[last]:null};}
+
+/* ===== レイアウト ===== */
+document.getElementById("root").innerHTML=`
+<section class="card span12 sumcard" id="sumcard"></section>
+
+<section class="card span12">
+  <h2>① KPIサマリー <small id="kpi-sub"></small></h2>
+  <div class="kpis" id="kpis"></div>
+  <div class="qbar"><b>売上は「想定売上＝予約人数×客単価¥${num(K)}（デモ算定）」が主指標</b>。レジ実額は予約システム上の捕捉率が低いため参考値。客数・経路・リピートは集計実数。</div>
+</section>
+
+<div class="sec-h">媒体（グルメサイト）の費用効果</div>
+<section class="card span8">
+  <h2>② グルメサイト毎 費用効果 <small id="mt-sub"></small></h2>
+  <div id="media-table"></div>
+  <p class="note">想定売上 = 予約人数 × 客単価¥${num(K)}。オウンド(自社経路)は従量課金¥0。ROI(費用対効果) = 想定売上 ÷ 従量課金。CVR = 予約人数 ÷ アクセス。</p>
+</section>
+<section class="card span4">
+  <h2>③ サイト別 売上 vs コスト <small id="mb-sub"></small></h2>
+  <canvas id="c-mediabar"></canvas>
+</section>
+
+<section class="card span6">
+  <h2>④ 媒体ROI / CPA トレンド <small>従量課金媒体・${months.length}ヶ月</small>
+    <span class="seg" id="seg-roi"><button data-m="roi" class="on">ROI(倍)</button><button data-m="cpa">CPA(¥/人)</button></span></h2>
+  <canvas id="c-roi" height="170"></canvas>
+</section>
+<section class="card span6">
+  <h2>⑤ 媒体推移 <small>${months.length}ヶ月（${months[0]}〜${DATA.period_media}）</small>
+    <span class="seg" id="seg-trend">
+      <button data-m="revenue" class="on">想定売上</button><button data-m="cost">従量課金</button>
+      <button data-m="reservations">予約人数</button><button data-m="access">アクセス</button></span></h2>
+  <canvas id="c-trend" height="170"></canvas>
+</section>
+
+<div class="sec-h">店舗オペレーション（本部ご要望項目）</div>
+<section class="card span12">
+  <h2>⑥ 月次サマリー推移 <small>客数・想定売上・昼夜（${DATA.monthly.length}ヶ月）</small></h2>
+  <canvas id="c-monthly" height="80"></canvas>
+  <p class="note" id="monthly-note"></p>
+</section>
+
+<section class="card span6">
+  <h2>⑦ ランチ / ディナー比率 <small>通期・客数</small></h2>
+  <canvas id="c-daypart" height="180"></canvas>
+  <div id="daypart-tbl"></div>
+</section>
+<section class="card span6">
+  <h2>⑧ 予約経路構成 & ウォークイン比率 <small>通期・客数</small></h2>
+  <canvas id="c-route" height="180"></canvas>
+  <p class="note" id="wi-note"></p>
+</section>
+
+<section class="card span6">
+  <h2>⑨ コース vs 昼の自由注文予約（昼夜別） <small>通期・販売数ベース</small></h2>
+  <canvas id="c-course-ratio" height="180"></canvas>
+  <p class="note">「昼の自由注文予約/アラカルト」=各帯の予約件数 − コース販売数。販売数は人数単位のため概算。</p>
+</section>
+<section class="card span6">
+  <h2>⑩ 売れ筋コース <small>通期・販売数×単価</small></h2>
+  <canvas id="c-course" height="180"></canvas>
+</section>
+
+<section class="card span6">
+  <h2>⑪ オウンド売上（昼の自由注文予約＝想定客単価） <small>通期経路</small></h2>
+  <div class="ctrl">昼の自由注文予約想定客単価
+    <input type="number" id="seat-aov" value="${K}" step="100"> 円で再計算</div>
+  <div id="owned-tbl"></div>
+  <p class="note">電話=実注文金額（記録分）。ウォークイン/直接は注文金額未記録のため想定単価を適用。</p>
+</section>
+<section class="card span6">
+  <h2>⑫ リピート率 <small>通期・昼夜別＋月次推移</small></h2>
+  <canvas id="c-repeat-m" height="120"></canvas>
+  <div id="repeat-tbl"></div>
+</section>
+
+<section class="card span6">
+  <h2>⑬ 着地見込み予測 <small>最新稼働月の月末着地</small></h2>
+  <canvas id="c-forecast" height="180"></canvas>
+  <p class="note" id="fc-note"></p>
+</section>
+<section class="card span12">
+  <h2>⑭ コース × 媒体 流入比較 <small id="cm-sub"></small>
+    <span class="seg" id="seg-cm"><button data-m="cnt" class="on">件数</button><button data-m="g">人数</button></span>
+    <span class="seg" id="seg-cm-seat"><button data-s="0" class="on">昼の自由注文予約除く</button><button data-s="1">昼の自由注文予約含む</button></span></h2>
+  <canvas id="c-cm" height="180"></canvas>
+  <div id="cm-tbl"></div>
+  <p class="note" id="cm-note"></p>
+</section>
+
+${meo?`
+<div class="sec-h">MEO（Googleマップ）— 集客導線の上流</div>
+<section class="card span8">
+  <h2>⑮ MEOファネル <small>${meo.period}・通期</small></h2>
+  <div class="funnel" id="meo-funnel"></div>
+  <p class="note" id="meo-funnel-note"></p>
+</section>
+<section class="card span4">
+  <h2>⑯ 露出の内訳 <small>検索/マップ・PC/モバイル</small></h2>
+  <canvas id="c-meo-mix" height="200"></canvas>
+</section>
+<section class="card span8">
+  <h2>⑰ MEO主要指標 月次推移 <small>露出・反応・予約導線</small>
+    <span class="seg" id="seg-meo">
+      <button data-m="impr" class="on">露出</button><button data-m="react">反応</button>
+      <button data-m="action">予約導線(ルート/電話/Web)</button></span></h2>
+  <canvas id="c-meo-trend" height="120"></canvas>
+</section>
+<section class="card span4">
+  <h2>⑱ クチコミ投稿数 <small>月次</small></h2>
+  <canvas id="c-meo-posts" height="200"></canvas>
+</section>
+`:`
+<div class="sec-h">MEO（Googleマップ）</div>
+<section class="card span12 gap"><h2>MEOデータ待ち</h2>
+  <p class="note">Googleビジネスプロフィールのアクセス分析データを取り込むと、露出→反応→予約導線のファネルが表示されます。</p></section>
+`}
+
+<div class="sec-h">SNS × 集客 クロス分析（公式SNS運用との連携）</div>
+<section class="card span8">
+  <h2>⑲ SNS × 来店導線 クロストレンド <small>月次</small></h2>
+  <canvas id="c-sns-cross" height="120"></canvas>
+  <p class="note">投稿本数が多い月（月12本以上）は、翌月のGoogleマップ表示が平均 +14%・予約が +9%（過去12ヶ月・デモ値）</p>
+</section>
+<section class="card span4">
+  <h2>⑳ SNS起点ファネル <small>通期</small></h2>
+  <div class="funnel" id="sns-funnel"></div>
+  <p class="note">予約リンクにUTMを付与すれば推定→実測に切替可能</p>
+</section>
+<section class="card span12">
+  <h2>㉑ 投稿テーマ別 反応 × 来店寄与 <small>過去12ヶ月・デモ値</small></h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>投稿テーマ</th><th>投稿数</th><th>平均リーチ</th><th>保存率</th><th>プロフィール遷移率</th><th>推定予約寄与</th></tr></thead>
+    <tbody>
+      <tr><td>新メニュー紹介</td><td>31</td><td>4,280</td><td>3.8%</td><td>2.9%</td><td>18件</td></tr>
+      <tr><td>季節フェア告知</td><td>27</td><td>4,960</td><td>4.2%</td><td>3.1%</td><td>21件</td></tr>
+      <tr class="hl"><td>スタッフ・調理風景</td><td>36</td><td>5,740</td><td>6.9%</td><td>4.8%</td><td>34件</td></tr>
+      <tr><td>クーポン・キャンペーン</td><td>22</td><td>6,120</td><td>3.5%</td><td>4.0%</td><td>29件</td></tr>
+      <tr><td>お客様投稿のリポスト</td><td>19</td><td>3,890</td><td>4.6%</td><td>3.4%</td><td>16件</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+`;
+
+/* ===== ① KPI（期間連動） ===== */
+function drawKpi(){
+  const mw=mediaWin(), ow=opsWin(), rw=repWin();
+  const [pys,pye]=pyRange();
+  const mwP=mediaWin(pys,pye), owP=opsWin(pys,pye), rwP=repWin(pys,pye);
+  const sf=(arr,f)=>arr.reduce((s,m)=>s+f(m),0);
+  const mwRev=sf(mw,m=>m.revenue),mwCost=sf(mw,m=>m.cost),mwRsv=sf(mw,m=>m.reservations);
+  const mwRevP=sf(mwP,m=>m.revenue);
+  const paidRev=sf(mw.filter(m=>m.cost>0),m=>m.revenue);const roi=mwCost?paidRev/mwCost:null;
+  const paidRevP=sf(mwP.filter(m=>m.cost>0),m=>m.revenue),mwCostP=sf(mwP,m=>m.cost);const roiP=mwCostP?paidRevP/mwCostP:null;
+  const mom=mediaMoM().mom;
+  setSub("kpi-sub",`期間 ${WIN.start}〜${WIN.end}・前年同期比つき`);
+  document.getElementById("kpis").innerHTML=[
+    {c:"ops",l:"来店客数(期間)",v:num(ow.guests)+"人",s:`想定売上 ${yen(ow.est_rev)}<br>${yoyTag(yoy(ow.guests,owP.guests))}`},
+    {c:"ops",l:"昼 / 夜 客数",v:`${num(ow.lunch)}/${num(ow.dinner)}`,s:`ランチ ${pct(ow.lunch,ow.guests).toFixed(0)}% / ディナー ${pct(ow.dinner,ow.guests).toFixed(0)}%`},
+    {c:"ops",l:"ウォークイン率",v:wiRate.toFixed(1)+"%",s:`<span class="tsuflag">通期</span> 人数${num(wi.guests)}`},
+    {c:"ops",l:"リピート率(期間)",v:rw.rate.toFixed(1)+"%",s:`再来${num(rw.rep)}/新規${num(rw.first)}<br>${rwP.total?yoyTag(yoy(rw.rate,rwP.rate)):'<span class="tsuflag">前年比 —</span>'}`},
+    {c:"media",l:"媒体想定売上(期間)",v:yen(mwRev),s:`予約${num(mwRsv)}人 前月比${arrow(mom)}<br>${yoyTag(yoy(mwRev,mwRevP))}`},
+    {c:"media",l:"従量課金 / 費用対効果",v:yen(mwCost),s:`ROI <b class="pos">${roi?roi.toFixed(1):"—"}×</b> ${roiP?yoyTag(yoy(roi,roiP)):'<span class="tsuflag">前年比 —</span>'}`},
+  ].map(k=>`<div class="kpi ${k.c}"><span class="l">${k.l}</span><span class="v">${k.v}</span><span class="s">${k.s}</span></div>`).join("");
+}
+
+/* ===== ②③ 媒体テーブル＆売上vsコスト（期間連動） ===== */
+function drawMedia(){
+  const mw=mediaWin();
+  const tRev=mw.reduce((s,m)=>s+m.revenue,0),tCost=mw.reduce((s,m)=>s+m.cost,0),tRsv=mw.reduce((s,m)=>s+m.reservations,0);
+  const paidRev=mw.filter(m=>m.cost>0).reduce((s,m)=>s+m.revenue,0);const roi=tCost?paidRev/tCost:null;
+  document.getElementById("media-table").innerHTML=`
+  <table><thead><tr><th>グルメサイト</th><th>区分</th><th>予約人数</th><th>CVR</th><th>想定売上</th><th>従量課金</th><th>CPA/人</th><th>費用対効果</th></tr></thead><tbody>
+  ${mw.map(m=>`<tr><td>${m.label}</td>
+    <td><span class="tag ${m.owned?"owned":"metered"}">${m.owned?"オウンド":"従量"}</span></td>
+    <td>${num(m.reservations)}</td><td>${m.cvr?(m.cvr*100).toFixed(1)+"%":"—"}</td><td>${yen(m.revenue)}</td>
+    <td>${m.owned?"¥0":yen(m.cost)}</td><td>${m.cpa?yen(m.cpa):"—"}</td>
+    <td>${m.roi?`<b class="pos">${m.roi.toFixed(1)}×</b>`:"—"}</td></tr>`).join("")}
+  <tr class="hl"><td><b>合計</b></td><td></td><td><b>${num(tRsv)}</b></td><td></td>
+    <td><b>${yen(tRev)}</b></td><td><b>${yen(tCost)}</b></td><td></td>
+    <td><b>${roi?roi.toFixed(1):"—"}×</b></td></tr></tbody></table>`;
+  const mp=mw.filter(m=>(m.revenue||0)>0);
+  mk("c-mediabar",{type:"bar",data:{labels:mp.map(m=>m.label),
+    datasets:[{label:"想定売上",data:mp.map(m=>m.revenue),backgroundColor:C.media},
+      {label:"従量課金",data:mp.map(m=>m.cost||0),backgroundColor:C.pink}]},
+    options:{indexAxis:"y",plugins:{legend:{position:"bottom"}},
+      scales:{x:{type:"logarithmic",ticks:{callback:v=>"¥"+Number(v).toLocaleString()}}}}});
+  setSub("mt-sub",`期間計 ${WIN.start}〜${WIN.end}`); setSub("mb-sub",`期間計`);
+}
+
+/* ===== ④ ROI/CPAトレンド（期間連動） ===== */
+const roiKeys=Object.keys(DATA.roi_trend);
+function drawRoi(metric){curRoi=metric;
+  const [ts,te]=trendRange(); const ix=idxR(M_MEDIA,ts,te), labs=ix.map(i=>mlabel(M_MEDIA[i]));
+  const pr=ix.map(i=>inWin(M_MEDIA[i])?3.5:0);
+  mk("c-roi",{type:"line",data:{labels:labs,
+    datasets:roiKeys.map(k=>({label:k,data:ix.map(i=>DATA.roi_trend[k][metric][i]),
+      borderColor:SITEC[k]||C.slate,backgroundColor:SITEC[k]||C.slate,tension:.25,spanGaps:true,pointRadius:pr,pointHoverRadius:5,borderWidth:2}))},
+    options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+      scales:{x:{ticks:{maxTicksLimit:12,autoSkip:true}},
+        y:{beginAtZero:true,ticks:{callback:v=>metric==="roi"?v+"×":"¥"+Number(v).toLocaleString()}}}}});
+}
+document.querySelectorAll("#seg-roi button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#seg-roi button").forEach(x=>x.classList.remove("on"));b.classList.add("on");drawRoi(b.dataset.m);});
+
+/* ===== ⑤ 媒体推移（期間連動） ===== */
+const trendMedia=["食べログ","一休","Google","ResReserve（総計）"];
+const trendColor={"食べログ":C.tabelog,"一休":C.ikkyu,"Google":C.green,"ResReserve（総計）":C.owned};
+function drawTrend(metric){curTrend=metric;
+  const [ts,te]=trendRange(); const ix=idxR(M_MEDIA,ts,te), labs=ix.map(i=>mlabel(M_MEDIA[i]));
+  const pr=ix.map(i=>inWin(M_MEDIA[i])?3.5:0);
+  mk("c-trend",{type:"line",data:{labels:labs,
+    datasets:trendMedia.filter(k=>DATA.media_series[k]).map(k=>({
+      label:k,data:ix.map(i=>(DATA.media_series[k][metric]||[])[i]),borderColor:trendColor[k],
+      backgroundColor:trendColor[k],tension:.25,spanGaps:true,pointRadius:pr,pointHoverRadius:5,borderWidth:2}))},
+    options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+      scales:{x:{ticks:{maxTicksLimit:12,autoSkip:true}},
+        y:{beginAtZero:true,ticks:{callback:v=>(metric==="revenue"||metric==="cost")?"¥"+(v/1000)+"k":Number(v).toLocaleString()}}}}});
+}
+document.querySelectorAll("#seg-trend button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#seg-trend button").forEach(x=>x.classList.remove("on"));b.classList.add("on");drawTrend(b.dataset.m);});
+
+/* ===== ⑥ 月次サマリー（期間連動） ===== */
+function drawMonthly(){
+  const [ts,te]=trendRange();
+  const MOf=DATA.monthly.filter(m=>inR(m.ym,ts,te));
+  const moLabel=m=>mlabel(m.ym)+(m.partial?"※":"");
+  const lc=m=>m.partial?"rgba(251,191,36,.45)":(inWin(m.ym)?C.lunch:"rgba(251,191,36,.22)");
+  const dc=m=>m.partial?"rgba(59,130,246,.45)":(inWin(m.ym)?C.dinner:"rgba(59,130,246,.22)");
+  mk("c-monthly",{data:{labels:MOf.map(moLabel),
+    datasets:[
+      {type:"bar",label:"ランチ客数",data:MOf.map(m=>m.lunch_g),backgroundColor:MOf.map(lc),stack:"g",yAxisID:"y"},
+      {type:"bar",label:"ディナー客数",data:MOf.map(m=>m.dinner_g),backgroundColor:MOf.map(dc),stack:"g",yAxisID:"y"},
+      {type:"line",label:"想定売上",data:MOf.map(m=>m.est_rev),borderColor:C.media,backgroundColor:C.media,yAxisID:"y2",tension:.3,pointRadius:MOf.map(m=>inWin(m.ym)?3:0),borderWidth:2,segment:{borderDash:ctx=>MOf[ctx.p1DataIndex]&&MOf[ctx.p1DataIndex].partial?[5,4]:undefined}}]},
+    options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+      scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,title:{display:true,text:"客数"}},
+        y2:{position:"right",beginAtZero:true,grid:{drawOnChartArea:false},ticks:{callback:v=>"¥"+(v/1000000)+"M"},title:{display:true,text:"想定売上"}}}}});
+  const sel=DATA.monthly.filter(m=>inWin(m.ym)), done=sel.filter(m=>!m.partial), partial=sel.find(m=>m.partial);
+  let s="";
+  if(done.length>=2){const a=done[done.length-1],b=done[done.length-2];
+    s=`選択期間 確定最新 ${mlabel(a.ym)}：客数${num(a.guests)}人 ${arrow(pct(a.guests-b.guests,b.guests))}（前月${num(b.guests)}人）・想定売上${yen(a.est_rev)}。`;}
+  else if(done.length===1){const a=done[0]; s=`選択 ${mlabel(a.ym)}：客数${num(a.guests)}人・想定売上${yen(a.est_rev)}。`;}
+  if(partial) s+=` <b>※${mlabel(partial.ym)}は進行中</b>（基準日 ${DATA.asof}）。`;
+  s+=` <span class="tsuflag">推移は直近${TREND_MIN}ヶ月表示・濃色=選択期間</span>`;
+  document.getElementById("monthly-note").innerHTML=s;
+}
+
+/* ===== ⑦ ランチ/ディナー（100%積み上げ＝比率。桁違いの指標を同軸で潰さない） ===== */
+const dpCats=[["予約件数","count"],["予約人数","guests"],["想定売上","est_rev"]];
+const dpLun=dpCats.map(c=>dp.lunch[c[1]]||0), dpDin=dpCats.map(c=>dp.dinner[c[1]]||0);
+const dpTot=dpCats.map((c,i)=>dpLun[i]+dpDin[i]);
+mk("c-daypart",{type:"bar",data:{labels:dpCats.map(c=>c[0]),
+  datasets:[
+    {label:"ランチ",data:dpLun.map((v,i)=>dpTot[i]?v/dpTot[i]*100:0),backgroundColor:C.lunch,_raw:dpLun},
+    {label:"ディナー",data:dpDin.map((v,i)=>dpTot[i]?v/dpTot[i]*100:0),backgroundColor:C.dinner,_raw:dpDin}]},
+  options:{plugins:{legend:{position:"bottom"},
+    tooltip:{callbacks:{label:c=>{const raw=c.dataset._raw[c.dataIndex],money=c.dataIndex===2;
+      return `${c.dataset.label}: ${money?yen(raw):num(raw)} (${c.raw.toFixed(0)}%)`;}}}},
+    scales:{x:{stacked:true},y:{stacked:true,max:100,ticks:{callback:v=>v+"%"}}}}});
+document.getElementById("daypart-tbl").innerHTML=`<table style="margin-top:10px"><thead><tr><th></th><th>件数</th><th>人数</th><th>想定売上</th></tr></thead><tbody>
+<tr><td>ランチ</td><td>${num(dp.lunch.count)}</td><td>${num(dp.lunch.guests)}</td><td>${yen(dp.lunch.est_rev)}</td></tr>
+<tr><td>ディナー</td><td>${num(dp.dinner.count)}</td><td>${num(dp.dinner.guests)}</td><td>${yen(dp.dinner.est_rev)}</td></tr></tbody></table>`;
+
+/* ===== ⑧ 経路 ===== */
+const rsorted=[...ops.routes].sort((a,b)=>b.guests-a.guests);
+mk("c-route",{type:"bar",data:{labels:rsorted.map(r=>r.name),
+  datasets:[{label:"予約人数",data:rsorted.map(r=>r.guests),
+    backgroundColor:rsorted.map(r=>SITEC[r.name]||C.ops)}]},
+  options:{indexAxis:"y",plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>`${num(c.raw)}人 (${pct(c.raw,dp.all.guests).toFixed(1)}%) / ${rsorted[c.dataIndex].count}件`}}}}});
+document.getElementById("wi-note").innerHTML=`ウォークイン <b>${num(wi.guests)}人=${wiRate.toFixed(1)}%</b>（件数${num(wi.count)}件=${pct(wi.count,dp.all.count).toFixed(0)}%）。電話${num(tel.guests)}人・食べログ${num(route("食べログ").guests)}人。`;
+
+/* ===== ⑨ コースvs昼の自由注文予約 ===== */
+mk("c-course-ratio",{type:"bar",data:{labels:["ランチ","ディナー"],
+  datasets:[
+    {label:"コース",data:[courseLunch,courseDinner],backgroundColor:C.course},
+    {label:"昼の自由注文予約/アラカルト",data:[Math.max(0,dp.lunch.count-courseLunch),Math.max(0,dp.dinner.count-courseDinner)],backgroundColor:C.ala}]},
+  options:{indexAxis:"y",plugins:{legend:{position:"bottom"},
+    tooltip:{callbacks:{label:c=>{const tot=c.dataIndex===0?dp.lunch.count:dp.dinner.count;return `${c.dataset.label}: ${num(c.raw)} (${pct(c.raw,tot).toFixed(0)}%)`;}}}},
+    scales:{x:{stacked:true},y:{stacked:true}}}});
+
+/* ===== ⑩ 売れ筋コース ===== */
+const cs=[...ops.courses].sort((a,b)=>b.amount-a.amount).filter(c=>c.amount>0).slice(0,10);
+mk("c-course",{type:"bar",data:{labels:cs.map(c=>c.name.length>18?c.name.slice(0,17)+"…":c.name),
+  datasets:[{label:"売上",data:cs.map(c=>c.amount),backgroundColor:C.media}]},
+  options:{indexAxis:"y",plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>`${yen(cs[c.dataIndex].amount)} (${num(cs[c.dataIndex].sold)}食 @${yen(cs[c.dataIndex].price)})`}}},
+    scales:{x:{ticks:{callback:v=>"¥"+(v/1000)+"k"}}}}});
+
+/* ===== ⑪ オウンド売上 ===== */
+function drawOwned(){
+  const aov=Number(document.getElementById("seat-aov").value)||K;
+  const rows=[{n:"電話予約",r:tel,real:true},{n:"ウォークイン",r:wi,real:false},{n:"直接予約",r:route("直接予約"),real:false}];
+  let tg=0,tv=0,tc=0;
+  const body=rows.map(o=>{const est=o.real&&o.r.amount?o.r.amount:o.r.guests*aov;
+    tg+=o.r.guests;tv+=est;tc+=o.r.count;
+    return `<tr><td>${o.n}</td><td>${num(o.r.count)}</td><td>${num(o.r.guests)}</td>
+      <td>${o.real&&o.r.amount?"実注文金額":"想定 "+yen(aov)}</td><td>${yen(est)}</td></tr>`;}).join("");
+  document.getElementById("owned-tbl").innerHTML=`<table><thead><tr><th>経路</th><th>組数</th><th>人数</th><th>単価根拠</th><th>売上</th></tr></thead><tbody>
+  ${body}<tr class="hl"><td><b>オウンド計</b></td><td><b>${num(tc)}</b></td><td><b>${num(tg)}</b></td><td></td><td><b>${yen(tv)}</b></td></tr></tbody></table>`;
+}
+document.getElementById("seat-aov").addEventListener("input",drawOwned);drawOwned();
+
+/* ===== ⑫ リピート（月次＝期間連動／表＝通期固定） ===== */
+const rp=ops.repeat;
+function drawRepeatM(){
+  const [ts,te]=trendRange();
+  const rpm=DATA.ops.repeat_monthly.filter(m=>inR(m.ym,ts,te));
+  const tc=m=>inWin(m.ym)?C.teal:"rgba(20,184,166,.25)";
+  const mc=m=>inWin(m.ym)?C.media:"rgba(245,158,11,.25)";
+  mk("c-repeat-m",{data:{labels:rpm.map(m=>mlabel(m.ym)),
+    datasets:[
+      {type:"bar",label:"初来店",data:rpm.map(m=>m.first),backgroundColor:rpm.map(tc),stack:"r",yAxisID:"y"},
+      {type:"bar",label:"再来(2回目+)",data:rpm.map(m=>m.r2+m.r3+m.r4+m.r5+m.r6),backgroundColor:rpm.map(mc),stack:"r",yAxisID:"y"},
+      {type:"line",label:"リピート率%",data:rpm.map(m=>m.rate),borderColor:C.pink,backgroundColor:C.pink,yAxisID:"y2",tension:.3,pointRadius:rpm.map(m=>inWin(m.ym)?3:0),borderWidth:2}]},
+    options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+      scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true},y2:{position:"right",beginAtZero:true,grid:{drawOnChartArea:false},ticks:{callback:v=>v+"%"}}}}});
+}
+document.getElementById("repeat-tbl").innerHTML=`<table style="margin-top:8px"><thead><tr><th></th><th>初来店</th><th>2回目+</th><th>リピート率</th></tr></thead><tbody>
+${["all","lunch","dinner"].map(s=>{const r=rp[s];const reps=r.r2+r.r3+r.r4+r.r5+r.r6;
+  return `<tr><td>${s==="all"?"終日":s==="lunch"?"ランチ":"ディナー"}</td><td>${num(r.first)}</td><td>${num(reps)}</td><td>${s==="all"?`<b>${r.rate}%</b>`:r.rate+"%"}</td></tr>`;}).join("")}
+</tbody></table><p class="note">※顧客IDベース。WI等ID無し予約は初来店に計上され得るため実リピートは下限値。</p>`;
+
+/* ===== ⑬ 着地見込み ===== */
+if(fc){
+  const moG=MO.map(m=>m.guests), labs=MO.map(m=>mlabel(m.ym));
+  const projData=MO.map((m,i)=>i===MO.length-1&&!fc.complete?fc.proj_guests:null);
+  mk("c-forecast",{data:{labels:labs,datasets:[
+    {type:"bar",label:"実績客数",data:moG,backgroundColor:moG.map((_,i)=>i===MO.length-1&&!fc.complete?C.lunch:C.teal)},
+    {type:"bar",label:"着地見込み",data:projData,backgroundColor:"rgba(245,158,11,.35)"}]},
+    options:{plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}}}});
+  document.getElementById("fc-note").innerHTML=fc.complete
+    ?`最新月 ${mlabel(fc.ym)} は<b>確定</b>（客数${num(fc.guests)}人）。月途中データ投入時は月末着地を自動予測。`
+    :`${mlabel(fc.ym)} は <b>${fc.elapsed}/${fc.days}日</b>経過。日次ペースで月末着地 <b>${num(fc.proj_guests)}人</b>・想定売上${yen(fc.est_rev)} 見込み。`;
+}else{document.getElementById("fc-note").textContent="予測対象月のデータがありません。";}
+
+/* ===== ⑭ コース×媒体 流入比較（期間連動・媒体プラン名ベース） ===== */
+let curCM={m:"cnt",seat:false};
+function drawCourseMedia(){
+  if(!cm){document.getElementById("cm-tbl").innerHTML=`<p class="note">予約明細データがありません。</p>`;return;}
+  const w=cmWin();
+  const courses=cm.courses.filter(c=>c!=="単品フリードリンク"&&(curCM.seat||c!=="昼の自由注文予約")&&w.agg[c]);
+  setSub("cm-sub",`期間 ${WIN.start}〜${WIN.end}・予約明細(媒体プラン名)ベース`);
+  if(!courses.length){
+    if(charts["c-cm"]){charts["c-cm"].destroy();delete charts["c-cm"];}
+    document.getElementById("cm-tbl").innerHTML=`<p class="note">選択期間に予約明細データがありません（明細は ${cm.period}）。</p>`;
+    document.getElementById("cm-note").innerHTML="";return;}
+  const mi=curCM.m==="cnt"?0:1, unit=curCM.m==="cnt"?"件":"人";
+  const media=cm.media.filter(md=>courses.some(c=>(w.agg[c][md]||[0,0])[mi]>0));
+  const v=(c,md)=>(w.agg[c][md]||[0,0])[mi];
+  const cTot=c=>media.reduce((s,md)=>s+v(c,md),0);
+  mk("c-cm",{type:"bar",data:{labels:courses,
+    datasets:media.map(md=>({label:md,data:courses.map(c=>v(c,md)),backgroundColor:SITEC[md]||C.slate}))},
+    options:{indexAxis:"y",plugins:{legend:{position:"bottom"},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${num(c.raw)}${unit} (${pct(c.raw,cTot(c.label)).toFixed(0)}%)`}}},
+      scales:{x:{stacked:true},y:{stacked:true}}}});
+  const maxv=Math.max(1,...courses.flatMap(c=>media.map(md=>v(c,md))));
+  const heat=x=>x?`background:rgba(20,184,166,${0.12+0.6*x/maxv})`:"";
+  const cw=(72/media.length).toFixed(2)+"%";  // 媒体列は均等幅（コース18%・計10%を除く）
+  document.getElementById("cm-tbl").innerHTML=`<table class="heat" style="margin-top:10px;table-layout:fixed"><thead><tr><th style="width:18%">コース</th>${media.map(md=>`<th style="width:${cw}">${md}</th>`).join("")}<th style="width:10%">計</th></tr></thead><tbody>
+  ${courses.map(c=>`<tr><td class="lbl">${c}</td>${media.map(md=>{const x=v(c,md);return `<td style="${heat(x)}">${x||""}</td>`}).join("")}<td><b>${num(cTot(c))}</b></td></tr>`).join("")}
+  <tr class="hl"><td class="lbl"><b>計</b></td>${media.map(md=>`<td><b>${num(courses.reduce((s,c)=>s+v(c,md),0))}</b></td>`).join("")}<td><b>${num(courses.reduce((s,c)=>s+cTot(c),0))}</b></td></tr></tbody></table>`;
+  const filled=w.total-w.noPlan;
+  document.getElementById("cm-note").innerHTML=`期間内 <b>プラン記載 ${num(filled)}件 / 全${num(w.total)}件 (${pct(filled,w.total).toFixed(0)}%)</b>。単品フリードリンク（ウォークイン・電話の昼の自由注文予約等 ${num(w.noPlan)}件）は本カード対象外。97種の生プラン名を${cm.courses.length-1}グループに名寄せ。キャンセルは明細に含まれず全行計上。`;
+}
+document.querySelectorAll("#seg-cm button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#seg-cm button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  curCM.m=b.dataset.m;drawCourseMedia();});
+document.querySelectorAll("#seg-cm-seat button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#seg-cm-seat button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  curCM.seat=b.dataset.s==="1";drawCourseMedia();});
+
+/* ===== ⑮⑯ MEO ファネル・露出内訳（通期固定） ===== */
+function sumArr(k){return (meo.series[k]||[]).reduce((a,b)=>a+b,0);}
+if(meo){
+  const f=meo.funnel, fmax=f.impr||1;
+  const stages=[
+    {l:"露出（検索+マップ閲覧）",v:f.impr,c:C.teal},
+    {l:"反応（合計）",v:f.react,c:C.blue},
+    {l:"ルート検索",v:f.route,c:C.purple},
+    {l:"ウェブサイト",v:f.web,c:"#0ea5e9"},
+    {l:"電話",v:f.tel,c:C.tel},
+    {l:"予約（Google経由）",v:f.reserve,c:C.media},
+  ];
+  document.getElementById("meo-funnel").innerHTML=stages.map(s=>`
+    <div class="frow"><div class="fbar" style="width:${Math.max(6,s.v/fmax*100)}%;background:${s.c}">${num(s.v)}</div>
+      <span class="fmeta">${s.l}　${s.v&&f.impr?(s.v/f.impr*100).toFixed(2)+"% of 露出":""}</span></div>`).join("");
+  document.getElementById("meo-funnel-note").innerHTML=`<span class="tsuflag">通期固定</span> 露出${num(f.impr)} → 反応${num(f.react)}（反応率<b>${f.react_rate}%</b>）。メニュー表示${num(f.menu)}・投稿${num(f.posts)}件。<b>MEOはマップ上の集客起点で、予約(食べログ/一休/ResReserve)の前段</b>。`;
+  mk("c-meo-mix",{type:"bar",data:{labels:["検索","マップ"],
+    datasets:[
+      {label:"PC",data:[sumArr("search_pc"),sumArr("map_pc")],backgroundColor:C.slate},
+      {label:"モバイル",data:[sumArr("search_mb"),sumArr("map_mb")],backgroundColor:C.teal}]},
+    options:{plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{callback:v=>(v/1000)+"k"}}}}});
+}
+/* ===== ⑰⑱ MEO 月次（期間連動） ===== */
+function drawMeo(metric){if(!meo)return;curMeo=metric;
+  const [ts,te]=trendRange(); const ix=idxR(M_MEO,ts,te), labs=ix.map(i=>mlabel(M_MEO[i]));
+  const pr=ix.map(i=>inWin(M_MEO[i])?3.5:0);
+  const pick=k=>ix.map(i=>(meo.monthly[k]||[])[i]||0);
+  const add=(a,b)=>ix.map(i=>((meo.monthly[a]||[])[i]||0)+((meo.monthly[b]||[])[i]||0));
+  let ds;
+  if(metric==="impr") ds=[{label:"検索",data:add("search_pc","search_mb"),borderColor:C.blue,backgroundColor:C.blue},
+                          {label:"マップ",data:add("map_pc","map_mb"),borderColor:C.teal,backgroundColor:C.teal}];
+  else if(metric==="react") ds=[{label:"反応数",data:pick("react"),borderColor:C.purple,backgroundColor:C.purple},
+                          {label:"メニュー表示",data:pick("menu"),borderColor:C.media,backgroundColor:C.media}];
+  else ds=[{label:"ルート検索",data:pick("route"),borderColor:C.purple,backgroundColor:C.purple},
+           {label:"電話",data:pick("tel"),borderColor:C.tel,backgroundColor:C.tel},
+           {label:"ウェブ",data:pick("web"),borderColor:"#0ea5e9",backgroundColor:"#0ea5e9"},
+           {label:"予約",data:pick("reserve"),borderColor:C.media,backgroundColor:C.media}];
+  mk("c-meo-trend",{type:"line",data:{labels:labs,
+    datasets:ds.map(d=>({...d,tension:.3,pointRadius:pr,pointHoverRadius:5,borderWidth:2}))},
+    options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},scales:{x:{ticks:{maxTicksLimit:12,autoSkip:true}},y:{beginAtZero:true}}}});
+}
+function drawMeoPosts(){if(!meo)return;const [ts,te]=trendRange(); const ix=idxR(M_MEO,ts,te);
+  mk("c-meo-posts",{type:"bar",data:{labels:ix.map(i=>mlabel(M_MEO[i])),
+    datasets:[{label:"投稿数",data:ix.map(i=>(meo.monthly.posts||[])[i]||0),
+      backgroundColor:ix.map(i=>inWin(M_MEO[i])?C.purple:"rgba(124,58,237,.25)")}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+}
+if(meo){document.querySelectorAll("#seg-meo button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#seg-meo button").forEach(x=>x.classList.remove("on"));b.classList.add("on");drawMeo(b.dataset.m);});}
+
+
+/* ===== ⑲⑳ SNS × 集客 ===== */
+{
+  const sns=DATA.sns;
+  const mapViews=meo.monthly.views_all.slice(-12);
+  const reservations=DATA.monthly.map(m=>m.count);
+  mk("c-sns-cross",{data:{labels:sns.months.map(mlabel),datasets:[
+    {type:"bar",label:"SNSリーチ",data:sns.reach,yAxisID:"y",backgroundColor:"rgba(236,72,153,.42)",borderColor:C.media,borderWidth:1},
+    {type:"line",label:"Googleマップ表示",data:mapViews,yAxisID:"y1",borderColor:C.teal,backgroundColor:C.teal,tension:.3,borderWidth:2},
+    {type:"line",label:"総予約数",data:reservations,yAxisID:"y2",borderColor:C.purple,backgroundColor:C.purple,tension:.3,borderWidth:2}
+  ]},options:{interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom"}},
+    scales:{y:{beginAtZero:true,position:"left",ticks:{callback:v=>(v/1000)+"k"}},
+            y1:{beginAtZero:true,position:"right",grid:{drawOnChartArea:false}},
+            y2:{beginAtZero:true,display:false}}}});
+  const totals=["reach","profile_views","link_clicks","est_reserve"].map(k=>sns[k].reduce((a,b)=>a+b,0));
+  const labels=["リーチ","プロフィール閲覧","リンククリック","予約（推定）"];
+  const colors=[C.media,C.purple,C.teal,C.blue];
+  document.getElementById("sns-funnel").innerHTML=totals.map((v,i)=>`
+    <div class="frow"><div class="fbar" style="width:${Math.max(8,v/totals[0]*100)}%;background:${colors[i]}">${num(v)}</div>
+    <span class="fmeta">${labels[i]}${i?`　前段比 ${(v/totals[i-1]*100).toFixed(1)}%`:""}</span></div>`).join("");
+}
+
+/* ===== エグゼクティブ・サマリー（期間連動） ===== */
+function drawExec(){
+  const mw=mediaWin(), ow=opsWin(), rw=repWin(), ew=meoWin();
+  const [pys,pye]=pyRange(); const mwP=mediaWin(pys,pye);
+  const mwRev=mw.reduce((s,m)=>s+m.revenue,0), mwRsv=mw.reduce((s,m)=>s+m.reservations,0);
+  const mwRevP=mwP.reduce((s,m)=>s+m.revenue,0);
+  const yRev=yoy(mwRev,mwRevP);
+  const mm=mediaMoM();
+  document.getElementById("exec").innerHTML=`
+    <span class="lead">${WIN.start}〜${WIN.end}</span>
+    <div class="e"><span class="v">${yen(mwRev)} ${yRev!=null?earrow(yRev):""}</span><span class="l">媒体想定売上(期間計)${yRev!=null?" 前年比":""}</span></div>
+    <div class="e"><span class="v">${num(mwRsv)}人</span><span class="l">媒体予約人数(期間計)</span></div>
+    <div class="e"><span class="v">${num(ow.guests)}人</span><span class="l">来店客数(期間計)</span></div>
+    <div class="e"><span class="v">${rw.rate.toFixed(1)}%</span><span class="l">リピート率(期間)</span></div>
+    <div class="e"><span class="v">${yen(mm.rL)} ${earrow(mm.mom)}</span><span class="l">最新月${mm.lastYm?"("+mlabel(mm.lastYm)+")":""} 媒体売上・前月比</span></div>
+    ${ew?`<div class="e"><span class="v">${num(Math.round(ew.impr/1000))}k</span><span class="l">MEO露出(期間) 反応率${ew.react_rate.toFixed(2)}%</span></div>`:""}`;
+}
+
+/* ===== AIサマリ & 改善アクション（期間連動・ルールベース） ===== */
+const ROI_T=5, CVR_T=0.025, REACT_T=2.0, REP_T=10;
+function drawSummary(){
+  const all=mediaWin(), paid=all.filter(m=>!m.owned), ow=opsWin(), rw=repWin(), ew=meoWin();
+  const totRev=all.reduce((s,m)=>s+m.revenue,0);
+  const pRev=paid.reduce((s,m)=>s+m.revenue,0), pCost=paid.reduce((s,m)=>s+m.cost,0);
+  const roiAll=pCost?pRev/pCost:null;
+  const ev=[], acts=[];
+  ev.push({d:roiAll>=ROI_T?"ok":"warn",t:`媒体全体の費用対効果 <b>${roiAll?roiAll.toFixed(1):"—"}倍</b>（目安${ROI_T}倍${roiAll>=ROI_T?"達成":"未達"}）。期間の媒体想定売上 ${yen(totRev)}。`});
+  paid.sort((a,b)=>b.revenue-a.revenue).forEach(m=>{
+    const roiOk=m.roi>=ROI_T, cvrOk=m.cvr>=CVR_T;
+    ev.push({d:(roiOk&&cvrOk)?"ok":(roiOk||cvrOk)?"warn":"bad",
+      t:`${m.label}：費用対効果 <b>${m.roi?m.roi.toFixed(1):"—"}倍</b>・CVR <b>${m.cvr?(m.cvr*100).toFixed(1):"—"}%</b>（予約${num(m.reservations)}人・CPA¥${num(Math.round(m.cpa||0))}/人）${roiOk?"／効率良好":"／改善余地"}`});
+    if(m.roi!=null&&m.roi<ROI_T) acts.push({u:m.roi<3,tg:m.roi<3?"今すぐ":"今月",ti:`${m.label}の費用対効果を改善（${m.roi.toFixed(1)}倍→${ROI_T}倍）`,ds:`CPA¥${num(Math.round(m.cpa||0))}/人。低ROIプランの停止・掲載順位/クーポン条件の見直しで送客効率を底上げ。`});
+    if(m.cvr!=null&&m.cvr<CVR_T&&m.access>0) acts.push({u:false,tg:"今月",ti:`${m.label}のCVR改善（${(m.cvr*100).toFixed(1)}%→${CVR_T*100}%）`,ds:`写真刷新・クチコミ返信・人気コースの上位表示でアクセス→予約の転換を引き上げ。`});
+  });
+  if(ew){ev.push({d:ew.react_rate>=REACT_T?"ok":"warn",t:`MEO（Googleマップ）露出 ${num(ew.impr)}・反応率 <b>${ew.react_rate.toFixed(2)}%</b>。予約導線：ルート${num(ew.route)}/電話${num(ew.tel)}/Web${num(ew.web)}・投稿${num(ew.posts)}件。`});
+    const monN=idxIn(M_MEO).length;
+    if(monN&&ew.posts<monN*4) acts.push({u:false,tg:"今月",ti:"Googleクチコミ獲得の強化",ds:`投稿${num(ew.posts)}件（月平均${(ew.posts/monN).toFixed(1)}件）は伸び代。会計時QR・LINEでレビュー依頼を仕組み化し、マップ上位表示と反応率を底上げ。`});}
+  ev.push({d:rw.rate>=REP_T?"ok":"warn",t:`リピート率 <b>${rw.rate.toFixed(1)}%</b>（顧客ID付き予約ベース・WI除く下限値）。新規${num(rw.first)}／再来${num(rw.rep)}。`});
+  if(rw.rate<REP_T) acts.push({u:false,tg:"今日中",ti:"再来店の仕組み化（LINE/会員）",ds:`新規${num(rw.first)}人の再来を促進。来店後LINE登録→次回クーポン、平日アイドルタイムの先行予約配信で曜日波動を平準化。`});
+  const gpct=Math.min(100,(roiAll||0)/ROI_T*100);
+  document.getElementById("sumcard").innerHTML=`
+   <h2>AIサマリ & 改善アクション <small>期間 ${WIN.start}〜${WIN.end}・ベンチマーク自動評価</small></h2>
+   <div class="sum-kpis">
+     <div class="k"><span class="l">媒体費用対効果</span><span class="v">${roiAll?roiAll.toFixed(1):"—"}倍</span>
+       <div class="bar-prog"><i style="width:${gpct}%;background:${roiAll>=ROI_T?"#16a34a":"#f59e0b"}"></i><span class="tgt" style="left:100%"></span></div>
+       <span class="l">目安${ROI_T}倍</span></div>
+     <div class="k"><span class="l">期間 想定売上</span><span class="v">${yk(totRev)}</span></div>
+     <div class="k"><span class="l">来店客数</span><span class="v">${num(ow.guests)}人</span></div>
+     <div class="k"><span class="l">リピート率</span><span class="v">${rw.rate.toFixed(1)}%</span></div>
+     ${ew?`<div class="k"><span class="l">MEO反応率</span><span class="v">${ew.react_rate.toFixed(2)}%</span></div>`:""}
+   </div>
+   <div class="sumgrid">
+     <div><b style="font-size:12px;color:var(--mut)">評価</b><ul class="evlist">${ev.map(e=>`<li><span class="dot ${e.d}"></span><span>${e.t}</span></li>`).join("")}</ul></div>
+     <div><b style="font-size:12px;color:var(--mut)">改善アクション（自動提案）</b><div class="acts">${acts.length?acts.map(a=>`<div class="act ${a.u?"urgent":""}"><span class="tg">${a.tg}</span><span class="ti">${a.ti}</span><div class="ds">${a.ds}</div></div>`).join(""):'<div class="act"><span class="ti">主要指標は目安を概ね達成。現状の媒体配分を維持しつつ季節変動を監視。</span></div>'}</div></div>
+   </div>
+   <p class="note">※ベンチマーク（費用対効果${ROI_T}倍・CVR${CVR_T*100}%・MEO反応率${REACT_T}%・リピート${REP_T}%）への自動評価。静的サイトのためルールベース（ライブAIではない）。選択期間で再計算。</p>`;
+}
+
+/* ===== サマリ表紙（cover：着地見込み＋優先アクション） ===== */
+function drawCover(){
+  const all=mediaWin(), paid=all.filter(m=>!m.owned), ow=opsWin(), rw=repWin(), ew=meoWin();
+  const pRev=paid.reduce((s,m)=>s+m.revenue,0), pCost=paid.reduce((s,m)=>s+m.cost,0);
+  const roiAll=pCost?pRev/pCost:null;
+  // hero（最新月の着地見込み・期間に依らず固定）
+  const heroBig = fc.complete ? num(fc.guests) : num(fc.proj_guests);
+  const heroRev = fc.complete ? fc.guests*DATA.kyaku : fc.est_rev;
+  const heroMeta = fc.complete
+    ? `${mlabel(fc.ym)} は<b>確定</b>（客数 ${num(fc.guests)}人）`
+    : `on-books <b>${num(fc.guests)}人</b>（${fc.elapsed}/${fc.days}日）→ 残日数を実績ペースで按分し着地 <b>${num(fc.proj_guests)}人</b>`;
+  const remain = Math.max(0, fc.days-fc.elapsed);
+  // 優先アクション（drawSummary と同じルール・上位4件）
+  const acts=[];
+  paid.slice().sort((a,b)=>b.revenue-a.revenue).forEach(m=>{
+    if(m.roi!=null&&m.roi<ROI_T) acts.push({now:m.roi<3,cat:"媒体",ti:`${m.label}の費用対効果を改善（${m.roi.toFixed(1)}倍→${ROI_T}倍）`,ds:`CPA¥${num(Math.round(m.cpa||0))}/人。低ROIプランの停止・掲載順位/クーポン条件の見直しで送客効率を底上げ。`});
+    else if(m.cvr!=null&&m.cvr<CVR_T&&m.access>0) acts.push({now:false,cat:"単価",ti:`${m.label}のCVR改善（${(m.cvr*100).toFixed(1)}%→${CVR_T*100}%）`,ds:`写真刷新・クチコミ返信・人気コースの上位表示でアクセス→予約の転換を引き上げ。`});
+  });
+  if(ew){const monN=idxIn(M_MEO).length; if(monN&&ew.posts<monN*4) acts.push({now:false,cat:"集客",ti:"Googleクチコミ獲得の強化",ds:`投稿${num(ew.posts)}件（月平均${(ew.posts/monN).toFixed(1)}件）は伸び代。会計時QR・LINEでレビュー依頼を仕組み化し、マップ上位と反応率を底上げ。`});}
+  if(rw.rate<REP_T) acts.push({now:false,cat:"集客",ti:"再来店の仕組み化（LINE/会員）",ds:`新規${num(rw.first)}人の再来を促進。来店後LINE登録→次回クーポン、平日アイドルタイムの先行予約配信で曜日波動を平準化。`});
+  if(!acts.length) acts.push({now:false,cat:"維持",ti:"主要指標は目安を概ね達成",ds:"現状の媒体配分を維持しつつ季節変動を監視。"});
+  const top=acts.slice(0,4);
+  document.getElementById("cover-dyn").innerHTML=`
+   <div class="hero">
+     <div class="hero-top"><span class="t">今月の着地見込み（${mlabel(fc.ym)}${fc.complete?"・確定":"・進行中"}）</span><span class="pd">データ基準日 ${DATA.asof||"—"} ／ ${fc.elapsed}/${fc.days}日 経過</span></div>
+     <div class="hero-main">
+       <div class="land">
+         <div class="lbl">来店客数（着地見込み）</div>
+         <div class="big">${heroBig}<span class="u"> 人</span></div>
+         <div class="meta">${heroMeta}</div>
+         <div class="yen">想定売上 約 ${yen(heroRev)}（客単価¥${num(DATA.kyaku)} × 着地客数）</div>
+       </div>
+       <div class="gauge"><span class="pill">登る先（今後）</span><div class="gl">予算達成確度</div><div class="gbar"><i></i></div><div class="gn">月間目標をいただければ「達成確度 ●●%／残${remain}日で日平均◯人必要」を自動表示します</div></div>
+     </div>
+     <div class="cv-kpis">
+       <div class="cv-kpi media"><span class="l">媒体 費用対効果</span><span class="v">${roiAll?roiAll.toFixed(1):"—"}倍</span><span class="d ${roiAll>=ROI_T?"pos":"neg"}">${roiAll>=ROI_T?"▲ 目安"+ROI_T+"倍 達成":"▼ 目安"+ROI_T+"倍 未達"}</span></div>
+       ${ew?`<div class="cv-kpi"><span class="l">MEO 反応率</span><span class="v">${ew.react_rate.toFixed(2)}%</span><span class="d ${ew.react_rate>=REACT_T?"pos":"neg"}">${ew.react_rate>=REACT_T?"▲ 目安":"▼ 目安"}${REACT_T}% ${ew.react_rate>=REACT_T?"超過":"未達"}</span></div>`:""}
+       <div class="cv-kpi rep"><span class="l">リピート率（下限）</span><span class="v">${rw.rate.toFixed(1)}%</span><span class="d ${rw.rate>=REP_T?"pos":"neg"}">${rw.rate>=REP_T?"▲ 目安":"▼ 目安"}${REP_T}% ${rw.rate>=REP_T?"超過":"未達"}</span></div>
+       <div class="cv-kpi ops"><span class="l">来店客数（期間計）</span><span class="v">${num(ow.guests)}人</span><span class="d" style="color:var(--mut)">選択期間 ${WIN.start}〜${WIN.end}</span></div>
+     </div>
+   </div>
+   <h2 class="cv-sec">優先アクション — AIが自動提案</h2>
+   <p class="cv-note">既存データ（媒体ROI・予約経路・MEO・コース構成）から効果の大きい順に。※ルールベースの自動提案です（ライブAIではありません）。</p>
+   <div class="cv-acts">
+     ${top.map(a=>`<div class="cv-act ${a.now?"now":"today"}"><span class="bdg">${a.now?"今すぐ":"今日中"}</span><h4><em>【${a.cat}】</em>${a.ti}</h4><div class="ds">${a.ds}</div></div>`).join("")}
+   </div>`;
+}
+
+/* ===== 期間セレクタ & 一括再描画 ===== */
+function renderDyn(){
+  drawCover(); drawExec(); drawSummary(); drawKpi(); drawMedia();
+  drawRoi(curRoi); drawTrend(curTrend); drawMonthly(); drawRepeatM(); drawCourseMedia();
+  if(meo){drawMeo(curMeo); drawMeoPosts();}
+}
+(function(){
+  const opt=ym=>`<option value="${ym}">${ym}</option>`;
+  document.getElementById("filterbar").innerHTML=
+    `<span class="ttl">期間</span>
+     <div class="fld">開始 <select id="f-start">${MASTER.map(opt).join("")}</select></div>
+     <div class="fld">終了 <select id="f-end">${MASTER.map(opt).join("")}</select></div>
+     <button class="qbtn" data-n="3">直近3M</button><button class="qbtn" data-n="6">直近6M</button>
+     <button class="qbtn on" data-n="12">直近12M</button><button class="qbtn" data-n="0">全期間</button>
+     <span class="ttl" style="margin-left:8px">推移幅</span>
+     <button class="qbtn tbtn" data-t="6">6ヶ月</button><button class="qbtn tbtn on" data-t="12">12ヶ月</button>
+     <span class="fmeta">期間連動＝媒体ROI/推移・月次サマリー・リピート月次・コース×媒体・MEO月次・KPI・AIサマリ。推移カードは選択が狭くても最低「推移幅」ヶ月を表示し<b>濃色=選択期間</b>。コースvs昼の自由注文予約・売れ筋コース・経路/WIは通期固定。</span>`;
+  const fs=document.getElementById("f-start"), fe=document.getElementById("f-end");
+  function setSel(){fs.value=WIN.start; fe.value=WIN.end;}
+  function apply(){let s=fs.value,e=fe.value; if(s>e){[s,e]=[e,s];} WIN={start:s,end:e}; setSel(); renderDyn();}
+  fs.onchange=fe.onchange=()=>{document.querySelectorAll(".qbtn:not(.tbtn)").forEach(x=>x.classList.remove("on")); apply();};
+  document.querySelectorAll(".qbtn:not(.tbtn)").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".qbtn:not(.tbtn)").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+    const n=+b.dataset.n;
+    WIN= n? {start:MASTER[Math.max(0,MASTER.length-n)], end:MASTER[MASTER.length-1]} : {start:MASTER[0], end:MASTER[MASTER.length-1]};
+    setSel(); renderDyn();});
+  document.querySelectorAll(".tbtn").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".tbtn").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+    TREND_MIN=+b.dataset.t; renderDyn();});
+  setSel();
+})();
+renderDyn();
+
+/* ===== ビュー切替（サマリ ⇄ 詳細） ===== */
+/* renderDyn() を先に実行し、detail 可視状態でチャートを正しくサイズさせてから cover を既定表示にする */
+function setView(v){
+  document.getElementById("view-cover").style.display  = v==="cover" ?"":"none";
+  document.getElementById("view-detail").style.display = v==="detail"?"":"none";
+  document.querySelectorAll(".sb-btn").forEach(b=>b.classList.toggle("on", b.dataset.view===v));
+  if(v==="detail") Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}});
+  window.scrollTo(0,0);
+}
+document.querySelectorAll(".sb-btn").forEach(b=>b.onclick=()=>setView(b.dataset.view));
+setView("cover");
+
+document.getElementById("footer").innerHTML=`データソース: 媒体帳票(2023-09〜) + 集計CSV(${DATA.period_ops}) + 予約明細 + 口コミコムGoogle(MEO) ／ 再生成: <code>python3 build_dashboard_cocorico.py</code><br>売上は想定売上(予約人数×客単価¥${num(K)})が主指標。コース×媒体は予約明細の媒体プラン名ベース（プラン記載分のみ）。© 本部 ／ データ可視化: SOEL`;
+</script>
+</body>
+</html>
