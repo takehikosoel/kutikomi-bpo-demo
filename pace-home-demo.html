@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ペース表ホーム（デモ）｜くいもの屋わん 横浜西口駅前店</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{--bg:#f6f5f4;--card:#fff;--card2:#f1f3f7;--line:#e2e5ea;--txt:#1a1d24;--mut:#6b7280;--accent:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#3b82f6;--pink:#ec4899;--teal:#0d9488;--purple:#7c3aed;--n-canvas:#f6f5f4;--n-surface:#fff;--n-ink:#1a1a19;--n-ink2:#31302e;--n-mut:#615d59;--n-faint:#a39e98;--n-line:#e6e4e1;--n-blue:#0075de;--n-orange:#dd5b00;--n-green:#1aae39}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--txt);font-family:"Inter",-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-size:14px;line-height:1.5}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10}
+    .title-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.top h1{font-size:18px;margin:0}.top-right{display:flex;align-items:center;gap:14px}.asof{font-size:12px;color:var(--mut);white-space:nowrap}.demo-back{font-size:11px;color:var(--mut);text-decoration:none;white-space:nowrap}.demo-back:hover{text-decoration:underline}
+    .badge{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid #5eead4;color:#0f766e;background:rgba(20,184,166,.12)}
+    main{max-width:1280px;margin:0 auto;padding:18px 20px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .sec-h{grid-column:span 12;margin:8px 2px -4px;font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.04em;border-left:3px solid var(--teal);padding-left:8px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .span12{grid-column:span 12}.span4{grid-column:span 4}.card h2{font-size:15px;margin:0 0 12px}.note{font-size:11px;color:var(--mut);margin:8px 0 0}.pos{color:var(--good)}.neg{color:var(--bad)}
+    .hero{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:center;border-top:4px solid var(--accent);padding:22px}
+    .gauge{position:relative;width:180px;height:180px;margin:auto}.gauge canvas{width:180px!important;height:180px!important}.gauge-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}.gauge-label small{color:var(--mut);font-size:11px}.gauge-label strong{font-size:32px;line-height:1.15}.gauge-label span{color:#b45309;font-weight:700;font-size:12px;margin-top:4px}
+    .pace-table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}.pace-table th,.pace-table td{text-align:center;padding:9px 8px;border-right:1px solid var(--line)}.pace-table th:last-child,.pace-table td:last-child{border-right:0}.pace-table th{color:var(--mut);font-size:11px;font-weight:600;border-bottom:1px solid var(--line)}.pace-table td{font-size:20px;font-weight:800;vertical-align:top}.pace-table td small{display:block;font-size:11px;font-weight:600;margin-top:3px}.need{margin-top:16px;padding:14px 18px;border-radius:10px;background:#fff7e0;border:1px solid #fcd34d;color:#78350f}.need strong{font-size:18px;color:#b45309}.need .current{font-size:12px;color:var(--mut)}
+    .bars{display:grid;gap:9px}.bar-row{display:grid;grid-template-columns:92px 1fr 44px;gap:8px;align-items:center;font-size:12px;border-radius:5px;transition:.15s}.bar-track{position:relative;display:grid;grid-template-columns:1fr 1fr;height:11px;background:var(--card2);border-radius:9px}.bar-track::after{content:"";position:absolute;top:-2px;bottom:-2px;left:50%;width:1px;background:var(--line);transform:translateX(-.5px);z-index:2}.bar-half{position:relative;overflow:hidden}.bar-half.left{border-radius:9px 0 0 9px}.bar-half.right{border-radius:0 9px 9px 0}.bar-fill{position:absolute;top:1px;height:9px}.bar-half.left .bar-fill{right:0;border-radius:9px 0 0 9px}.bar-half.right .bar-fill{left:0;border-radius:0 9px 9px 0}.bar-fill.bad{background:#ef4444}.bar-fill.good{background:var(--good)}.bar-dot{position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:#94a3b8;transform:translate(-50%,-50%);z-index:3}.bar-val{text-align:right;font-weight:700}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}th{color:var(--mut);font-weight:600;font-size:11px}
+    .heat th,.heat td{text-align:center;padding:7px 3px}.heat td:first-child{text-align:left;font-weight:600;background:none}.heat-cell{border-radius:5px;background:#f3f4f6;color:#4b5563}.heat-warn{background:#fee2e2;color:#b91c1c}.heat-bad{background:#dc2626;color:#fff;font-weight:800}.heat-note{display:block;font-size:8px;white-space:nowrap}
+    .course td:nth-child(2),.course td:nth-child(3){white-space:nowrap}.course strong{display:block}.course small{color:var(--mut)}
+    .actions{display:grid;gap:10px}.action{display:grid;grid-template-columns:155px 1fr auto;gap:18px;align-items:center;padding:16px 18px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:11px;background:#fffdf7;transition:.15s}.impact small{display:block;color:var(--mut);font-size:10px}.impact strong{font-size:25px;color:#b45309}.action-title{font-size:14px;font-weight:800}.hole{color:var(--mut);font-size:12px;margin-top:3px}.tags{margin-top:6px}.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;font-weight:700}.btns{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;max-width:330px}.btn{display:inline-block;border:1px solid #99c7ef;background:#fff;color:var(--n-blue);font:600 11px inherit;border-radius:7px;padding:8px 10px;cursor:pointer;transition:.15s;text-decoration:none}.btn:hover{background:rgba(0,117,222,.08);transform:translateY(-1px)}
+    [data-hole-id]{transition:.15s}.linked{outline:2px solid var(--accent);outline-offset:2px;background-color:#fff7ed!important}
+    .funnel{display:grid;grid-template-columns:repeat(4,1fr);align-items:stretch;gap:28px;margin:6px 0 14px}.step{position:relative;background:var(--card2);border-radius:10px;padding:14px 15px;min-height:82px;display:flex;flex-direction:column;justify-content:center}.step:not(:last-child)::after{content:"→";position:absolute;right:-21px;top:50%;transform:translateY(-50%);font-size:20px;color:#a39e98}.step small{color:var(--mut);font-size:10px}.step strong{font-size:17px}.step.result{background:#ecfdf3;border:1px solid #bbf7d0}.step.result strong{font-size:29px;color:var(--good)}.service-note{border-top:1px solid var(--line);padding-top:11px;color:var(--mut);font-size:12px}
+    .footer{max-width:1280px;margin:0 auto;padding:8px 20px 32px;color:var(--mut);font-size:11px}
+    @media(max-width:880px){.top{position:static;align-items:flex-start;flex-direction:column;padding:14px 16px}.span4{grid-column:span 12}.hero{grid-template-columns:1fr}.pace-wrap{overflow-x:auto}.pace-table{min-width:720px}.action{grid-template-columns:1fr}.btns{justify-content:flex-start;max-width:none}.funnel{grid-template-columns:1fr;gap:22px}.step:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-23px;transform:translateX(-50%)}main{padding:14px 12px;gap:12px}}
+    @media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.top{position:static}.card{break-inside:avoid;box-shadow:none}.btn{display:none}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="title-line"><h1>くいもの屋わん 横浜西口駅前店</h1><span class="badge">ペース表ホーム（デモ）</span></div>
+    <div class="top-right"><div class="asof">2026年8月18日(火) 朝の時点</div><a class="demo-back" href="index.html">← デモ一覧</a></div>
+  </header>
+  <main>
+    <div class="sec-h">今月の達成ペース</div>
+    <section class="card span12 hero" aria-labelledby="pace-title">
+      <div class="gauge"><canvas id="paceGauge" aria-label="達成ペース93%のゲージ"></canvas><div class="gauge-label"><small id="pace-title">達成ペース</small><strong>93%</strong><span>▲やや遅い</span></div></div>
+      <div><div class="pace-wrap"><table class="pace-table"><thead><tr><th>今月の目標</th><th>実績（18日時点）</th><th>着地予測</th><th>去年の同じ時点</th><th>予算との差</th></tr></thead><tbody><tr><td>500万円</td><td>280万円</td><td>465〜495万円</td><td>265万円<small class="pos">前年比 +5.7%</small></td><td class="neg">▲30万円<small>▲6%</small></td></tr></tbody></table></div><div class="need">残り10営業日。日平均 <strong>22万円</strong> 必要です <span class="current">（直近の平均は 19万円/日）</span></div></div>
+    </section>
+
+    <div class="sec-h">どこが遅れてる？</div>
+    <section class="card span4"><h2>予約の入り口別 <small>（前年の同じ時点と比べて）</small></h2><div class="bars">
+      <div class="bar-row" data-hole-id="tabelog"><span>食べログ</span><div class="bar-track"><div class="bar-half left"><div class="bar-fill bad" style="width:80%"></div></div><div class="bar-half right"></div></div><span class="bar-val neg">▲20%</span></div>
+      <div class="bar-row"><span>ホットペッパー</span><div class="bar-track"><div class="bar-half left"><div class="bar-fill bad" style="width:32%"></div></div><div class="bar-half right"></div></div><span class="bar-val neg">▲8%</span></div>
+      <div class="bar-row"><span>電話</span><div class="bar-track"><div class="bar-half left"><div class="bar-fill bad" style="width:20%"></div></div><div class="bar-half right"></div></div><span class="bar-val neg">▲5%</span></div>
+      <div class="bar-row"><span>ウォークイン</span><div class="bar-track"><div class="bar-half left"></div><div class="bar-half right"></div><span class="bar-dot"></span></div><span class="bar-val">±0%</span></div>
+      <div class="bar-row" data-hole-id="google"><span>Google予約</span><div class="bar-track"><div class="bar-half left"></div><div class="bar-half right"><div class="bar-fill good" style="width:40%"></div></div></div><span class="bar-val pos">+10%</span></div>
+      <div class="bar-row"><span>Instagram</span><div class="bar-track"><div class="bar-half left"></div><div class="bar-half right"><div class="bar-fill good" style="width:60%"></div></div></div><span class="bar-val pos">+15%</span></div>
+    </div><p class="note">バーの長さは±25%を最大とした比率</p></section>
+    <section class="card span4"><h2>曜日×時間帯 <small>（今月の埋まり具合）</small></h2><div style="overflow-x:auto"><table class="heat"><thead><tr><th></th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日</th></tr></thead><tbody><tr><td>ランチ</td><td class="heat-cell">+2%</td><td class="heat-cell">▲3%</td><td class="heat-cell">±0%</td><td class="heat-cell">+4%</td><td class="heat-cell">▲5%</td><td class="heat-cell">+3%</td><td class="heat-cell">+1%</td></tr><tr><td>ディナー</td><td class="heat-cell">▲2%</td><td class="heat-cell">+1%</td><td class="heat-cell">▲4%</td><td class="heat-cell">+2%</td><td class="heat-bad" data-hole-id="fri-dinner">▲25%<span class="heat-note">3週連続</span></td><td class="heat-warn">▲8%</td><td class="heat-cell">+5%</td></tr></tbody></table></div></section>
+    <section class="card span4"><h2>コース別</h2><table class="course"><thead><tr><th>コース</th><th>前年</th><th>今年</th><th>前年比</th></tr></thead><tbody><tr data-hole-id="banquet"><td><strong>宴会コース</strong><small>4,500円</small></td><td>80組</td><td>56組</td><td class="neg"><strong>▲30%</strong></td></tr><tr><td><strong>飲み放題付き</strong><small>5,000円</small></td><td>62組</td><td>65組</td><td class="pos"><strong>+5%</strong></td></tr><tr><td><strong>席のみ</strong></td><td colspan="2">—</td><td class="pos"><strong>+3%</strong></td></tr></tbody></table></section>
+
+    <div class="sec-h">何で埋める？</div>
+    <section class="span12 actions" aria-label="おすすめの打ち手">
+      <article class="action" data-holes="fri-dinner banquet"><div class="impact"><small>期待</small><strong>+40万円</strong></div><div><div class="action-title">金曜ディナーの宴会コースを前面に出す</div><div class="hole">対応する穴：金曜D▲25% × 宴会▲30%</div><div class="tags"><span class="tag">即効〜数週間</span></div></div><div class="btns"><a class="btn" href="media-sns-demo/index.html">みせサポで投稿を作る →</a><a class="btn" href="tenpo-os-demo/index.html#bitei">媒体の特集枠を調整 →</a></div></article>
+      <article class="action" data-holes="tabelog"><div class="impact"><small>期待</small><strong>+25万円</strong></div><div><div class="action-title">食べログのプランと写真をテコ入れ</div><div class="hole">対応する穴：食べログ経由▲20%</div><div class="tags"><span class="tag">数週間</span></div></div><div class="btns"><a class="btn" href="tenpo-os-demo/index.html#bitei">BPOに依頼 →</a></div></article>
+      <article class="action" data-holes="google"><div class="impact"><small>期待</small><strong>+12万円</strong></div><div><div class="action-title">Googleマップの口コミ返信と最新写真</div><div class="hole">対応する穴：検索露出の底上げ</div><div class="tags"><span class="tag">数週間〜数ヶ月</span></div></div><div class="btns"><a class="btn" href="kuchikomi-demo/index.html">BPOに依頼 →</a></div></article>
+      <article class="action" data-holes="fri-dinner"><div class="impact"><small>期待</small><strong>+8万円</strong></div><div><div class="action-title">LINE友だちに金曜限定クーポン</div><div class="hole">対応する穴：再来のきっかけ作り</div><div class="tags"><span class="tag">即効</span></div></div><div class="btns"><a class="btn" href="media-sns-demo/index.html">みせサポで配信を作る →</a></div></article>
+      <p class="note">※期待額は穴の大きさ×過去の実績から自動見積り（デモでは仮の値）</p>
+    </section>
+
+    <div class="sec-h">先月やった施策の結果</div>
+    <section class="card span12"><div class="funnel"><div class="step"><small>実行した打ち手</small><strong>投稿4本＋特集枠</strong></div><div class="step"><small>露出</small><strong>リーチ2.8万</strong></div><div class="step"><small>予約</small><strong>+42組（168名）</strong></div><div class="step result"><small>回収</small><strong>+38万円</strong></div></div><div class="service-note">このツールは無料でご利用いただけます。打ち手の実行はSOELが代行します（みせサポ・口コミBPO・媒体運用）</div></section>
+  </main>
+  <footer class="footer">デモ画面・数値はすべて架空です ／ 月次の売上目標とPOSの売上データをご提供いただくと、実データで動きます</footer>
+  <script>
+    const gauge = document.getElementById('paceGauge');
+    if (gauge && window.Chart) {
+      new Chart(gauge, {type:'doughnut',data:{datasets:[{data:[93,7],backgroundColor:['#f59e0b','#f1f3f7'],borderWidth:0,borderRadius:8}]},options:{responsive:false,cutout:'78%',rotation:-90,circumference:360,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
+    }
+    const actions = [...document.querySelectorAll('.action[data-holes]')];
+    const holes = [...document.querySelectorAll('[data-hole-id]')];
+    const clearLinked = () => document.querySelectorAll('.linked').forEach(el => el.classList.remove('linked'));
+    const linkFromAction = action => {
+      clearLinked();
+      action.dataset.holes.split(/\s+/).forEach(id => {
+        const hole = holes.find(el => el.dataset.holeId === id);
+        if (hole) hole.classList.add('linked');
+      });
+    };
+    const linkFromHole = hole => {
+      clearLinked();
+      actions.filter(action => action.dataset.holes.split(/\s+/).includes(hole.dataset.holeId))
+        .forEach(action => action.classList.add('linked'));
+    };
+    actions.forEach(action => {
+      action.addEventListener('mouseenter', () => linkFromAction(action));
+      action.addEventListener('mouseleave', clearLinked);
+      action.addEventListener('click', event => {
+        if (event.target.closest('a')) return;
+        event.stopPropagation();
+        linkFromAction(action);
+      });
+    });
+    holes.forEach(hole => {
+      hole.addEventListener('mouseenter', () => linkFromHole(hole));
+      hole.addEventListener('mouseleave', clearLinked);
+      hole.addEventListener('click', event => {
+        event.stopPropagation();
+        linkFromHole(hole);
+      });
+    });
+    document.addEventListener('click', clearLinked);
+  </script>
+</body>
+</html>
