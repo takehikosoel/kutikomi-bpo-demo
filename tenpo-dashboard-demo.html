@@ -34,6 +34,7 @@ body{margin:0;background:var(--bg);color:var(--txt);font-family:"Inter",-apple-s
 main{max-width:1280px;margin:0 auto;padding:18px 20px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .sec-h{grid-column:span 12;margin:6px 2px -4px;font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.04em;border-left:3px solid var(--teal);padding-left:8px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.hl-jump{outline:3px solid #f59e0b;outline-offset:3px;transition:outline-color .4s}
 .span12{grid-column:span 12}.span6{grid-column:span 6}.span8{grid-column:span 8}.span4{grid-column:span 4}
 @media(max-width:880px){.span6,.span8,.span4{grid-column:span 12}}
 .card h2{font-size:15px;margin:0 0 4px}
@@ -940,6 +941,22 @@ function setView(v){
 }
 document.querySelectorAll(".sb-btn").forEach(b=>b.onclick=()=>setView(b.dataset.view));
 setView("cover");
+
+function jumpToHash(){
+  const id=decodeURIComponent(location.hash.slice(1));
+  if(!id) return;
+  const el=document.getElementById(id);
+  if(!el) return;
+  setView("detail");
+  const card=el.closest("section.card") || el;
+  setTimeout(()=>{
+    card.scrollIntoView({behavior:"smooth",block:"start"});
+    card.classList.add("hl-jump");
+    setTimeout(()=>card.classList.remove("hl-jump"),2500);
+  },80);
+}
+window.addEventListener("hashchange",jumpToHash);
+jumpToHash();
 
 document.getElementById("footer").innerHTML=`データソース: 媒体帳票(2023-09〜) + 集計CSV(${DATA.period_ops}) + 予約明細 + 口コミコムGoogle(MEO) ／ 再生成: <code>python3 build_dashboard_cocorico.py</code><br>売上は想定売上(予約人数×客単価¥${num(K)})が主指標。コース×媒体は予約明細の媒体プラン名ベース（プラン記載分のみ）。© 本部 ／ データ可視化: SOEL`;
 </script>
