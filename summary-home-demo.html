@@ -24,6 +24,9 @@
     .top h1{font-size:22px;font-weight:700;letter-spacing:-.25px;line-height:1.27;color:var(--ink);margin:0}
     .top-right{display:flex;align-items:center;gap:16px}
     .asof{font-size:15px;color:var(--muted);white-space:nowrap}
+    .month-toggle{display:inline-flex;border:1px solid var(--hairline);border-radius:9999px;background:var(--surface);padding:3px;gap:2px}
+    .month-toggle button{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.125px;padding:5px 14px;border-radius:9999px;cursor:pointer}
+    .month-toggle button[aria-pressed="true"]{background:var(--ink);color:#fff}
     .demo-back{font-size:15px;color:var(--blue);text-decoration:none;white-space:nowrap}
     .demo-back:hover{text-decoration:underline}
     /* badge-pill（eyebrow：12px/600/+0.125px） */
@@ -100,6 +103,7 @@
     /* 月次推移ミニチャート */
     .mini{position:relative;height:58px;display:flex;align-items:flex-end;gap:10px}
     .mini .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+    .mini .col[hidden],.minix span[hidden]{display:none}
     .mini .col i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--hairline-2)}
     .mini .col.last i{background:var(--ink)}
     .mini .col em{font-style:normal;font-size:13px;color:var(--muted);margin-bottom:4px;white-space:nowrap}
@@ -129,13 +133,13 @@
 
     @media(max-width:980px){.span3,.span4{grid-column:span 6}}
     @media(max-width:880px){.top{align-items:flex-start;flex-direction:column;padding:16px 20px}.span3,.span4,.span6{grid-column:span 12}.hero-grid{grid-template-columns:1fr}.action{grid-template-columns:1fr;gap:14px}.btns{justify-content:flex-start}main{padding:24px 16px 40px;gap:16px}}
-    @media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.action{break-inside:avoid;box-shadow:none}.btn{display:none}}
+    @media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.action{break-inside:avoid;box-shadow:none}.btn,.month-toggle{display:none}}
   </style>
 </head>
 <body>
   <header class="top">
     <div class="title-line"><h1>串カツ酒場 人氣万両 上福岡駅前店</h1><span class="badge">サマリーホーム（デモ）</span></div>
-    <div class="top-right"><div class="asof">施策期間 2026-06-01 〜 07-31</div><a class="demo-back" href="index.html">← デモ一覧</a></div>
+    <div class="top-right"><div class="month-toggle" role="group" aria-label="表示月切替"><button type="button" data-month="06" aria-pressed="false">6月</button><button type="button" data-month="07" aria-pressed="true">7月</button></div><div class="asof">施策期間 2026-06-01 〜 07-31</div><a class="demo-back" href="index.html">← デモ一覧</a></div>
   </header>
 
   <main>
@@ -144,7 +148,7 @@
         <div>
           <div class="lab">総合スコア</div>
           <div class="total">74<span>点</span></div>
-          <div class="basis">※4軸の単純平均・提案時KPI比（支援店平均比は参考・整備中 n=3）</div>
+          <div class="basis">※4軸の単純平均・提案時KPI比（採点は施策期間全体の評価。支援店平均比は参考・整備中 n=3）</div>
           <div class="msg"><span class="dot"></span><strong>認知・検討は勝てている。ボトルネックは拡散（口コミ）</strong><span class="current">Google口コミ15件が伸びしろ。来店はCVR 0.36%が次の課題</span></div>
         </div>
         <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:300px;height:auto;justify-self:center" role="img" aria-label="4軸スコアのレーダーチャート：認知100点・検討比較85点・来店70点・拡散40点">
@@ -203,14 +207,14 @@
     <!-- 認知（SNS表示回数 計） -->
     <section class="card span4 kpi">
       <div class="kpi-h"><span class="stage">認知</span><span class="grade a">◎</span></div>
-      <div class="v">約21<small>万回／7月</small></div>
-      <div class="l">SNS表示回数（月間）<small>広告＋自社投稿の7月合算 212,081回</small></div>
+      <div class="v" id="awareness-value">約21<small>万回／7月</small></div>
+      <div class="l">SNS表示回数（月間）<small id="awareness-detail">広告＋自社投稿の7月合算 212,081回</small></div>
       <div class="brk-rows">
-        <div class="brk-row"><span class="nm">広告（Meta）<small>7月のみ配信（7/1〜31）・CTR 5.85%＝関東平均3.0%の約1.9倍</small></span><span class="vl">195,495</span><span class="gr a">◎</span></div>
-        <div class="brk-row"><span class="nm">自社投稿<small>6月 3,385 → 7月 16,586。7月は広告経由の閲覧と混在</small></span><span class="vl">16,586</span><span class="gr b">○</span></div>
+        <div class="brk-row" id="awareness-ad-row"><span class="nm">広告（Meta）<small id="awareness-ad-detail">7月のみ配信（7/1〜31）・CTR 5.85%＝関東平均3.0%の約1.9倍</small></span><span class="vl" id="awareness-ad-value">195,495</span><span class="gr a" id="awareness-ad-grade">◎</span></div>
+        <div class="brk-row"><span class="nm">自社投稿<small id="awareness-owned-detail">6月 3,385 → 7月 16,586。7月は広告経由の閲覧と混在</small></span><span class="vl" id="awareness-owned-value">16,586</span><span class="gr b" id="awareness-owned-grade">○</span></div>
         <div class="brk-row"><span class="nm">インフルエンサー<small>施策累計（投稿6/29〜7/6・7/10集計）。月割り不可のため月間値には含めない</small></span><span class="vl">304,584</span><span class="gr a">◎</span></div>
       </div>
-      <div class="n">※施策累計ではインフルエンサー304,584回を含め約52万回。<br>※実施していない施策の行は「－（未実施）」と表示されます（店舗ごとに実施内容が違うため、同じ様式で比べられます）</div>
+      <div class="n">※施策累計ではインフルエンサー304,584回を含め約52万回（7/10集計）。<br>※実施していない施策の行は「－（未実施）」と表示されます（店舗ごとに実施内容が違うため、同じ様式で比べられます）</div>
       <div class="viz">
         <div class="bar-track"><div class="bar-fill" style="width:100%"></div><div class="bar-mark" style="left:21%"></div></div>
         <div class="vizlab"><span>縦線＝インフルエンサーKPI 65,000回</span><span>達成率 469%（振り切り）</span></div>
@@ -220,49 +224,49 @@
     <!-- 検討① -->
     <section class="card span4 kpi">
       <div class="kpi-h"><span class="stage">検討・比較</span><span class="grade b">○</span></div>
-      <div class="v">16,034<small>回／7月</small></div>
+      <div class="v" id="gbp-value">16,034<small>回／7月</small></div>
       <div class="l">GBP閲覧数（月間）</div>
-      <div class="n">6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外</div>
+      <div class="n" id="gbp-note">6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外</div>
       <div class="viz">
         <div class="mini">
           <div class="col"><em>1,024</em><i style="height:6%"></i></div>
-          <div class="col"><em>6,027</em><i style="height:38%"></i></div>
-          <div class="col last"><em>16,034</em><i style="height:100%"></i></div>
+          <div class="col" data-chart="gbp" data-chart-month="06"><em>6,027</em><i style="height:38%"></i></div>
+          <div class="col last" data-chart="gbp" data-chart-month="07"><em>16,034</em><i style="height:100%"></i></div>
         </div>
-        <div class="minix"><span>5月</span><span>6月</span><span>7月</span></div>
+        <div class="minix"><span>5月</span><span>6月</span><span data-chart="gbp" data-chart-month="07">7月</span></div>
       </div>
     </section>
 
     <!-- 検討② -->
     <section class="card span4 kpi">
       <div class="kpi-h"><span class="stage">検討・比較</span><span class="grade a">◎</span></div>
-      <div class="v">5,339<small>PV／7月</small></div>
+      <div class="v" id="tabelog-value">5,339<small>PV／7月</small></div>
       <div class="l">食べログ アクセス数（月間）</div>
-      <div class="n">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.7〜3.6倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,500）</div>
+      <div class="n" id="tabelog-note">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.7〜3.6倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,500）</div>
       <div class="viz">
         <div class="mini">
           <div class="band" style="bottom:17%;height:6%"></div>
           <div class="line" style="bottom:100%"><span>圏内ライン 8,816</span></div>
           <div class="col"><em>1,276</em><i style="height:14%"></i></div>
-          <div class="col"><em>4,955</em><i style="height:56%"></i></div>
-          <div class="col last"><em>5,339</em><i style="height:61%"></i></div>
+          <div class="col" data-chart="tabelog" data-chart-month="06"><em>4,955</em><i style="height:56%"></i></div>
+          <div class="col last" data-chart="tabelog" data-chart-month="07"><em>5,339</em><i style="height:61%"></i></div>
         </div>
-        <div class="minix"><span>5月</span><span>6月</span><span>7月</span></div>
+        <div class="minix"><span>5月</span><span>6月</span><span data-chart="tabelog" data-chart-month="07">7月</span></div>
       </div>
     </section>
 
     <!-- 来店 -->
     <section class="card span6 kpi">
       <div class="kpi-h"><span class="stage">来店</span><span class="grade b">○</span></div>
-      <div class="v">19<small>組／75名（7月）</small></div>
+      <div class="v" id="visit-value">19<small>組／75名（7月）</small></div>
       <div class="l">食べログ ネット予約経由の来店（月間）</div>
-      <div class="n">6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名<br>CVR 0.36%（7月・ネット予約19組 ÷ 食べログPV 5,339）</div>
+      <div class="n" id="visit-note">6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名<br>CVR 0.36%（7月・ネット予約19組 ÷ 食べログPV 5,339）</div>
       <div class="viz">
         <div class="mini">
-          <div class="col"><em>10組</em><i style="height:53%"></i></div>
-          <div class="col last"><em>19組</em><i style="height:100%"></i></div>
+          <div class="col" data-chart="visit" data-chart-month="06"><em>10組</em><i style="height:53%"></i></div>
+          <div class="col last" data-chart="visit" data-chart-month="07"><em>19組</em><i style="height:100%"></i></div>
         </div>
-        <div class="minix"><span>6月</span><span>7月</span></div>
+        <div class="minix"><span>6月</span><span data-chart="visit" data-chart-month="07">7月</span></div>
       </div>
     </section>
 
@@ -292,7 +296,7 @@
         <div class="from">来店<strong>70点</strong></div>
         <div>
           <div class="action-title">CVR（予約転換率）を上げる</div>
-          <div class="hole">現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います</div>
+          <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います</div>
         </div>
         <div class="btns"><a class="btn" href="pace-home-demo.html">来店の詳細を見る →</a></div>
       </article>
@@ -300,7 +304,7 @@
         <div class="from">検討比較<strong>85点</strong></div>
         <div>
           <div class="action-title">食べログのエリアランキング圏内に入る</div>
-          <div class="hole">月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ</div>
+          <div class="hole" id="action-ranking">月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ</div>
         </div>
         <div class="btns"><a class="btn" href="tenpo-os-demo/index.html#bitei">食べログ強化を相談 →</a></div>
       </article>
@@ -317,8 +321,72 @@
     </section>
   </main>
 
+  <script>
+    const MONTHLY = {
+      "06": {
+        "awareness-value": "3,385<small>回／6月</small>",
+        "awareness-detail": "自社投稿の6月合算 3,385回（広告は7月開始）",
+        "awareness-ad-detail": "7月開始（6月は未配信）",
+        "awareness-ad-value": "－（未実施）",
+        "awareness-ad-grade": "",
+        "awareness-owned-detail": "ストーリーズ2,049・フィード803・リール529",
+        "awareness-owned-value": "3,385",
+        "awareness-owned-grade": "○",
+        "gbp-value": "6,027<small>回／6月</small>",
+        "gbp-note": "5月 1,024回 → 6月 <b>6,027回（前月比 約5.9倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外",
+        "tabelog-value": "4,955<small>PV／6月</small>",
+        "tabelog-note": "5月 1,276PV → 6月 <b>4,955PV（前月比 約3.9倍）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.5〜3.3倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,900）",
+        "visit-value": "10<small>組／27名（6月）</small>",
+        "visit-note": "ネット予約の受付開始後 初月実績（食べログ掲載開始 5/15）<br>CVR 0.20%（6月・ネット予約10組 ÷ 食べログPV 4,955）",
+        "action-cvr": "現在0.20%。写真・プラン・予約ボタンの導線を見直し、見られた4,955PVから取りこぼしている予約を拾います",
+        "action-ranking": "月間PV 4,955 → 圏内ライン 8,816 まであと約3,900。CVR 0.20%のまま分母が1.78倍になれば、予約は月10組から18組規模へ"
+      },
+      "07": {
+        "awareness-value": "約21<small>万回／7月</small>",
+        "awareness-detail": "広告＋自社投稿の7月合算 212,081回",
+        "awareness-ad-detail": "7月のみ配信（7/1〜31）・CTR 5.85%＝関東平均3.0%の約1.9倍",
+        "awareness-ad-value": "195,495",
+        "awareness-ad-grade": "◎",
+        "awareness-owned-detail": "6月 3,385 → 7月 16,586。7月は広告経由の閲覧と混在",
+        "awareness-owned-value": "16,586",
+        "awareness-owned-grade": "○",
+        "gbp-value": "16,034<small>回／7月</small>",
+        "gbp-note": "6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外",
+        "tabelog-value": "5,339<small>PV／7月</small>",
+        "tabelog-note": "6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.7〜3.6倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,500）",
+        "visit-value": "19<small>組／75名（7月）</small>",
+        "visit-note": "6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名<br>CVR 0.36%（7月・ネット予約19組 ÷ 食べログPV 5,339）",
+        "action-cvr": "現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います",
+        "action-ranking": "月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ"
+      }
+    };
+
+    const setMonth = (month) => {
+      Object.entries(MONTHLY[month]).forEach(([id, html]) => {
+        document.getElementById(id).innerHTML = html;
+      });
+      document.querySelectorAll(".month-toggle button").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.month === month));
+      });
+      document.getElementById("awareness-ad-row").classList.toggle("none", month === "06");
+      document.querySelectorAll('[data-chart-month="07"]').forEach((element) => {
+        element.hidden = month === "06";
+      });
+      document.querySelectorAll('.mini .col[data-chart-month="06"]').forEach((column) => {
+        column.classList.toggle("last", month === "06");
+      });
+      document.querySelectorAll('.mini .col[data-chart-month="07"]').forEach((column) => {
+        column.classList.toggle("last", month === "07");
+      });
+    };
+
+    document.querySelectorAll(".month-toggle button").forEach((button) => {
+      button.addEventListener("click", () => setMonth(button.dataset.month));
+    });
+  </script>
+
   <footer class="footer">
-    ※数値は2026-07-31時点の確定実績。各カードの主要数値は7月単月（前月比つき）、インフルエンサーのみ施策累計（各媒体の管理画面・API実測）。口コミ評価のみ2026-07時点の累計。インフルエンサー施策は中間報告（集計基準日 2026-07-10）の確定値。<br>
+    ※数値は2026-07-31時点の確定実績。各カードの主要数値はヘッダーで選択した表示月の単月実績（前月比つき）、インフルエンサーのみ施策累計（各媒体の管理画面・API実測）。口コミ評価のみ2026-07時点の累計。インフルエンサー施策は中間報告（集計基準日 2026-07-10）の確定値。<br>
     食べログ関連は管理画面キャプチャからの手動更新（取得日 2026-08-10）。点数は上記の採点ルールによる社内評価です（比較基準＝提案時KPI比。支援店平均比は参考・整備中）。
   </footer>
 </body>
