@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>サマリーホーム（デモ）｜串カツ酒場 人氣万両 上福岡駅前店</title>
+  <title>サマリーホーム（デモ）｜串カツ酒場 まんぷく亭 東口駅前店</title>
   <style>
     /* ===== DESIGN-notion.md 準拠のトークン（warm paper canvas／hairline＋barely-there elevation） ===== */
     :root{
@@ -12,32 +12,32 @@
       --ink:rgba(0,0,0,.95);--ink2:#31302e;--muted:#615d59;--faint:#a39e98;
       --blue:#0075de;--blue-press:#005bab;--green:#1aae39;--orange:#dd5b00;
       --lift:0 .175px 1.041px rgba(0,0,0,.01),0 .8px 2.925px rgba(0,0,0,.02),0 2.025px 7.847px rgba(0,0,0,.027),0 4px 18px rgba(0,0,0,.04);
+      --head-h:69px;
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--canvas);color:var(--ink2);
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--canvas);color:var(--ink2);overflow-x:hidden;
       font-family:Inter,-apple-system,system-ui,"Segoe UI","Hiragino Kaku Gothic ProN",Meiryo,Helvetica,Arial,sans-serif;
       font-feature-settings:"lnum" 1,"locl" 1;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-    /* ヘッダー（nav-bar：白・スリム） */
-    .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--hairline);background:var(--surface)}
-    .title-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    /* ヘッダー（nav-bar：白・スリム・追従） */
+    .top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--hairline);background:var(--surface)}
+    .title-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
     .top h1{font-size:22px;font-weight:700;letter-spacing:-.25px;line-height:1.27;color:var(--ink);margin:0}
     .top-right{display:flex;align-items:center;gap:16px}
     .asof{font-size:15px;color:var(--muted);white-space:nowrap}
-    .month-toggle{display:inline-flex;border:1px solid var(--hairline);border-radius:9999px;background:var(--surface);padding:3px;gap:2px}
-    .month-toggle button{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.125px;padding:5px 14px;border-radius:9999px;cursor:pointer}
+    .month-toggle{display:inline-flex;border:1px solid var(--hairline);border-radius:9999px;background:var(--surface);padding:3px;gap:2px;flex:none}
+    .month-toggle button{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.125px;padding:5px 14px;border-radius:9999px;cursor:pointer;min-height:32px}
     .month-toggle button[aria-pressed="true"]{background:var(--ink);color:#fff}
     .demo-back{font-size:15px;color:var(--blue);text-decoration:none;white-space:nowrap}
     .demo-back:hover{text-decoration:underline}
     /* badge-pill（eyebrow：12px/600/+0.125px） */
-    .badge{font-size:12px;font-weight:600;letter-spacing:.125px;line-height:1.33;padding:4px 10px;border-radius:9999px;background:var(--surface);border:1px solid var(--hairline);color:var(--blue)}
+    .badge{font-size:12px;font-weight:600;letter-spacing:.125px;line-height:1.33;padding:4px 10px;border-radius:9999px;background:var(--surface);border:1px solid var(--hairline);color:var(--blue);white-space:nowrap}
 
     /* レイアウト：余白でグルーピング（罫線に頼らない） */
-    main{max-width:1200px;margin:0 auto;padding:32px 24px 56px;display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
-    .sec-h{grid-column:span 12;margin:36px 2px 0;font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
-    .sec-h .rule{font-weight:400;font-size:14px;color:var(--faint)}
+    main{max-width:1200px;margin:0 auto;padding:28px 24px 56px;display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
     .card{background:var(--surface);border:1px solid var(--hairline);border-radius:12px;padding:24px}
-    .span12{grid-column:span 12}.span6{grid-column:span 6}.span4{grid-column:span 4}.span3{grid-column:span 3}
+    .span12{grid-column:span 12}
     .note{font-size:14px;color:var(--muted);margin:8px 0 0}
 
     /* 総合判定（唯一 barely-there の浮き） */
@@ -47,48 +47,98 @@
     .hero .total{font-size:56px;font-weight:700;line-height:1.05;letter-spacing:-1.4px;color:var(--ink);margin-top:10px}
     .hero .total span{font-size:17px;font-weight:400;letter-spacing:0;color:var(--muted);margin-left:6px}
     .hero .basis{font-size:12px;color:var(--muted);letter-spacing:.125px;margin-top:8px}
-    .hero .msg{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .hero .msg{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px}
     .hero .dot{width:8px;height:8px;border-radius:9999px;background:var(--orange);flex:none;transform:translateY(-3px)}
     .hero strong{font-size:26px;font-weight:700;letter-spacing:-.625px;line-height:1.23;color:var(--ink)}
     .hero .current{font-size:15px;color:var(--muted)}
 
-    /* 4軸スコア */
-    .score .ax{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .score .ax .nm{font-size:20px;font-weight:600;letter-spacing:-.125px;color:var(--ink)}
-    .score .ax .nm small{display:block;font-weight:400;color:var(--muted);font-size:14px;margin-left:0;margin-top:2px;letter-spacing:0}
+    /* 4軸サマリー（1枚のカードに4等分／各軸へジャンプ） */
+    .axes{padding:0;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr)}
+    .axis{display:block;padding:20px 22px;text-decoration:none;color:inherit;border-left:1px solid var(--hairline);transition:.12s}
+    .axis:first-child{border-left:0}
+    .axis:hover{background:var(--canvas)}
+    .axis .ax-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .axis .nm{font-size:17px;font-weight:600;letter-spacing:-.125px;color:var(--ink)}
+    .axis .pt{font-size:30px;font-weight:700;line-height:1.15;letter-spacing:-.75px;color:var(--ink);margin-top:10px}
+    .axis .pt span{font-size:13px;font-weight:400;margin-left:4px;color:var(--muted);letter-spacing:0}
+    .axis .cap{font-size:13px;color:var(--muted);margin-top:10px}
+    .track{height:5px;background:var(--hairline);border-radius:9999px;margin-top:10px;position:relative;overflow:hidden}
+    .track i{position:absolute;left:0;top:0;height:5px;border-radius:9999px;background:var(--ink)}
+
     .state{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted);white-space:nowrap}
     .state i{width:8px;height:8px;border-radius:9999px;flex:none;background:var(--faint)}
     .state.ok i{background:var(--green)}
     .state.warn i{background:var(--orange)}
-    .score .pt{font-size:40px;font-weight:700;line-height:1.1;letter-spacing:-1px;color:var(--ink);margin-top:16px}
-    .score .pt span{font-size:15px;font-weight:400;margin-left:5px;color:var(--muted);letter-spacing:0}
-    .score .track{height:5px;background:var(--hairline);border-radius:9999px;margin-top:14px;position:relative;overflow:hidden}
-    .score .track i{position:absolute;left:0;top:0;height:5px;border-radius:9999px;background:var(--ink)}
-    .score .brk{font-size:14px;color:var(--muted);margin-top:12px}
-    .score .basis{font-size:12px;color:var(--faint);margin-top:8px;letter-spacing:.125px}
 
-    /* 施策カード */
-    .kpi{display:flex;flex-direction:column}
-    .kpi-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .stage{font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted);background:var(--surface);border:1px solid var(--hairline);border-radius:9999px;padding:4px 10px}
+    /* 分析の頭（読み方のロジック） */
+    .logic .lg-h{font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted)}
+    .funnel{display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .funnel .fn{border:1px solid var(--hairline);border-radius:10px;padding:10px 16px;font-size:15px;font-weight:600;letter-spacing:-.125px;color:var(--ink);background:var(--surface);display:flex;flex-direction:column;gap:2px}
+    .funnel .fn small{font-weight:400;font-size:12px;color:var(--muted);letter-spacing:0}
+    .funnel .fn.hot{border-color:var(--hairline-2);background:var(--canvas)}
+    .funnel .ar{display:flex;align-items:center;color:var(--faint);font-size:14px}
+    .funnel .loop{display:flex;align-items:center;font-size:12px;color:var(--faint);letter-spacing:.125px;padding-left:4px}
+    .lg-lead{font-size:16px;line-height:1.7;color:var(--ink2);margin:16px 0 0;letter-spacing:-.125px}
+    .lg-lead b{color:var(--ink);font-weight:700}
+    .fold{margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.75}
+    .fold summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:13px;letter-spacing:.125px;list-style:none;display:inline-flex;align-items:center;gap:6px}
+    .fold summary::-webkit-details-marker{display:none}
+    .fold summary::before{content:"＋";font-weight:400;color:var(--faint)}
+    .fold[open] summary::before{content:"−"}
+    .fold .q{margin-top:14px;padding-left:0;list-style:none;counter-reset:q}
+    .fold .q li{position:relative;padding-left:30px;margin-top:10px;counter-increment:q}
+    .fold .q li::before{content:counter(q);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:9999px;border:1px solid var(--hairline);font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center}
+    .fold .q b{color:var(--ink);font-weight:600}
+    .fold .rule{margin-top:16px;padding-top:14px;border-top:1px solid var(--hairline)}
+
+    /* 各段の示唆（結論を先に、根拠のカードはその下） */
+    .read{border:1px solid var(--hairline);border-radius:12px;background:var(--surface);padding:18px 22px;margin-bottom:20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
+    .read .tag{font-size:12px;font-weight:600;letter-spacing:.125px;color:#fff;background:var(--ink);border-radius:9999px;padding:5px 12px;white-space:nowrap;margin-top:2px}
+    .read.warn .tag{background:var(--orange)}
+    .read .lead{font-size:17px;font-weight:600;letter-spacing:-.125px;color:var(--ink);line-height:1.55}
+    .read .body{font-size:13.5px;color:var(--muted);line-height:1.75;margin-top:8px}
+    .read .body b{color:var(--ink2);font-weight:600}
+    .read .meta{font-size:12px;color:var(--faint);letter-spacing:.125px;line-height:1.7;margin-top:10px}
+
+    /* ===== ステージ（認知／検討・比較／来店／拡散） ===== */
+    .stage{grid-column:span 12;scroll-margin-top:calc(var(--head-h) + 12px)}
+    .stage-head{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin:32px 2px 14px}
+    .sh-l{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
+    .sh-l .num{width:24px;height:24px;border-radius:9999px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none;transform:translateY(3px)}
+    .sh-l .nm{font-size:20px;font-weight:600;letter-spacing:-.125px;color:var(--ink)}
+    .sh-l .sub{font-size:14px;color:var(--muted)}
+    .sh-r{display:flex;align-items:center;gap:12px}
+    .sh-r .track{width:110px;margin-top:0;flex:none}
+    .sh-r .pts{font-size:20px;font-weight:700;letter-spacing:-.4px;color:var(--ink);white-space:nowrap}
+    .sh-r .pts span{font-size:12px;font-weight:400;color:var(--muted);margin-left:2px}
+
+    /* 施策カード：全ステージ共通の内部構造（源→数字→名称→補足→図） */
+    .stage-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+    .kpi{display:flex;flex-direction:column;min-height:330px}
+    .kpi-h{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:26px}
+    .src{font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted);background:var(--surface);border:1px solid var(--hairline);border-radius:9999px;padding:4px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .grade{min-width:34px;height:24px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;letter-spacing:.125px;flex:none;border:1px solid var(--hairline);background:var(--surface);color:var(--ink2)}
     .grade.a{color:var(--green)}
     .grade.b{color:var(--ink)}
     .grade.c{color:var(--orange)}
-    .kpi .v{font-size:36px;font-weight:700;line-height:1.15;letter-spacing:-.9px;color:var(--ink);margin-top:18px}
-    .kpi .v small{font-size:15px;font-weight:400;color:var(--muted);margin-left:6px;letter-spacing:0}
-    .kpi .l{font-size:20px;font-weight:600;letter-spacing:-.125px;line-height:1.4;color:var(--ink);margin-top:4px}
-    .kpi .l small{font-weight:400;color:var(--muted);font-size:14px;margin-left:8px;letter-spacing:0}
-    .kpi .n{font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px}
+    .grade.na{color:var(--faint)}
+    .kpi .v{font-size:34px;font-weight:700;line-height:1.15;letter-spacing:-.85px;color:var(--ink);margin-top:16px}
+    .kpi .v small{font-size:14px;font-weight:400;color:var(--muted);margin-left:6px;letter-spacing:0}
+    .kpi .l{font-size:18px;font-weight:600;letter-spacing:-.125px;line-height:1.45;color:var(--ink);margin-top:4px}
+    .kpi .l small{display:block;font-weight:400;color:var(--muted);font-size:13.5px;margin-top:3px;letter-spacing:0;line-height:1.55}
+    .kpi .n{font-size:13.5px;color:var(--muted);line-height:1.65;margin-top:10px}
     .kpi .n b{color:var(--ink);font-weight:600}
     .kpi .viz{margin-top:auto;padding-top:20px}
+    /* 採点対象外／未実施カードは面を落とす */
+    .kpi.na{background:#fbfaf9}
+    .kpi.na .v,.kpi.na .l{color:var(--faint)}
 
     /* 内訳行（実施していない施策は「－（未実施）」） */
-    .brk-rows{margin-top:18px;border-top:1px solid var(--hairline)}
-    .brk-row{display:grid;grid-template-columns:1fr auto 30px;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--hairline);font-size:15px}
+    .brk-rows{margin-top:16px;border-top:1px solid var(--hairline)}
+    .brk-row{display:grid;grid-template-columns:minmax(0,1fr) auto 28px;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--hairline);font-size:15px}
     .brk-row .nm{color:var(--ink);font-weight:600}
-    .brk-row .nm small{display:block;font-weight:400;font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:2px}
-    .brk-row .vl{font-weight:700;font-size:16px;color:var(--ink);letter-spacing:-.2px}
+    .brk-row .nm small{display:block;font-weight:400;font-size:13px;color:var(--muted);line-height:1.5;margin-top:2px}
+    .brk-row .vl{font-weight:700;font-size:16px;color:var(--ink);letter-spacing:-.2px;white-space:nowrap}
     .brk-row .gr{font-size:13px;font-weight:600;text-align:right;color:var(--muted)}
     .brk-row .gr.a{color:var(--green)}.brk-row .gr.b{color:var(--ink)}.brk-row .gr.c{color:var(--orange)}
     .brk-row.none .nm,.brk-row.none .vl{color:var(--faint);font-weight:400}
@@ -98,51 +148,115 @@
     .bar-fill{position:absolute;left:0;top:0;height:6px;border-radius:9999px;background:var(--ink)}
     .bar-track.empty{background:repeating-linear-gradient(45deg,#f0efee,#f0efee 5px,var(--hairline) 5px,var(--hairline) 10px)}
     .bar-mark{position:absolute;top:-4px;bottom:-4px;width:1px;background:var(--hairline-2);z-index:2}
-    .vizlab{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--faint);margin-top:8px}
+    .vizlab{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--faint);margin-top:8px}
 
     /* 月次推移ミニチャート */
     .mini{position:relative;height:58px;display:flex;align-items:flex-end;gap:10px}
     .mini .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
     .mini .col[hidden],.minix span[hidden]{display:none}
-    .mini .col i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--hairline-2)}
+    .mini .col i{display:block;width:100%;min-height:3px;border-radius:4px 4px 0 0;background:var(--hairline-2)}
     .mini .col.last i{background:var(--ink)}
-    .mini .col em{font-style:normal;font-size:13px;color:var(--muted);margin-bottom:4px;white-space:nowrap}
+    .mini .col em{font-style:normal;font-size:12.5px;color:var(--muted);margin-bottom:4px;white-space:nowrap}
     .mini .band{position:absolute;left:0;right:0;background:rgba(0,0,0,.045);border-top:1px dashed var(--hairline-2);border-bottom:1px dashed var(--hairline-2)}
     .mini .line{position:absolute;left:0;right:0;border-top:1px dashed var(--hairline-2)}
     .mini .line span{position:absolute;right:0;top:-16px;font-size:12px;color:var(--faint);background:var(--surface);padding:0 4px}
-    .minix{display:flex;gap:10px;font-size:13px;color:var(--faint);margin-top:6px}
+    .minix{display:flex;gap:10px;font-size:12.5px;color:var(--faint);margin-top:6px}
     .minix span{flex:1;text-align:center}
 
-    /* 対策 */
-    .actions{display:grid;gap:14px}
-    .action{display:grid;grid-template-columns:130px 1fr auto;gap:24px;align-items:center;padding:24px;border:1px solid var(--hairline);border-radius:12px;background:var(--surface)}
-    .action .from{font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted)}
-    .action .from strong{display:block;font-size:26px;font-weight:700;letter-spacing:-.625px;color:var(--ink);margin-top:4px}
-    .action-title{font-size:20px;font-weight:600;letter-spacing:-.125px;color:var(--ink)}
-    .hole{color:var(--muted);font-size:14px;margin-top:5px;line-height:1.6}
+    /* 対策：各ステージの末尾に1本 */
+    .action{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px 20px;align-items:center;padding:18px 24px;border:1px solid var(--hairline);border-radius:12px;background:var(--surface);margin-top:20px}
+    .pri{font-size:12px;font-weight:600;letter-spacing:.125px;color:#fff;background:var(--ink);border-radius:9999px;padding:5px 12px;white-space:nowrap}
+    .action.keep{background:transparent;border-style:dashed}
+    .action.keep .pri{background:var(--surface);border:1px solid var(--hairline);color:var(--muted)}
+    .action-title{font-size:17px;font-weight:600;letter-spacing:-.125px;color:var(--ink)}
+    .hole{color:var(--muted);font-size:13.5px;margin-top:4px;line-height:1.65}
 
     /* ボタン：pill CTA（blue）＋ utility（8px・ヘアライン） */
     .btns{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;min-height:40px;background:var(--surface);border:1px solid var(--hairline);color:var(--ink);font-size:15px;font-weight:500;font-family:inherit;border-radius:8px;padding:6px 14px;text-decoration:none;transition:.12s}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;background:var(--surface);border:1px solid var(--hairline);color:var(--ink);font-size:15px;font-weight:500;font-family:inherit;border-radius:8px;padding:6px 14px;text-decoration:none;transition:.12s;white-space:nowrap}
     .btn:hover{background:var(--canvas)}
     .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;border-radius:9999px;padding:8px 20px;box-shadow:var(--lift)}
     .btn.primary:hover{background:var(--blue-press);border-color:var(--blue-press)}
     .btn.link{color:var(--blue)}
 
-    .footer{max-width:1200px;margin:0 auto;padding:28px 24px 56px;color:var(--ink2);font-size:14px;line-height:1.9}
+    .footer{max-width:1200px;margin:0 auto;padding:28px 24px 56px;color:var(--ink2);font-size:13.5px;line-height:1.9}
 
-    @media(max-width:980px){.span3,.span4{grid-column:span 6}}
-    @media(max-width:880px){.top{align-items:flex-start;flex-direction:column;padding:16px 20px}.span3,.span4,.span6{grid-column:span 12}.hero-grid{grid-template-columns:1fr}.action{grid-template-columns:1fr;gap:14px}.btns{justify-content:flex-start}main{padding:24px 16px 40px;gap:16px}}
-    @media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.action{break-inside:avoid;box-shadow:none}.btn,.month-toggle{display:none}}
+    /* ===== レスポンシブ ===== */
+    @media(max-width:1080px){
+      .hero-grid{grid-template-columns:minmax(0,1fr) 260px;gap:24px}
+      .axis{padding:18px 16px}
+    }
+    @media(max-width:880px){
+      :root{--head-h:96px}
+      .top{flex-direction:column;align-items:stretch;gap:10px;padding:12px 16px}
+      .top h1{font-size:17px;line-height:1.35}
+      .top-right{justify-content:space-between;gap:10px}
+      .badge{display:none}
+      .asof{font-size:12px;white-space:normal;text-align:right}
+      .top .demo-back{display:none}
+      main{padding:20px 16px 40px;gap:16px}
+      .hero{padding:20px}
+      .hero-grid{grid-template-columns:1fr;gap:20px}
+      .hero .total{font-size:44px;letter-spacing:-1.1px}
+      .hero .msg{display:block;margin-top:14px}
+      .hero .dot{display:inline-block;margin-right:8px;transform:none}
+      .hero strong{font-size:20px;letter-spacing:-.4px}
+      .hero .current{display:block;font-size:14px;margin-top:6px}
+      .axes{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .axis{border-left:1px solid var(--hairline);padding:16px 14px}
+      .axis .ax-h{flex-direction:column;align-items:flex-start;gap:5px}
+      .axis .nm{white-space:nowrap}
+      .axis .pt{margin-top:8px}
+      .axis:nth-child(odd){border-left:0}
+      .axis:nth-child(n+3){border-top:1px solid var(--hairline)}
+      .funnel{gap:6px}
+      .funnel .fn{padding:8px 12px;font-size:14px}
+      .funnel .loop{width:100%;padding-left:0;margin-top:2px}
+      .lg-lead{font-size:15px;margin-top:14px}
+      .read{padding:16px 18px;grid-template-columns:1fr;gap:10px;margin-bottom:16px}
+      .read .tag{justify-self:start;margin-top:0}
+      .read .lead{font-size:16px}
+      .stage-head{margin:24px 2px 12px}
+      .sh-r{width:100%}
+      .sh-r .track{flex:1;width:auto}
+      .stage-cards{grid-template-columns:1fr;gap:16px}
+      .card{padding:20px}
+      .kpi{min-height:0}
+      .kpi .v{font-size:30px;letter-spacing:-.7px;margin-top:14px}
+      .kpi .l{font-size:16.5px}
+      .action{grid-template-columns:1fr;gap:12px;padding:18px 20px;margin-top:16px}
+      .btns{justify-content:stretch}
+      .btns .btn{flex:1}
+      .footer{padding:20px 16px 48px;font-size:12.5px;line-height:1.8}
+    }
+    @media(max-width:420px){
+      .top h1{font-size:16px}
+      .hero .total{font-size:40px}
+      .axis{padding:14px 12px}
+      .axis .nm{font-size:15px}
+      .axis .pt{font-size:26px}
+      .axis .state{font-size:11px}
+      .kpi .v{font-size:27px}
+      .brk-row{grid-template-columns:minmax(0,1fr) auto 24px;font-size:14px}
+    }
+    @media print{
+      @page{size:A4 portrait;margin:8mm}
+      body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .top{position:static}
+      .card,.action,.stage{break-inside:avoid;box-shadow:none}
+      .kpi{min-height:0}
+      .btn,.month-toggle{display:none}
+    }
   </style>
 </head>
 <body>
   <header class="top">
-    <div class="title-line"><h1>串カツ酒場 人氣万両 上福岡駅前店</h1><span class="badge">サマリーホーム（デモ）</span></div>
+    <div class="title-line"><h1>串カツ酒場 まんぷく亭 東口駅前店</h1><span class="badge">サマリーホーム（デモ）</span></div>
     <div class="top-right"><div class="month-toggle" role="group" aria-label="表示月切替"><button type="button" data-month="06" aria-pressed="false">6月</button><button type="button" data-month="07" aria-pressed="true">7月</button></div><div class="asof">施策期間 2026-06-01 〜 07-31</div><a class="demo-back" href="index.html">← デモ一覧</a></div>
   </header>
 
   <main>
+    <!-- 総合判定 -->
     <section class="card span12 hero">
       <div class="hero-grid">
         <div>
@@ -151,7 +265,7 @@
           <div class="basis">※4軸の単純平均・提案時KPI比（採点は施策期間全体の評価。支援店平均比は参考・整備中 n=3）</div>
           <div class="msg"><span class="dot"></span><strong>認知・検討は勝てている。ボトルネックは拡散（口コミ）</strong><span class="current">Google口コミ15件が伸びしろ。来店はCVR 0.36%が次の課題</span></div>
         </div>
-        <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:300px;height:auto;justify-self:center" role="img" aria-label="4軸スコアのレーダーチャート：認知100点・検討比較85点・来店70点・拡散40点">
+        <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:280px;height:auto;justify-self:center" role="img" aria-label="4軸スコアのレーダーチャート：認知100点・検討比較85点・来店70点・拡散40点">
           <g fill="none" stroke="var(--hairline-2)" stroke-width="1">
             <polygon points="160,95.5 179.5,115 160,134.5 140.5,115"></polygon>
             <polygon points="160,76 199,115 160,154 121,115"></polygon>
@@ -173,135 +287,169 @@
       </div>
     </section>
 
-    <section class="card span3 score">
-      <div class="ax"><span class="nm">認知<small>見つけてもらう</small></span><span class="state ok"><i></i>順調</span></div>
-      <div class="pt">100<span>点</span></div>
-      <div class="track"><i style="width:100%"></i></div>
-      <div class="brk">SNS表示回数 ◎</div>
-      <div class="basis">提案時KPI比</div>
-    </section>
-    <section class="card span3 score">
-      <div class="ax"><span class="nm">検討比較<small>探されて見られる</small></span><span class="state ok"><i></i>順調</span></div>
-      <div class="pt">85<span>点</span></div>
-      <div class="track"><i style="width:85%"></i></div>
-      <div class="brk">GBP閲覧 ○ ／ 食べログPV ◎</div>
-      <div class="basis">提案時KPI比</div>
-    </section>
-    <section class="card span3 score">
-      <div class="ax"><span class="nm">来店<small>実際に来てもらう</small></span><span class="state ok"><i></i>順調</span></div>
-      <div class="pt">70<span>点</span></div>
-      <div class="track"><i style="width:70%"></i></div>
-      <div class="brk">ネット予約 ○</div>
-      <div class="basis">提案時KPI比</div>
-    </section>
-    <section class="card span3 score">
-      <div class="ax"><span class="nm">拡散<small>口コミが次の客を呼ぶ</small></span><span class="state warn"><i></i>注意</span></div>
-      <div class="pt">40<span>点</span></div>
-      <div class="track"><i style="width:40%"></i></div>
-      <div class="brk">Google口コミ △</div>
-      <div class="basis">提案時KPI比</div>
+    <!-- 4軸サマリー：タップで各セクションへ -->
+    <section class="card span12 axes" aria-label="4軸スコア">
+      <a class="axis" href="#s1">
+        <div class="ax-h"><span class="nm">1. 認知</span><span class="state ok"><i></i>順調</span></div>
+        <div class="pt">100<span>点</span></div>
+        <div class="track"><i style="width:100%"></i></div>
+        <div class="cap">見つけてもらう</div>
+      </a>
+      <a class="axis" href="#s2">
+        <div class="ax-h"><span class="nm">2. 検討・比較</span><span class="state ok"><i></i>順調</span></div>
+        <div class="pt">85<span>点</span></div>
+        <div class="track"><i style="width:85%"></i></div>
+        <div class="cap">探されて見られる</div>
+      </a>
+      <a class="axis" href="#s3">
+        <div class="ax-h"><span class="nm">3. 来店</span><span class="state ok"><i></i>順調</span></div>
+        <div class="pt">70<span>点</span></div>
+        <div class="track"><i style="width:70%"></i></div>
+        <div class="cap">実際に来てもらう</div>
+      </a>
+      <a class="axis" href="#s4">
+        <div class="ax-h"><span class="nm">4. 拡散</span><span class="state warn"><i></i>注意</span></div>
+        <div class="pt">40<span>点</span></div>
+        <div class="track"><i style="width:40%"></i></div>
+        <div class="cap">口コミが次の客を呼ぶ</div>
+      </a>
     </section>
 
-    <div class="sec-h"><span>各施策の採点</span><span class="rule">◎＝基準クリア（100点）／○＝成長中・基準に近い（70点）／△＝未達・データ不足（40点）　軸の点数＝配下施策の平均／総合点＝4軸の平均</span></div>
-
-    <!-- 認知（SNS表示回数 計） -->
-    <section class="card span4 kpi">
-      <div class="kpi-h"><span class="stage">認知</span><span class="grade a">◎</span></div>
-      <div class="v" id="awareness-value">約21<small>万回／7月</small></div>
-      <div class="l">SNS表示回数（月間）<small id="awareness-detail">広告＋自社投稿の7月合算 212,081回</small></div>
-      <div class="brk-rows">
-        <div class="brk-row" id="awareness-ad-row"><span class="nm">広告（Meta）<small id="awareness-ad-detail">7月のみ配信（7/1〜31）・CTR 5.85%＝関東平均3.0%の約1.9倍</small></span><span class="vl" id="awareness-ad-value">195,495</span><span class="gr a" id="awareness-ad-grade">◎</span></div>
-        <div class="brk-row"><span class="nm">自社投稿<small id="awareness-owned-detail">6月 3,385 → 7月 16,586。7月は広告経由の閲覧と混在</small></span><span class="vl" id="awareness-owned-value">16,586</span><span class="gr b" id="awareness-owned-grade">○</span></div>
-        <div class="brk-row"><span class="nm">インフルエンサー<small>施策累計（投稿6/29〜7/6・7/10集計）。月割り不可のため月間値には含めない</small></span><span class="vl">304,584</span><span class="gr a">◎</span></div>
+    <!-- 分析の頭：何をどう読んで示唆にするか -->
+    <section class="card span12 logic">
+      <div class="lg-h">分析の頭 — このダッシュボードの読み方</div>
+      <div class="funnel">
+        <span class="fn">認知<small>見られた量</small></span>
+        <span class="ar">→</span>
+        <span class="fn">検討・比較<small>見に来た量</small></span>
+        <span class="ar">→</span>
+        <span class="fn">来店<small>行動した量</small></span>
+        <span class="ar">→</span>
+        <span class="fn hot">拡散<small>次の客を呼ぶ量</small></span>
+        <span class="loop">↺ 翌月の認知・検討の効率へ戻る</span>
       </div>
-      <div class="n">※施策累計ではインフルエンサー304,584回を含め約52万回（7/10集計）。<br>※実施していない施策の行は「－（未実施）」と表示されます（店舗ごとに実施内容が違うため、同じ様式で比べられます）</div>
-      <div class="viz">
-        <div class="bar-track"><div class="bar-fill" style="width:100%"></div><div class="bar-mark" style="left:21%"></div></div>
-        <div class="vizlab"><span>縦線＝インフルエンサーKPI 65,000回</span><span>達成率 469%（振り切り）</span></div>
-      </div>
-    </section>
-
-    <!-- 検討① -->
-    <section class="card span4 kpi">
-      <div class="kpi-h"><span class="stage">検討・比較</span><span class="grade b">○</span></div>
-      <div class="v" id="gbp-value">16,034<small>回／7月</small></div>
-      <div class="l">GBP閲覧数（月間）</div>
-      <div class="n" id="gbp-note">6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外</div>
-      <div class="viz">
-        <div class="mini">
-          <div class="col"><em>1,024</em><i style="height:6%"></i></div>
-          <div class="col" data-chart="gbp" data-chart-month="06"><em>6,027</em><i style="height:38%"></i></div>
-          <div class="col last" data-chart="gbp" data-chart-month="07"><em>16,034</em><i style="height:100%"></i></div>
+      <p class="lg-lead">集客は足し算ではなく<b>掛け算</b>です。一番細い段が全体の上限を決めるので、全部を同時に改善せず、<b>点数の低い段から1つずつ</b>手を入れます。</p>
+      <details class="fold">
+        <summary>各段で問う3つのこと／採点の考え方</summary>
+        <ol class="q">
+          <li><b>量は足りているか</b>（絶対値 × 基準）— 提案時KPI・近隣同業態の水準・ランキング圏内ラインと比べます。比較対象のない数字は「多い／少ない」を判断できません。</li>
+          <li><b>次の段への歩留まりは落ちていないか</b>（転換率）— 前段の分母のうち何%が次段へ進んだか。量が増えても歩留まりが下がっていれば、実売上は伸びません。</li>
+          <li><b>それは施策で動かせるか</b>（可動域）— 動かせるものだけを対策に落とします。動かせないものは「参考指標」として観測に留めます。</li>
+        </ol>
+        <div class="rule">
+          <b>採点</b>：◎＝基準クリア（100点）／○＝成長中・基準に近い（70点）／△＝未達・データ不足（40点）。軸の点数＝配下施策の平均、総合点＝4軸の平均、比較基準＝提案時KPI比。<br>
+          <b>採点しないもの</b>：基準が未整備の「参考指標」と、実施していない「未実施」は点数に含めません（実施していない施策は「－（未実施）」で表示。店舗ごとに実施内容が違っても同じ様式で比べられます）。数字を良く見せるために基準を後付けしない、という運用ルールです。<br>
+          <b>拡散だけ性質が違う</b>：認知〜来店は「今月の集客」ですが、拡散（口コミ）は<b>翌月以降の認知と検討の効率を上げる資産</b>です。効果が遅れて出るぶん、点数が低いときは最優先で着手します。
         </div>
-        <div class="minix"><span>5月</span><span>6月</span><span data-chart="gbp" data-chart-month="07">7月</span></div>
-      </div>
+      </details>
     </section>
 
-    <!-- 検討② -->
-    <section class="card span4 kpi">
-      <div class="kpi-h"><span class="stage">検討・比較</span><span class="grade a">◎</span></div>
-      <div class="v" id="tabelog-value">5,339<small>PV／7月</small></div>
-      <div class="l">食べログ アクセス数（月間）</div>
-      <div class="n" id="tabelog-note">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.7〜3.6倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,500）</div>
-      <div class="viz">
-        <div class="mini">
-          <div class="band" style="bottom:17%;height:6%"></div>
-          <div class="line" style="bottom:100%"><span>圏内ライン 8,816</span></div>
-          <div class="col"><em>1,276</em><i style="height:14%"></i></div>
-          <div class="col" data-chart="tabelog" data-chart-month="06"><em>4,955</em><i style="height:56%"></i></div>
-          <div class="col last" data-chart="tabelog" data-chart-month="07"><em>5,339</em><i style="height:61%"></i></div>
-        </div>
-        <div class="minix"><span>5月</span><span>6月</span><span data-chart="tabelog" data-chart-month="07">7月</span></div>
+    <!-- ===== 1. 認知 ===== -->
+    <section class="stage" id="s1">
+      <div class="stage-head">
+        <div class="sh-l"><span class="num">1</span><span class="nm">認知</span><span class="sub">見つけてもらう</span></div>
+        <div class="sh-r"><span class="track"><i style="width:100%"></i></span><span class="pts">100<span>点</span></span><span class="state ok"><i></i>順調</span></div>
       </div>
-    </section>
-
-    <!-- 来店 -->
-    <section class="card span6 kpi">
-      <div class="kpi-h"><span class="stage">来店</span><span class="grade b">○</span></div>
-      <div class="v" id="visit-value">19<small>組／75名（7月）</small></div>
-      <div class="l">食べログ ネット予約経由の来店（月間）</div>
-      <div class="n" id="visit-note">6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名<br>CVR 0.36%（7月・ネット予約19組 ÷ 食べログPV 5,339）</div>
-      <div class="viz">
-        <div class="mini">
-          <div class="col" data-chart="visit" data-chart-month="06"><em>10組</em><i style="height:53%"></i></div>
-          <div class="col last" data-chart="visit" data-chart-month="07"><em>19組</em><i style="height:100%"></i></div>
-        </div>
-        <div class="minix"><span>6月</span><span data-chart="visit" data-chart-month="07">7月</span></div>
-      </div>
-    </section>
-
-    <!-- 拡散 -->
-    <section class="card span6 kpi">
-      <div class="kpi-h"><span class="stage">拡散</span><span class="grade c">△</span></div>
-      <div class="v">★4.4<small>／15件</small></div>
-      <div class="l">Google口コミ評価</div>
-      <div class="n"><b>リピート意向のコメント多数</b><br>2026.07時点の累計。件数が少なく、比較検討で選ばれる材料になりきっていない</div>
-      <div class="viz">
-        <div class="bar-track empty"></div>
-        <div class="vizlab"><span>月別の推移＝整備中（内訳未取得）</span><span></span></div>
-      </div>
-    </section>
-
-    <div class="sec-h"><span>対策 — 点数の低い軸から</span></div>
-    <section class="span12 actions" aria-label="対策">
-      <article class="action">
-        <div class="from">拡散<strong>40点</strong></div>
+      <div class="read">
+        <span class="tag">示唆</span>
         <div>
-          <div class="action-title">口コミ増加エンジンを回す</div>
-          <div class="hole">現在15件。QRアンケートで来店客からの投稿を仕組み化し、AI返信とあわせて競合水準まで積み上げます（△→◎で拡散の点数が上がります）</div>
+          <div class="lead">母数はもう足りている。ここへの追加投資より、見た人を次の段へ送る効率を上げるほうが効く。</div>
+          <div class="body">施策累計 約52万回はKPI 65,000回の<b>約8倍</b>、広告CTR 5.85%も関東平均3.0%の<b>約1.9倍</b>。「見られていないから客が来ない」という状態ではないことが確定しました。表示回数をさらに積んでも、後段の歩留まりが低いままでは予約は増えません。</div>
+          <div class="meta">見る指標＝表示回数（量）／比べる基準＝提案時KPI 65,000回・関東平均CTR 3.0%</div>
         </div>
-        <div class="btns"><a class="btn primary" href="kuchikomi-demo/index.html">口コミBPOに依頼 →</a></div>
-      </article>
-      <article class="action">
-        <div class="from">来店<strong>70点</strong></div>
+      </div>
+      <div class="stage-cards">
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">Meta（広告＋自社投稿）</span><span class="grade a">◎</span></div>
+          <div class="v" id="awareness-value">約21<small>万回／7月</small></div>
+          <div class="l">SNS表示回数（月間）<small id="awareness-detail">広告＋自社投稿の7月合算 212,081回</small></div>
+          <div class="brk-rows">
+            <div class="brk-row" id="awareness-ad-row"><span class="nm">広告（Meta）<small id="awareness-ad-detail">7月のみ配信（7/1〜31）・CTR 5.85%＝関東平均3.0%の約1.9倍</small></span><span class="vl" id="awareness-ad-value">195,495</span><span class="gr a" id="awareness-ad-grade">◎</span></div>
+            <div class="brk-row"><span class="nm">自社投稿<small id="awareness-owned-detail">6月 3,385 → 7月 16,586。7月は広告経由の閲覧と混在</small></span><span class="vl" id="awareness-owned-value">16,586</span><span class="gr b" id="awareness-owned-grade">○</span></div>
+          </div>
+          <div class="viz">
+            <div class="mini">
+              <div class="col" data-chart-month="06"><em>3,385</em><i style="height:2%"></i></div>
+              <div class="col last" data-chart-month="07"><em>212,081</em><i style="height:100%"></i></div>
+            </div>
+            <div class="minix"><span>6月</span><span data-chart-month="07">7月</span></div>
+          </div>
+        </article>
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">Instagram（インフルエンサー）</span><span class="grade a">◎</span></div>
+          <div class="v">304,584<small>回／施策累計</small></div>
+          <div class="l">インフルエンサー投稿の表示回数<small>投稿 6/29〜7/6・集計 7/10（中間報告の確定値）</small></div>
+          <div class="n">KPI 65,000回に対して <b>達成率 469%</b>。<br>月割りできないため、左のSNS表示回数（月間）には含めていません。施策累計では両方あわせて <b>約52万回</b>。</div>
+          <div class="viz">
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div><div class="bar-mark" style="left:21%"></div></div>
+            <div class="vizlab"><span>縦線＝KPI 65,000回</span><span>達成率 469%（振り切り）</span></div>
+          </div>
+        </article>
+
+      </div>
+      <article class="action keep">
+        <span class="pri">維持</span>
         <div>
-          <div class="action-title">CVR（予約転換率）を上げる</div>
-          <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います</div>
+          <div class="action-title">認知は基準クリア。追加投資より次の段へ</div>
+          <div class="hole">見つけてもらう量は足りています。ここから先は「見た人を予約と口コミに変える」ほうが効きます。</div>
         </div>
-        <div class="btns"><a class="btn" href="pace-home-demo.html">来店の詳細を見る →</a></div>
+        <div class="btns"><a class="btn" href="#s4">拡散の対策へ →</a></div>
       </article>
+    </section>
+
+    <!-- ===== 2. 検討・比較 ===== -->
+    <section class="stage" id="s2">
+      <div class="stage-head">
+        <div class="sh-l"><span class="num">2</span><span class="nm">検討・比較</span><span class="sub">探されて見られる</span></div>
+        <div class="sh-r"><span class="track"><i style="width:85%"></i></span><span class="pts">85<span>点</span></span><span class="state ok"><i></i>順調</span></div>
+      </div>
+      <div class="read">
+        <span class="tag">示唆</span>
+        <div>
+          <div class="lead">量は近隣の約3倍。ただし「エリアランキング圏内」という壁の手前で止まっている。</div>
+          <div class="body">食べログ 5,339PVは近隣同業態（1,500〜2,000PV／月）の<b>約2.7〜3.6倍</b>で、比較検討の土俵には確実に乗っています。一方で圏内ラインは 8,816PV／月、<b>あと約3,500</b>。ここは連続的な差ではなく、超えると新しい流入経路（ランキング掲載）が開く<b>段差</b>です。前月比+8%の自然増で待つ距離ではないため、押し上げの施策が要ります。</div>
+          <div class="meta">見る指標＝GBP閲覧数・食べログPV（媒体上での比較検討の量）／比べる基準＝近隣同業態 1,500〜2,000PV・月、エリアランキング圏内ライン 8,816PV・月</div>
+        </div>
+      </div>
+      <div class="stage-cards">
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">Googleビジネスプロフィール</span><span class="grade b">○</span></div>
+          <div class="v" id="gbp-value">16,034<small>回／7月</small></div>
+          <div class="l">GBP閲覧数（月間）<small>Googleマップ・検索での閲覧（オーガニック）</small></div>
+          <div class="n" id="gbp-note">6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b></div>
+          <div class="viz">
+            <div class="mini">
+              <div class="col"><em>1,024</em><i style="height:6%"></i></div>
+              <div class="col" data-chart-month="06"><em>6,027</em><i style="height:38%"></i></div>
+              <div class="col last" data-chart-month="07"><em>16,034</em><i style="height:100%"></i></div>
+            </div>
+            <div class="minix"><span>5月</span><span>6月</span><span data-chart-month="07">7月</span></div>
+          </div>
+        </article>
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">食べログ</span><span class="grade a">◎</span></div>
+          <div class="v" id="tabelog-value">5,339<small>PV／7月</small></div>
+          <div class="l">食べログ アクセス数（月間）<small>近隣同業態の水準は 1,500〜2,000PV／月</small></div>
+          <div class="n" id="tabelog-note">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣水準の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,500）</div>
+          <div class="viz">
+            <div class="mini">
+              <div class="band" style="bottom:17%;height:6%"></div>
+              <div class="line" style="bottom:100%"><span>圏内ライン 8,816</span></div>
+              <div class="col"><em>1,276</em><i style="height:14%"></i></div>
+              <div class="col" data-chart-month="06"><em>4,955</em><i style="height:56%"></i></div>
+              <div class="col last" data-chart-month="07"><em>5,339</em><i style="height:61%"></i></div>
+            </div>
+            <div class="minix"><span>5月</span><span>6月</span><span data-chart-month="07">7月</span></div>
+          </div>
+        </article>
+
+      </div>
       <article class="action">
-        <div class="from">検討比較<strong>85点</strong></div>
+        <span class="pri">優先度 3</span>
         <div>
           <div class="action-title">食べログのエリアランキング圏内に入る</div>
           <div class="hole" id="action-ranking">月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ</div>
@@ -310,14 +458,108 @@
       </article>
     </section>
 
-    <div class="sec-h"><span>もっと詳しく</span></div>
-    <section class="card span12">
-      <div class="btns" style="justify-content:flex-start">
-        <a class="btn link" href="#">認知の詳細 →</a>
-        <a class="btn link" href="#">検討比較の詳細 →</a>
-        <a class="btn link" href="pace-home-demo.html">来店の詳細（ペース表）→</a>
-        <a class="btn link" href="kuchikomi-demo/index.html">拡散の詳細（口コミ）→</a>
+    <!-- ===== 3. 来店 ===== -->
+    <section class="stage" id="s3">
+      <div class="stage-head">
+        <div class="sh-l"><span class="num">3</span><span class="nm">来店</span><span class="sub">実際に来てもらう</span></div>
+        <div class="sh-r"><span class="track"><i style="width:70%"></i></span><span class="pts">70<span>点</span></span><span class="state ok"><i></i>順調</span></div>
       </div>
+      <div class="read">
+        <span class="tag">示唆</span>
+        <div>
+          <div class="lead">予約+90%の伸びは、ほぼ全部が「転換率の改善」で作られている。＝ページ側の改善がまだ効く段。</div>
+          <div class="body">6月→7月で食べログPVは<b>+8%</b>しか増えていないのに、予約は<b>+90%</b>。内訳は「PV増（1.08倍）× CVR改善（0.20%→0.36%＝1.76倍）」で、伸びの大半は<b>分母ではなく転換率</b>由来です。つまり、露出を増やさなくても予約が増える余地がまだ残っている状態。分母を増やす検討・比較の施策より、先にこちらを詰めるほうが投資対効果が高くなります。</div>
+          <div class="meta">見る指標＝ネット予約 組数（量）＋CVR＝予約÷PV（歩留まり）／比べる基準＝提案時KPI・前月比。CVR自体の目標値は未設定のため「参考指標」（採点対象外）</div>
+        </div>
+      </div>
+      <div class="stage-cards">
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">食べログ ネット予約</span><span class="grade b">○</span></div>
+          <div class="v" id="visit-value">19<small>組／75名（7月）</small></div>
+          <div class="l">ネット予約経由の来店（月間）<small>食べログ掲載開始 5/15・予約受付は6月から</small></div>
+          <div class="n" id="visit-note">6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名</div>
+          <div class="viz">
+            <div class="mini">
+              <div class="col" data-chart-month="06"><em>10組</em><i style="height:53%"></i></div>
+              <div class="col last" data-chart-month="07"><em>19組</em><i style="height:100%"></i></div>
+            </div>
+            <div class="minix"><span>6月</span><span data-chart-month="07">7月</span></div>
+          </div>
+        </article>
+
+        <article class="card kpi na">
+          <div class="kpi-h"><span class="src">参考指標（採点対象外）</span><span class="grade na">－</span></div>
+          <div class="v" id="cvr-value">0.36<small>%／7月</small></div>
+          <div class="l">CVR（予約転換率）<small>ネット予約組数 ÷ 食べログPV</small></div>
+          <div class="n" id="cvr-note">6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。</div>
+          <div class="viz">
+            <div class="mini">
+              <div class="col" data-chart-month="06"><em>0.20%</em><i style="height:56%"></i></div>
+              <div class="col last" data-chart-month="07"><em>0.36%</em><i style="height:100%"></i></div>
+            </div>
+            <div class="minix"><span>6月</span><span data-chart-month="07">7月</span></div>
+          </div>
+        </article>
+
+      </div>
+      <article class="action">
+        <span class="pri">優先度 2</span>
+        <div>
+          <div class="action-title">CVR（予約転換率）を上げる</div>
+          <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います</div>
+        </div>
+        <div class="btns"><a class="btn" href="pace-home-demo.html">来店の詳細（ペース表）→</a></div>
+      </article>
+    </section>
+
+    <!-- ===== 4. 拡散 ===== -->
+    <section class="stage" id="s4">
+      <div class="stage-head">
+        <div class="sh-l"><span class="num">4</span><span class="nm">拡散</span><span class="sub">口コミが次の客を呼ぶ</span></div>
+        <div class="sh-r"><span class="track"><i style="width:40%"></i></span><span class="pts">40<span>点</span></span><span class="state warn"><i></i>注意</span></div>
+      </div>
+      <div class="read warn">
+        <span class="tag">示唆</span>
+        <div>
+          <div class="lead">「質は良いが、量が足りない」状態。伸ばすべきは評価（★）ではなく件数。</div>
+          <div class="body">★4.4はすでに高く、ここを上げにいっても動く幅はわずかです。問題は<b>15件という件数</b>で、比較検討の場面で「実績が読めない」量にとどまっています。しかも件数は放置では増えません（投稿を促す導線が未実施）。<b>4段のうち唯一、仕組みを入れれば確実に動く段</b>であり、増えた口コミは翌月以降の認知・検討の効率にも跳ね返るため、優先度1に置いています。</div>
+          <div class="meta">見る指標＝Google口コミの件数（量）と評価（質）／比べる基準＝件数の目標値が未設定のため△（データ不足）。基準の整備自体が次の課題</div>
+        </div>
+      </div>
+      <div class="stage-cards">
+
+        <article class="card kpi">
+          <div class="kpi-h"><span class="src">Google</span><span class="grade c">△</span></div>
+          <div class="v">★4.4<small>／15件</small></div>
+          <div class="l">Google口コミ 評価・件数<small>2026.07時点の累計</small></div>
+          <div class="n"><b>リピート意向のコメント多数</b>で評価そのものは高い一方、<b>件数15件</b>と少なく、比較検討で選ばれる材料になりきっていません。</div>
+          <div class="viz">
+            <div class="bar-track empty"></div>
+            <div class="vizlab"><span>月別の推移＝整備中（内訳未取得）</span><span></span></div>
+          </div>
+        </article>
+
+        <article class="card kpi na">
+          <div class="kpi-h"><span class="src">未実施</span><span class="grade na">－</span></div>
+          <div class="v">－<small>（未実施）</small></div>
+          <div class="l">口コミ獲得の仕組み（QRアンケート）<small>来店客に投稿を促す導線</small></div>
+          <div class="n">卓上QR・会計時アンケートなどの導線が未設置です。実施すると口コミ件数が積み上がり、<b>拡散の点数が上がります</b>。</div>
+          <div class="viz">
+            <div class="bar-track empty"></div>
+            <div class="vizlab"><span>未実施のため採点対象外</span><span></span></div>
+          </div>
+        </article>
+
+      </div>
+      <article class="action">
+        <span class="pri">優先度 1</span>
+        <div>
+          <div class="action-title">口コミ増加エンジンを回す</div>
+          <div class="hole">現在15件。QRアンケートで来店客からの投稿を仕組み化し、AI返信とあわせて競合水準まで積み上げます（△→◎で拡散の点数が上がります）</div>
+        </div>
+        <div class="btns"><a class="btn primary" href="kuchikomi-demo/index.html">口コミBPOに依頼 →</a></div>
+      </article>
     </section>
   </main>
 
@@ -333,11 +575,13 @@
         "awareness-owned-value": "3,385",
         "awareness-owned-grade": "○",
         "gbp-value": "6,027<small>回／6月</small>",
-        "gbp-note": "5月 1,024回 → 6月 <b>6,027回（前月比 約5.9倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外",
+        "gbp-note": "5月 1,024回 → 6月 <b>6,027回（前月比 約5.9倍）</b>",
         "tabelog-value": "4,955<small>PV／6月</small>",
-        "tabelog-note": "5月 1,276PV → 6月 <b>4,955PV（前月比 約3.9倍）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.5〜3.3倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,900）",
+        "tabelog-note": "5月 1,276PV → 6月 <b>4,955PV（前月比 約3.9倍）</b>＝近隣水準の <b>約2.5〜3.3倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,900）",
         "visit-value": "10<small>組／27名（6月）</small>",
-        "visit-note": "ネット予約の受付開始後 初月実績（食べログ掲載開始 5/15）<br>CVR 0.20%（6月・ネット予約10組 ÷ 食べログPV 4,955）",
+        "visit-note": "ネット予約の受付開始後 初月実績（食べログ掲載開始 5/15）",
+        "cvr-value": "0.20<small>%／6月</small>",
+        "cvr-note": "6月は 10組 ÷ 4,955PV ＝ <b>0.20%</b>（受付開始初月）。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。",
         "action-cvr": "現在0.20%。写真・プラン・予約ボタンの導線を見直し、見られた4,955PVから取りこぼしている予約を拾います",
         "action-ranking": "月間PV 4,955 → 圏内ライン 8,816 まであと約3,900。CVR 0.20%のまま分母が1.78倍になれば、予約は月10組から18組規模へ"
       },
@@ -351,11 +595,13 @@
         "awareness-owned-value": "16,586",
         "awareness-owned-grade": "○",
         "gbp-value": "16,034<small>回／7月</small>",
-        "gbp-note": "6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b><br>Googleマップ・検索での閲覧（オーガニック）。食べログのエリアランキングはまだ圏外",
+        "gbp-note": "6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b>",
         "tabelog-value": "5,339<small>PV／7月</small>",
-        "tabelog-note": "6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣同業態水準（1,500〜2,000／月）の <b>約2.7〜3.6倍</b><br>エリアランキング圏内ラインは 8,816PV／月（あと約3,500）",
+        "tabelog-note": "6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣水準の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,500）",
         "visit-value": "19<small>組／75名（7月）</small>",
-        "visit-note": "6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名<br>CVR 0.36%（7月・ネット予約19組 ÷ 食べログPV 5,339）",
+        "visit-note": "6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名",
+        "cvr-value": "0.36<small>%／7月</small>",
+        "cvr-note": "6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。",
         "action-cvr": "現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います",
         "action-ranking": "月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ"
       }
@@ -363,7 +609,8 @@
 
     const setMonth = (month) => {
       Object.entries(MONTHLY[month]).forEach(([id, html]) => {
-        document.getElementById(id).innerHTML = html;
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
       });
       document.querySelectorAll(".month-toggle button").forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.month === month));
@@ -387,7 +634,8 @@
 
   <footer class="footer">
     ※数値は2026-07-31時点の確定実績。各カードの主要数値はヘッダーで選択した表示月の単月実績（前月比つき）、インフルエンサーのみ施策累計（各媒体の管理画面・API実測）。口コミ評価のみ2026-07時点の累計。インフルエンサー施策は中間報告（集計基準日 2026-07-10）の確定値。<br>
-    食べログ関連は管理画面キャプチャからの手動更新（取得日 2026-08-10）。点数は上記の採点ルールによる社内評価です（比較基準＝提案時KPI比。支援店平均比は参考・整備中）。
+    食べログ関連は管理画面キャプチャからの手動更新（取得日 2026-08-10）。点数は上記の採点ルールによる社内評価です（比較基準＝提案時KPI比。支援店平均比は参考・整備中）。<br>
+    <a class="demo-back" href="index.html">← デモ一覧に戻る</a>
   </footer>
 </body>
 </html>
