@@ -80,16 +80,11 @@
     .funnel .loop{display:flex;align-items:center;font-size:12px;color:var(--faint);letter-spacing:.125px;padding-left:4px}
     .lg-lead{font-size:16px;line-height:1.7;color:var(--ink2);margin:16px 0 0;letter-spacing:-.125px}
     .lg-lead b{color:var(--ink);font-weight:700}
-    .fold{margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.75}
-    .fold summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:13px;letter-spacing:.125px;list-style:none;display:inline-flex;align-items:center;gap:6px}
-    .fold summary::-webkit-details-marker{display:none}
-    .fold summary::before{content:"＋";font-weight:400;color:var(--faint)}
-    .fold[open] summary::before{content:"−"}
-    .fold .q{margin-top:14px;padding-left:0;list-style:none;counter-reset:q}
-    .fold .q li{position:relative;padding-left:30px;margin-top:10px;counter-increment:q}
-    .fold .q li::before{content:counter(q);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:9999px;border:1px solid var(--hairline);font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center}
-    .fold .q b{color:var(--ink);font-weight:600}
-    .fold .rule{margin-top:16px;padding-top:14px;border-top:1px solid var(--hairline)}
+    .lg-key{display:flex;align-items:center;gap:8px 18px;flex-wrap:wrap;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--hairline);font-size:13px;color:var(--muted);letter-spacing:.125px}
+    .lg-key em{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+    .lg-key i{font-style:normal;font-weight:600;font-size:13px}
+    .lg-key i.a{color:var(--green)}.lg-key i.b{color:var(--ink)}.lg-key i.c{color:var(--orange)}
+    .lg-key .sub{color:var(--faint)}
 
     /* 各段の示唆（結論を先に、根拠のカードはその下） */
     .read{border:1px solid var(--hairline);border-radius:12px;background:var(--surface);padding:18px 22px;margin-bottom:20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
@@ -262,8 +257,8 @@
         <div>
           <div class="lab">総合スコア</div>
           <div class="total">74<span>点</span></div>
-          <div class="basis">※4軸の単純平均・提案時KPI比（採点は施策期間全体の評価。支援店平均比は参考・整備中 n=3）</div>
-          <div class="msg"><span class="dot"></span><strong>認知・検討は勝てている。ボトルネックは拡散（口コミ）</strong><span class="current">Google口コミ15件が伸びしろ。来店はCVR 0.36%が次の課題</span></div>
+          <div class="basis">※下の4つの段の点数を平均したものです。比べた相手は、ご提案時にお約束した目標値（施策期間全体での評価）</div>
+          <div class="msg"><span class="dot"></span><strong>認知・検討は勝てている。ボトルネックは拡散（口コミ）</strong><span class="current">Google口コミ15件が伸びしろ。来店は「見た人のうち予約する割合」が次の課題</span></div>
         </div>
         <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:280px;height:auto;justify-self:center" role="img" aria-label="4軸スコアのレーダーチャート：認知100点・検討比較85点・来店70点・拡散40点">
           <g fill="none" stroke="var(--hairline-2)" stroke-width="1">
@@ -317,7 +312,7 @@
 
     <!-- 分析の頭：何をどう読んで示唆にするか -->
     <section class="card span12 logic">
-      <div class="lg-h">分析の頭 — このダッシュボードの読み方</div>
+      <div class="lg-h">このページの見方</div>
       <div class="funnel">
         <span class="fn">認知<small>見られた量</small></span>
         <span class="ar">→</span>
@@ -328,20 +323,13 @@
         <span class="fn hot">拡散<small>次の客を呼ぶ量</small></span>
         <span class="loop">↺ 翌月の認知・検討の効率へ戻る</span>
       </div>
-      <p class="lg-lead">集客は足し算ではなく<b>掛け算</b>です。一番細い段が全体の上限を決めるので、全部を同時に改善せず、<b>点数の低い段から1つずつ</b>手を入れます。</p>
-      <details class="fold">
-        <summary>各段で問う3つのこと／採点の考え方</summary>
-        <ol class="q">
-          <li><b>量は足りているか</b>（絶対値 × 基準）— 提案時KPI・近隣同業態の水準・ランキング圏内ラインと比べます。比較対象のない数字は「多い／少ない」を判断できません。</li>
-          <li><b>次の段への歩留まりは落ちていないか</b>（転換率）— 前段の分母のうち何%が次段へ進んだか。量が増えても歩留まりが下がっていれば、実売上は伸びません。</li>
-          <li><b>それは施策で動かせるか</b>（可動域）— 動かせるものだけを対策に落とします。動かせないものは「参考指標」として観測に留めます。</li>
-        </ol>
-        <div class="rule">
-          <b>採点</b>：◎＝基準クリア（100点）／○＝成長中・基準に近い（70点）／△＝未達・データ不足（40点）。軸の点数＝配下施策の平均、総合点＝4軸の平均、比較基準＝提案時KPI比。<br>
-          <b>採点しないもの</b>：基準が未整備の「参考指標」と、実施していない「未実施」は点数に含めません（実施していない施策は「－（未実施）」で表示。店舗ごとに実施内容が違っても同じ様式で比べられます）。数字を良く見せるために基準を後付けしない、という運用ルールです。<br>
-          <b>拡散だけ性質が違う</b>：認知〜来店は「今月の集客」ですが、拡散（口コミ）は<b>翌月以降の認知と検討の効率を上げる資産</b>です。効果が遅れて出るぶん、点数が低いときは最優先で着手します。
-        </div>
-      </details>
+      <p class="lg-lead">お客様がお店を選ぶまでの4つの段階です。この4つは順につながっているので、<b>一番弱いところが全体の足を引っぱります</b>。だから点数の低い段から順に手を入れます。</p>
+      <p class="lg-key">
+        <em><i class="a">◎</i> 目標クリア</em>
+        <em><i class="b">○</i> あと少し</em>
+        <em><i class="c">△</i> これから</em>
+        <span class="sub">「参考指標」「未実施」と書かれたカードは点数に入れていません</span>
+      </p>
     </section>
 
     <!-- ===== 1. 認知 ===== -->
@@ -353,9 +341,9 @@
       <div class="read">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">母数はもう足りている。ここへの追加投資より、見た人を次の段へ送る効率を上げるほうが効く。</div>
-          <div class="body">施策累計 約52万回はKPI 65,000回の<b>約8倍</b>、広告CTR 5.85%も関東平均3.0%の<b>約1.9倍</b>。「見られていないから客が来ない」という状態ではないことが確定しました。表示回数をさらに積んでも、後段の歩留まりが低いままでは予約は増えません。</div>
-          <div class="meta">見る指標＝表示回数（量）／比べる基準＝提案時KPI 65,000回・関東平均CTR 3.0%</div>
+          <div class="lead">見てもらう量は、もう足りています。次は「見た人に来てもらう」ほうに手をかけるのが得策です。</div>
+          <div class="body">施策累計 約52万回は目標 65,000回の<b>約8倍</b>。広告のクリック率5.85%も、関東平均3.0%の<b>約1.9倍</b>です。「見られていないからお客様が来ない」という状態ではない、とはっきりしました。ここから表示回数をさらに増やしても、そのあとの段階が弱いままでは予約は増えません。</div>
+          <div class="meta">見ている数字＝SNSでの表示回数　／　比べた相手＝提案時の目標 65,000回・関東平均のクリック率 3.0%</div>
         </div>
       </div>
       <div class="stage-cards">
@@ -408,9 +396,9 @@
       <div class="read">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">量は近隣の約3倍。ただし「エリアランキング圏内」という壁の手前で止まっている。</div>
-          <div class="body">食べログ 5,339PVは近隣同業態（1,500〜2,000PV／月）の<b>約2.7〜3.6倍</b>で、比較検討の土俵には確実に乗っています。一方で圏内ラインは 8,816PV／月、<b>あと約3,500</b>。ここは連続的な差ではなく、超えると新しい流入経路（ランキング掲載）が開く<b>段差</b>です。前月比+8%の自然増で待つ距離ではないため、押し上げの施策が要ります。</div>
-          <div class="meta">見る指標＝GBP閲覧数・食べログPV（媒体上での比較検討の量）／比べる基準＝近隣同業態 1,500〜2,000PV・月、エリアランキング圏内ライン 8,816PV・月</div>
+          <div class="lead">見られている量は近隣の約3倍。ただし「食べログのランキング圏内」の一歩手前で止まっています。</div>
+          <div class="body">食べログ 5,339PVは、近隣の同じ業態（1,500〜2,000PV／月）の<b>約2.7〜3.6倍</b>。比べられる土俵には確実に乗っています。一方でランキング圏内のラインは 8,816PV／月で、<b>あと約3,500</b>。ここは少しずつ近づく差ではなく、超えるとランキングに掲載されて新しい入口が開く「段差」です。前月比+8%の自然な伸びで届く距離ではないので、押し上げる施策が要ります。</div>
+          <div class="meta">見ている数字＝Googleマップ・食べログでの閲覧数　／　比べた相手＝近隣の同じ業態 1,500〜2,000PV／月、食べログのランキング圏内ライン 8,816PV／月</div>
         </div>
       </div>
       <div class="stage-cards">
@@ -418,7 +406,7 @@
         <article class="card kpi">
           <div class="kpi-h"><span class="src">Googleビジネスプロフィール</span><span class="grade b">○</span></div>
           <div class="v" id="gbp-value">16,034<small>回／7月</small></div>
-          <div class="l">GBP閲覧数（月間）<small>Googleマップ・検索での閲覧（オーガニック）</small></div>
+          <div class="l">Googleでの閲覧数（月間）<small>Googleマップ・検索から見られた回数（広告ではない自然な流入）</small></div>
           <div class="n" id="gbp-note">6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b></div>
           <div class="viz">
             <div class="mini">
@@ -452,7 +440,7 @@
         <span class="pri">優先度 3</span>
         <div>
           <div class="action-title">食べログのエリアランキング圏内に入る</div>
-          <div class="hole" id="action-ranking">月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ</div>
+          <div class="hole" id="action-ranking">月間の閲覧数 5,339 → 圏内ライン 8,816 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ</div>
         </div>
         <div class="btns"><a class="btn" href="tenpo-os-demo/index.html#bitei">食べログ強化を相談 →</a></div>
       </article>
@@ -467,9 +455,9 @@
       <div class="read">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">予約+90%の伸びは、ほぼ全部が「転換率の改善」で作られている。＝ページ側の改善がまだ効く段。</div>
-          <div class="body">6月→7月で食べログPVは<b>+8%</b>しか増えていないのに、予約は<b>+90%</b>。内訳は「PV増（1.08倍）× CVR改善（0.20%→0.36%＝1.76倍）」で、伸びの大半は<b>分母ではなく転換率</b>由来です。つまり、露出を増やさなくても予約が増える余地がまだ残っている状態。分母を増やす検討・比較の施策より、先にこちらを詰めるほうが投資対効果が高くなります。</div>
-          <div class="meta">見る指標＝ネット予約 組数（量）＋CVR＝予約÷PV（歩留まり）／比べる基準＝提案時KPI・前月比。CVR自体の目標値は未設定のため「参考指標」（採点対象外）</div>
+          <div class="lead">予約+90%の伸びは、ほぼ全部が「見た人が予約するようになった」ことで生まれています。ページの改善がまだ効きます。</div>
+          <div class="body">6月→7月で食べログの閲覧数は<b>+8%</b>しか増えていないのに、予約は<b>+90%</b>伸びました。つまり増えた分のほとんどは「見られる回数が増えたから」ではなく、<b>「見た人のうち予約する人の割合が上がったから」</b>（0.20%→0.36%）です。言いかえると、露出を増やさなくても予約が増える余地がまだ残っています。閲覧数を増やす施策より、先にこちらを詰めるほうが費用対効果が高くなります。</div>
+          <div class="meta">見ている数字＝ネット予約の組数と、見た人のうち予約した割合　／　比べた相手＝提案時の目標と前月。予約した割合そのものの目標値はまだ決めていないため「参考指標」扱い</div>
         </div>
       </div>
       <div class="stage-cards">
@@ -491,8 +479,8 @@
         <article class="card kpi na">
           <div class="kpi-h"><span class="src">参考指標（採点対象外）</span><span class="grade na">－</span></div>
           <div class="v" id="cvr-value">0.36<small>%／7月</small></div>
-          <div class="l">CVR（予約転換率）<small>ネット予約組数 ÷ 食べログPV</small></div>
-          <div class="n" id="cvr-note">6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。</div>
+          <div class="l">見た人のうち予約した割合<small>ネット予約の組数 ÷ 食べログの閲覧数（CVR）</small></div>
+          <div class="n" id="cvr-note">6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見てもらえた回数のうち、予約まで進んだ割合です。ここが上がると、閲覧数が同じでも予約が増えます。</div>
           <div class="viz">
             <div class="mini">
               <div class="col" data-chart-month="06"><em>0.20%</em><i style="height:56%"></i></div>
@@ -506,8 +494,8 @@
       <article class="action">
         <span class="pri">優先度 2</span>
         <div>
-          <div class="action-title">CVR（予約転換率）を上げる</div>
-          <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います</div>
+          <div class="action-title">見た人が予約する割合を上げる</div>
+          <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた5,339回の閲覧から取りこぼしている予約を拾います</div>
         </div>
         <div class="btns"><a class="btn" href="pace-home-demo.html">来店の詳細（ペース表）→</a></div>
       </article>
@@ -522,9 +510,9 @@
       <div class="read warn">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">「質は良いが、量が足りない」状態。伸ばすべきは評価（★）ではなく件数。</div>
-          <div class="body">★4.4はすでに高く、ここを上げにいっても動く幅はわずかです。問題は<b>15件という件数</b>で、比較検討の場面で「実績が読めない」量にとどまっています。しかも件数は放置では増えません（投稿を促す導線が未実施）。<b>4段のうち唯一、仕組みを入れれば確実に動く段</b>であり、増えた口コミは翌月以降の認知・検討の効率にも跳ね返るため、優先度1に置いています。</div>
-          <div class="meta">見る指標＝Google口コミの件数（量）と評価（質）／比べる基準＝件数の目標値が未設定のため△（データ不足）。基準の整備自体が次の課題</div>
+          <div class="lead">「評価は良いが、件数が足りない」状態です。上げるべきは★の数ではなく、口コミの件数。</div>
+          <div class="body">★4.4はすでに高く、ここを上げにいっても動く幅はわずかです。問題は<b>15件という件数</b>のほうで、他店と見比べられたときに「実際どうなのか分からない」と思われてしまう量です。しかも件数は、放っておいても増えません（投稿をお願いする仕組みがまだありません）。<b>4つの段のうち唯一、仕組みを入れれば確実に動くところ</b>で、増えた口コミは翌月以降「見つけてもらう・選ばれる」にも効いてくるため、優先度1に置いています。</div>
+          <div class="meta">見ている数字＝Google口コミの件数と評価　／　比べた相手＝件数の目標値をまだ決めていないため「これから（△）」の判定</div>
         </div>
       </div>
       <div class="stage-cards">
@@ -543,8 +531,8 @@
         <article class="card kpi na">
           <div class="kpi-h"><span class="src">未実施</span><span class="grade na">－</span></div>
           <div class="v">－<small>（未実施）</small></div>
-          <div class="l">口コミ獲得の仕組み（QRアンケート）<small>来店客に投稿を促す導線</small></div>
-          <div class="n">卓上QR・会計時アンケートなどの導線が未設置です。実施すると口コミ件数が積み上がり、<b>拡散の点数が上がります</b>。</div>
+          <div class="l">口コミ獲得の仕組み（QRアンケート）<small>ご来店のお客様に投稿をお願いする仕組み</small></div>
+          <div class="n">卓上QR・お会計時のアンケートなど、投稿をお願いする仕組みがまだありません。実施すると口コミ件数が積み上がり、<b>拡散の点数が上がります</b>。</div>
           <div class="viz">
             <div class="bar-track empty"></div>
             <div class="vizlab"><span>未実施のため採点対象外</span><span></span></div>
@@ -581,9 +569,9 @@
         "visit-value": "10<small>組／27名（6月）</small>",
         "visit-note": "ネット予約の受付開始後 初月実績（食べログ掲載開始 5/15）",
         "cvr-value": "0.20<small>%／6月</small>",
-        "cvr-note": "6月は 10組 ÷ 4,955PV ＝ <b>0.20%</b>（受付開始初月）。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。",
-        "action-cvr": "現在0.20%。写真・プラン・予約ボタンの導線を見直し、見られた4,955PVから取りこぼしている予約を拾います",
-        "action-ranking": "月間PV 4,955 → 圏内ライン 8,816 まであと約3,900。CVR 0.20%のまま分母が1.78倍になれば、予約は月10組から18組規模へ"
+        "cvr-note": "6月は 10組 ÷ 4,955PV ＝ <b>0.20%</b>（受付開始初月）。<br>見てもらえた回数のうち、予約まで進んだ割合です。ここが上がると、閲覧数が同じでも予約が増えます。",
+        "action-cvr": "現在0.20%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた4,955回の閲覧から取りこぼしている予約を拾います",
+        "action-ranking": "月間の閲覧数 4,955 → 圏内ライン 8,816 まであと約3,900。予約する割合が0.20%のままでも、閲覧数が1.78倍になれば予約は月10組から18組規模へ"
       },
       "07": {
         "awareness-value": "約21<small>万回／7月</small>",
@@ -601,9 +589,9 @@
         "visit-value": "19<small>組／75名（7月）</small>",
         "visit-note": "6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名",
         "cvr-value": "0.36<small>%／7月</small>",
-        "cvr-note": "6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見られた回数のうち、予約まで進んだ割合です。ここが上がると同じPVで予約が増えます。",
-        "action-cvr": "現在0.36%。写真・プラン・予約ボタンの導線を見直し、見られた5,339PVから取りこぼしている予約を拾います",
-        "action-ranking": "月間PV 5,339 → 圏内ライン 8,816 まであと約3,500。CVR 0.36%のまま分母が1.65倍になれば、予約は月19組から31組規模へ"
+        "cvr-note": "6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見てもらえた回数のうち、予約まで進んだ割合です。ここが上がると、閲覧数が同じでも予約が増えます。",
+        "action-cvr": "現在0.36%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた5,339回の閲覧から取りこぼしている予約を拾います",
+        "action-ranking": "月間の閲覧数 5,339 → 圏内ライン 8,816 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ"
       }
     };
 
