@@ -53,7 +53,7 @@
     .hero .current{font-size:15px;color:var(--muted)}
 
     /* 4軸サマリー（1枚のカードに4等分／各軸へジャンプ） */
-    .axes{padding:0;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr)}
+    .axes{padding:0;overflow:hidden;display:grid;grid-template-columns:repeat(5,1fr)}
     .axis{display:block;padding:20px 22px;text-decoration:none;color:inherit;border-left:1px solid var(--hairline);transition:.12s}
     .axis:first-child{border-left:0}
     .axis:hover{background:var(--canvas)}
@@ -64,6 +64,8 @@
     .axis .cap{font-size:13px;color:var(--muted);margin-top:10px}
     .track{height:5px;background:var(--hairline);border-radius:9999px;margin-top:10px;position:relative;overflow:hidden}
     .track i{position:absolute;left:0;top:0;height:5px;border-radius:9999px;background:var(--ink)}
+    .axis .track.ghost{background:transparent}
+    .axis .pt.ref{font-size:26px;color:var(--ink2)}
 
     .state{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.125px;color:var(--muted);white-space:nowrap}
     .state i{width:8px;height:8px;border-radius:9999px;flex:none;background:var(--faint)}
@@ -93,7 +95,7 @@
     .read .body b{color:var(--ink2);font-weight:600}
     .read .meta{font-size:12px;color:var(--faint);letter-spacing:.125px;line-height:1.7;margin-top:10px}
 
-    /* ===== ステージ（認知／検討・比較／来店／拡散） ===== */
+    /* ===== ステージ（発見／比較／決定／体験／拡散） ===== */
     .stage{grid-column:span 12;scroll-margin-top:calc(var(--head-h) + 12px)}
     .stage-head{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin:32px 2px 14px}
     .sh-l{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
@@ -124,6 +126,7 @@
     .kpi .viz{margin-top:auto;padding-top:20px}
     /* 採点対象外／未実施カードは面を落とす */
     .kpi.na{background:#fbfaf9}
+    .kpi.wide{grid-column:1/-1}
     .kpi.na .v,.kpi.na .l{color:var(--faint)}
 
     /* 内訳行（実施していない施策は「－（未実施）」） */
@@ -266,10 +269,10 @@
         <div>
           <div class="lab">総合スコア</div>
           <div class="total">74<span>点</span></div>
-          <div class="basis">※下の4つの段の点数を平均したものです。比べた相手は、ご提案時にお約束した目標値（施策期間全体での評価）</div>
-          <div class="msg"><span class="dot"></span><strong>認知・検討は勝てている。ボトルネックは拡散（口コミ）</strong><span class="current">Google口コミ15件が伸びしろ。来店は「見た人のうち予約する割合」が次の課題</span></div>
+          <div class="basis">※採点する4段（発見・比較・決定・拡散）の点数を平均したものです。体験はお店の領分のため採点していません。比べた相手は、ご提案時にお約束した目標値（施策期間全体での評価）</div>
+          <div class="msg"><span class="dot"></span><strong>発見・比較は勝てている。ボトルネックは拡散（口コミの件数）</strong><span class="current">Google口コミ15件が伸びしろ。決定（来店）は「見た人のうち予約する割合」が次の課題</span></div>
         </div>
-        <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:280px;height:auto;justify-self:center" role="img" aria-label="4軸スコアのレーダーチャート：認知100点・検討比較85点・来店70点・拡散40点">
+        <svg viewBox="0 0 320 240" width="300" style="width:100%;max-width:280px;height:auto;justify-self:center" role="img" aria-label="採点4段のレーダーチャート：発見100点・比較85点・決定（来店）70点・拡散40点">
           <g fill="none" stroke="var(--hairline-2)" stroke-width="1">
             <polygon points="160,95.5 179.5,115 160,134.5 140.5,115"></polygon>
             <polygon points="160,76 199,115 160,154 121,115"></polygon>
@@ -282,37 +285,43 @@
           </g>
           <polygon points="160,37 226.3,115 160,169.6 128.8,115" fill="rgba(0,0,0,.07)" stroke="var(--ink)" stroke-width="1.5"></polygon>
           <g font-family="Inter,-apple-system,system-ui,'Segoe UI',sans-serif">
-            <text x="160" y="14" text-anchor="middle"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">認知</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">100</tspan></text>
-            <text x="318" y="119" text-anchor="end"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">検討比較</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">85</tspan></text>
-            <text x="160" y="216" text-anchor="middle"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">来店</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">70</tspan></text>
+            <text x="160" y="14" text-anchor="middle"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">発見</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">100</tspan></text>
+            <text x="318" y="119" text-anchor="end"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">比較</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">85</tspan></text>
+            <text x="160" y="216" text-anchor="middle"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">決定</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">70</tspan></text>
             <text x="2" y="119" text-anchor="start"><tspan font-size="12" font-weight="600" fill="var(--muted)" letter-spacing=".125">拡散</tspan><tspan dx="5" font-size="13" font-weight="700" fill="var(--ink)">40</tspan></text>
           </g>
         </svg>
       </div>
     </section>
 
-    <!-- 4軸サマリー：タップで各セクションへ -->
-    <section class="card span12 axes" aria-label="4軸スコア">
+    <!-- ファネル5段：タップで各セクションへ -->
+    <section class="card span12 axes" aria-label="ファネル5段のスコア">
       <a class="axis" href="#s1">
-        <div class="ax-h"><span class="nm">1. 認知</span><span class="state ok"><i></i>順調</span></div>
+        <div class="ax-h"><span class="nm">1. 発見</span><span class="state ok"><i></i>順調</span></div>
         <div class="pt">100<span>点</span></div>
         <div class="track"><i style="width:100%"></i></div>
         <div class="cap">見つけてもらう</div>
       </a>
       <a class="axis" href="#s2">
-        <div class="ax-h"><span class="nm">2. 検討・比較</span><span class="state ok"><i></i>順調</span></div>
+        <div class="ax-h"><span class="nm">2. 比較</span><span class="state ok"><i></i>順調</span></div>
         <div class="pt">85<span>点</span></div>
         <div class="track"><i style="width:85%"></i></div>
-        <div class="cap">探されて見られる</div>
+        <div class="cap">他店と見比べられる</div>
       </a>
       <a class="axis" href="#s3">
-        <div class="ax-h"><span class="nm">3. 来店</span><span class="state ok"><i></i>順調</span></div>
+        <div class="ax-h"><span class="nm">3. 決定</span><span class="state ok"><i></i>順調</span></div>
         <div class="pt">70<span>点</span></div>
         <div class="track"><i style="width:70%"></i></div>
-        <div class="cap">実際に来てもらう</div>
+        <div class="cap">来店を決めてもらう</div>
       </a>
       <a class="axis" href="#s4">
-        <div class="ax-h"><span class="nm">4. 拡散</span><span class="state warn"><i></i>注意</span></div>
+        <div class="ax-h"><span class="nm">4. 体験</span><span class="state"><i></i>参考</span></div>
+        <div class="pt ref">★4.4</div>
+        <div class="track ghost"></div>
+        <div class="cap">お店の領分（採点対象外）</div>
+      </a>
+      <a class="axis" href="#s5">
+        <div class="ax-h"><span class="nm">5. 拡散</span><span class="state warn"><i></i>注意</span></div>
         <div class="pt">40<span>点</span></div>
         <div class="track"><i style="width:40%"></i></div>
         <div class="cap">口コミが次の客を呼ぶ</div>
@@ -327,7 +336,7 @@
         <em><i class="b">○</i> あと少し <b>70点</b></em>
         <em><i class="c">△</i> これから <b>40点</b></em>
       </p>
-      <p class="lg-note">各段の点数＝その段のカードの平均／総合スコア＝4つの段の平均。「参考指標」「未実施」と書かれたカードは点数に入れていません。</p>
+      <p class="lg-note">各段の点数＝その段のカードの平均／総合スコア＝採点する4段（発見・比較・決定・拡散）の平均。<b>「体験」はお店の領分＝施策で代われないため採点せず</b>、口コミの評点・内容を「体験の観測値」として参考表示しています。「参考指標」「未実施」「整備中」と書かれたカードも点数に入れていません。</p>
     </section>
 
     <!-- ===== 対策：点数の低い順に ===== -->
@@ -344,7 +353,7 @@
       <article class="action">
         <span class="pri">優先度 2</span>
         <div>
-          <div class="action-title">見た人が予約する割合を上げる<span class="from">来店 70点</span></div>
+          <div class="action-title">見た人が予約する割合を上げる<span class="from">決定（来店） 70点</span></div>
           <div class="hole" id="action-cvr">現在0.36%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた5,339回の閲覧から取りこぼしている予約を拾います</div>
         </div>
         <div class="btns"><a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a></div>
@@ -352,27 +361,27 @@
       <article class="action">
         <span class="pri">優先度 3</span>
         <div>
-          <div class="action-title">食べログのエリアランキング圏内に入る<span class="from">検討・比較 85点</span></div>
-          <div class="hole" id="action-ranking">月間の閲覧数 5,339 → 圏内ライン 8,816 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ</div>
+          <div class="action-title">食べログのエリアランキング圏内に入る<span class="from">比較 85点</span></div>
+          <div class="hole" id="action-ranking">月間の閲覧数 5,339 → 圏内ライン 約8,800 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ</div>
         </div>
         <div class="btns"><a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a></div>
       </article>
       <article class="action keep">
         <span class="pri">維持</span>
         <div>
-          <div class="action-title">認知は目標クリア。追加の投資は不要です<span class="from">認知 100点</span></div>
+          <div class="action-title">発見は目標クリア。追加の投資は不要です<span class="from">発見 100点</span></div>
           <div class="hole">見つけてもらう量は足りています。ここから先は「見た人を予約と口コミに変える」ほうが効きます。</div>
         </div>
         <div class="btns"><a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a></div>
       </article>
     </section>
 
-    <div class="sec-h"><span class="t">各項目の振り返り</span><span class="d">それぞれの数字と、そこから読み取れること</span></div>
+    <div class="sec-h"><span class="t">各段の振り返り</span><span class="d">発見・比較・決定・体験・拡散の5段すべての数字と、そこから読み取れること</span></div>
 
-    <!-- ===== 1. 認知 ===== -->
+    <!-- ===== 1. 発見 ===== -->
     <section class="stage" id="s1">
       <div class="stage-head">
-        <div class="sh-l"><span class="num">1</span><span class="nm">認知</span><span class="sub">見つけてもらう</span></div>
+        <div class="sh-l"><span class="num">1</span><span class="nm">発見</span><span class="sub">見つけてもらう</span></div>
         <div class="sh-r"><span class="track"><i style="width:100%"></i></span><span class="pts">100<span>点</span></span><span class="state ok"><i></i>順調</span></div>
       </div>
       <div class="read">
@@ -415,23 +424,24 @@
 
       </div>
       <div class="stage-foot">
-        <span class="btn soon">認知の詳細（準備中）</span>
+        <span class="btn soon">発見の詳細（準備中）</span>
         <a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a>
       </div>
     </section>
 
-    <!-- ===== 2. 検討・比較 ===== -->
+    <!-- ===== 2. 比較 ===== -->
     <section class="stage" id="s2">
       <div class="stage-head">
-        <div class="sh-l"><span class="num">2</span><span class="nm">検討・比較</span><span class="sub">探されて見られる</span></div>
+        <div class="sh-l"><span class="num">2</span><span class="nm">比較</span><span class="sub">他店と見比べられる</span></div>
         <div class="sh-r"><span class="track"><i style="width:85%"></i></span><span class="pts">85<span>点</span></span><span class="state ok"><i></i>順調</span></div>
       </div>
       <div class="read">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">見られている量は近隣の約3倍。ただし「食べログのランキング圏内」の一歩手前で止まっています。</div>
-          <div class="body">食べログ 5,339PVは、近隣の同じ業態（1,500〜2,000PV／月）の<b>約2.7〜3.6倍</b>。比べられる土俵には確実に乗っています。一方でランキング圏内のラインは 8,816PV／月で、<b>あと約3,500</b>。ここは少しずつ近づく差ではなく、超えるとランキングに掲載されて新しい入口が開く「段差」です。前月比+8%の自然な伸びで届く距離ではないので、押し上げる施策が要ります。</div>
-          <div class="meta">見ている数字＝Googleマップ・食べログでの閲覧数　／　比べた相手＝近隣の同じ業態 1,500〜2,000PV／月、食べログのランキング圏内ライン 8,816PV／月</div>
+          <div class="lead">見られている量はエリア平均の約3倍。ただし「食べログのランキング圏内」の一歩手前で止まっています。</div>
+          <div class="body">食べログ 5,339PVは、<b>エリア×ジャンルの集計値（1,500〜2,000PV／月）</b>の<b>約2.7〜3.6倍</b>。比べられる土俵には確実に乗っています。一方でランキング圏内のラインは 約8,800PV／月で、<b>あと約3,500</b>。ここは少しずつ近づく差ではなく、超えるとランキングに掲載されて新しい入口が開く「段差」です。前月比+8%の自然な伸びで届く距離ではないので、押し上げる施策が要ります。</div>
+          <div class="body">この段には今月から<b>「保存数の増加ペース」</b>を足します。食べログで保存（＝行きたいリストに入れる）した人が1ヶ月に何人増えたかで、<b>点数や口コミ件数より先に動きます</b>。押し上げる施策が効き始めているかどうかが、PVやランキングに現れるより1〜2ヶ月早く見えるためです。まだ取得していないので、今月は数字が入りません。</div>
+          <div class="meta">見ている数字＝Googleマップ・食べログでの閲覧数（＋今月から 食べログの保存数・整備中）　／　比べた相手＝エリア×ジャンルの集計値 1,500〜2,000PV／月、同エリアのランキング圏内ライン 約8,800PV／月（個別店舗の店名・点数は表示しません）</div>
         </div>
       </div>
       <div class="stage-cards">
@@ -454,12 +464,12 @@
         <article class="card kpi">
           <div class="kpi-h"><span class="src">食べログ</span><span class="grade a">◎</span></div>
           <div class="v" id="tabelog-value">5,339<small>PV／7月</small></div>
-          <div class="l">食べログ アクセス数（月間）<small>近隣同業態の水準は 1,500〜2,000PV／月</small></div>
-          <div class="n" id="tabelog-note">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣水準の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,500）</div>
+          <div class="l">食べログ アクセス数（月間）<small>エリア×ジャンルの集計値は 1,500〜2,000PV／月</small></div>
+          <div class="n" id="tabelog-note">6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝エリア×ジャンル集計値の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 約8,800PV／月（あと約3,500）</div>
           <div class="viz">
             <div class="mini">
               <div class="band" style="bottom:17%;height:6%"></div>
-              <div class="line" style="bottom:100%"><span>圏内ライン 8,816</span></div>
+              <div class="line" style="bottom:100%"><span>圏内ライン 約8,800</span></div>
               <div class="col"><em>1,276</em><i style="height:14%"></i></div>
               <div class="col" data-chart-month="06"><em>4,955</em><i style="height:56%"></i></div>
               <div class="col last" data-chart-month="07"><em>5,339</em><i style="height:61%"></i></div>
@@ -468,17 +478,28 @@
           </div>
         </article>
 
+        <article class="card kpi na wide">
+          <div class="kpi-h"><span class="src">食べログ（公開ページ）</span><span class="grade na">整備中</span></div>
+          <div class="v" id="save-value">－<small>（取得はこれから）</small></div>
+          <div class="l">保存数の増加ペース（人／月）<small>食べログで「保存」＝行きたいリストに入れた人が、1ヶ月に何人増えたか</small></div>
+          <div class="n" id="save-note">点数や口コミより<b>先に動く「行きたい」の先行指標</b>です。まだ取得していないため、<b>比較 85点の計算には入れていません</b>。<br>※累計の保存数そのものは開店から時間が経つほど積み上がるので、他店とは比べません。見るのは<b>1ヶ月あたり何人増えたか</b>と、<b>閲覧数のうち何%が保存に至ったか</b>の2つです。</div>
+          <div class="viz">
+            <div class="bar-track empty"></div>
+            <div class="vizlab"><span>初回の取得待ち（1回目は基準点。増加ペースは2回目の取得から出ます）</span><span></span></div>
+          </div>
+        </article>
+
       </div>
       <div class="stage-foot">
-        <span class="btn soon">検討・比較の詳細（準備中）</span>
+        <span class="btn soon">比較の詳細（準備中）</span>
         <a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a>
       </div>
     </section>
 
-    <!-- ===== 3. 来店 ===== -->
+    <!-- ===== 3. 決定（来店） ===== -->
     <section class="stage" id="s3">
       <div class="stage-head">
-        <div class="sh-l"><span class="num">3</span><span class="nm">来店</span><span class="sub">実際に来てもらう</span></div>
+        <div class="sh-l"><span class="num">3</span><span class="nm">決定（来店）</span><span class="sub">来店を決めてもらう</span></div>
         <div class="sh-r"><span class="track"><i style="width:70%"></i></span><span class="pts">70<span>点</span></span><span class="state ok"><i></i>順調</span></div>
       </div>
       <div class="read">
@@ -521,32 +542,77 @@
 
       </div>
       <div class="stage-foot">
-        <a class="btn" href="pace-home-demo.html">来店の詳細（ペース表）→</a>
+        <a class="btn" href="pace-home-demo.html">決定（来店）の詳細（ペース表）→</a>
         <a class="btn primary" href="tenpo-os-demo/index.html">対策を相談する →</a>
       </div>
     </section>
 
-    <!-- ===== 4. 拡散 ===== -->
+    <!-- ===== 4. 体験 ===== -->
     <section class="stage" id="s4">
       <div class="stage-head">
-        <div class="sh-l"><span class="num">4</span><span class="nm">拡散</span><span class="sub">口コミが次の客を呼ぶ</span></div>
+        <div class="sh-l"><span class="num">4</span><span class="nm">体験</span><span class="sub">来たお客様に満足してもらう</span></div>
+        <div class="sh-r"><span class="state"><i></i>参考（採点対象外）</span></div>
+      </div>
+      <div class="read">
+        <span class="tag">示唆</span>
+        <div>
+          <div class="lead">満足度は高い水準を保てています。ここはお店そのものの力で、私たちの施策では代われません。数字を見ておくだけの段です。</div>
+          <div class="body">口コミの評点は<b>★4.4</b>。内容も「また来たい」「接客が丁寧」といった声が中心で、来ていただいた方の満足度は十分に高い状態です。<b>この段は採点しません</b>。施策で動かせるのは「来ていただくまで」と「来たあとに口コミを増やすところ」で、体験そのものはお店の領分だからです。ただし体験が良いからこそ、口コミを増やす施策がそのまま効きます。逆に気になる声（混雑時の待ち時間など）が増えていないかは、毎月ここで見ておきます。</div>
+          <div class="meta">見ている数字＝Google口コミの評点と本文の内容　／　採点対象外（施策で代われない領域のため、観測値として参考表示）</div>
+        </div>
+      </div>
+      <div class="stage-cards">
+
+        <article class="card kpi na">
+          <div class="kpi-h"><span class="src">Google（体験の観測値）</span><span class="grade na">参考</span></div>
+          <div class="v">★4.4<small>／15件の平均</small></div>
+          <div class="l">口コミの評点<small>2026.07時点の累計</small></div>
+          <div class="n">★5・★4が大半で、<b>リピート意向のコメントが多数</b>。満足度そのものは高い水準です。件数を増やす施策は<b>拡散</b>の段で扱います。</div>
+          <div class="viz">
+            <div class="bar-track"><div class="bar-fill" style="width:88%"></div></div>
+            <div class="vizlab"><span>★5を満点としたときの位置</span><span>★4.4</span></div>
+          </div>
+        </article>
+
+        <article class="card kpi na">
+          <div class="kpi-h"><span class="src">Google（体験の観測値）</span><span class="grade na">参考</span></div>
+          <div class="v">15<small>件の本文を分類</small></div>
+          <div class="l">口コミで触れられている内容<small>本文に出てくる話題を分けたもの（1件で複数該当あり）</small></div>
+          <div class="brk-rows">
+            <div class="brk-row"><span class="nm">味・ボリューム<small>「揚げたてが旨い」「安くて満腹」</small></span><span class="vl">11件</span><span class="gr"></span></div>
+            <div class="brk-row"><span class="nm">接客<small>「感じが良い」「気配りが丁寧」</small></span><span class="vl">8件</span><span class="gr"></span></div>
+            <div class="brk-row"><span class="nm">雰囲気・清潔感<small>「一人でも気軽に入れる」</small></span><span class="vl">5件</span><span class="gr"></span></div>
+            <div class="brk-row"><span class="nm">待ち時間・混雑<small>気になる声。金土の19〜20時台に集中</small></span><span class="vl">3件</span><span class="gr"></span></div>
+          </div>
+        </article>
+
+      </div>
+      <div class="stage-foot">
+        <a class="btn" href="kuchikomi-demo/index.html">口コミの内容を見る →</a>
+      </div>
+    </section>
+
+    <!-- ===== 5. 拡散 ===== -->
+    <section class="stage" id="s5">
+      <div class="stage-head">
+        <div class="sh-l"><span class="num">5</span><span class="nm">拡散</span><span class="sub">口コミが次の客を呼ぶ</span></div>
         <div class="sh-r"><span class="track"><i style="width:40%"></i></span><span class="pts">40<span>点</span></span><span class="state warn"><i></i>注意</span></div>
       </div>
       <div class="read warn">
         <span class="tag">示唆</span>
         <div>
-          <div class="lead">「評価は良いが、件数が足りない」状態です。上げるべきは★の数ではなく、口コミの件数。</div>
-          <div class="body">★4.4はすでに高く、ここを上げにいっても動く幅はわずかです。問題は<b>15件という件数</b>のほうで、他店と見比べられたときに「実際どうなのか分からない」と思われてしまう量です。しかも件数は、放っておいても増えません（投稿をお願いする仕組みがまだありません）。<b>4つの段のうち唯一、仕組みを入れれば確実に動くところ</b>で、増えた口コミは翌月以降「見つけてもらう・選ばれる」にも効いてくるため、優先度1に置いています。</div>
-          <div class="meta">見ている数字＝Google口コミの件数と評価　／　比べた相手＝件数の目標値をまだ決めていないため「これから（△）」の判定</div>
+          <div class="lead">「中身は良いが、件数が足りない」状態です。上げるべきは★の数ではなく、口コミの件数。</div>
+          <div class="body">評点★4.4はすでに高く、ここを上げにいっても動く幅はわずかです（評点そのものは前の「体験」の段で観測値として見ています）。問題は<b>15件という件数</b>のほうで、他店と見比べられたときに「実際どうなのか分からない」と思われてしまう量です。しかも件数は、放っておいても増えません（投稿をお願いする仕組みがまだありません）。<b>採点する4段のなかで、仕組みを入れれば確実に動くところ</b>で、増えた口コミは翌月以降「発見・比較」にも効いてくるため、優先度1に置いています。</div>
+          <div class="meta">見ている数字＝Google口コミの件数（評点・内容は「体験」の段で参考表示）　／　比べた相手＝件数の目標値をまだ決めていないため「これから（△）」の判定</div>
         </div>
       </div>
       <div class="stage-cards">
 
         <article class="card kpi">
           <div class="kpi-h"><span class="src">Google</span><span class="grade c">△</span></div>
-          <div class="v">★4.4<small>／15件</small></div>
-          <div class="l">Google口コミ 評価・件数<small>2026.07時点の累計</small></div>
-          <div class="n"><b>リピート意向のコメント多数</b>で評価そのものは高い一方、<b>件数15件</b>と少なく、比較検討で選ばれる材料になりきっていません。</div>
+          <div class="v">15<small>件／2026.07時点</small></div>
+          <div class="l">Google口コミ 件数<small>評点（★4.4）と内容は「体験」の段で参考表示</small></div>
+          <div class="n">評価の中身は良い一方、<b>件数15件</b>と少なく、他店と見比べられたときに選ばれる材料になりきっていません。<b>増やせばそのまま効きます</b>。</div>
           <div class="viz">
             <div class="bar-track empty"></div>
             <div class="vizlab"><span>月別の推移＝整備中（内訳未取得）</span><span></span></div>
@@ -586,13 +652,15 @@
         "gbp-value": "6,027<small>回／6月</small>",
         "gbp-note": "5月 1,024回 → 6月 <b>6,027回（前月比 約5.9倍）</b>",
         "tabelog-value": "4,955<small>PV／6月</small>",
-        "tabelog-note": "5月 1,276PV → 6月 <b>4,955PV（前月比 約3.9倍）</b>＝近隣水準の <b>約2.5〜3.3倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,900）",
+        "save-value": "－<small>（取得はこれから）</small>",
+        "save-note": "点数や口コミより<b>先に動く「行きたい」の先行指標</b>です。まだ取得していないため、<b>比較 85点の計算には入れていません</b>。<br>※累計の保存数そのものは開店から時間が経つほど積み上がるので、他店とは比べません。見るのは<b>1ヶ月あたり何人増えたか</b>と、<b>閲覧数のうち何%が保存に至ったか</b>の2つです。",
+        "tabelog-note": "5月 1,276PV → 6月 <b>4,955PV（前月比 約3.9倍）</b>＝エリア×ジャンル集計値の <b>約2.5〜3.3倍</b>。エリアランキング圏内ラインは 約8,800PV／月（あと約3,800）",
         "visit-value": "10<small>組／27名（6月）</small>",
         "visit-note": "ネット予約の受付開始後 初月実績（食べログ掲載開始 5/15）",
         "cvr-value": "0.20<small>%／6月</small>",
         "cvr-note": "6月は 10組 ÷ 4,955PV ＝ <b>0.20%</b>（受付開始初月）。<br>見てもらえた回数のうち、予約まで進んだ割合です。ここが上がると、閲覧数が同じでも予約が増えます。",
         "action-cvr": "現在0.20%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた4,955回の閲覧から取りこぼしている予約を拾います",
-        "action-ranking": "月間の閲覧数 4,955 → 圏内ライン 8,816 まであと約3,900。予約する割合が0.20%のままでも、閲覧数が1.78倍になれば予約は月10組から18組規模へ"
+        "action-ranking": "月間の閲覧数 4,955 → 圏内ライン 約8,800 まであと約3,800。予約する割合が0.20%のままでも、閲覧数が1.78倍になれば予約は月10組から18組規模へ"
       },
       "07": {
         "awareness-value": "約21<small>万回／7月</small>",
@@ -606,13 +674,15 @@
         "gbp-value": "16,034<small>回／7月</small>",
         "gbp-note": "6月 6,027回 → 7月 <b>16,034回（前月比 約2.7倍）</b>",
         "tabelog-value": "5,339<small>PV／7月</small>",
-        "tabelog-note": "6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝近隣水準の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 8,816PV／月（あと約3,500）",
+        "save-value": "－<small>（取得はこれから）</small>",
+        "save-note": "点数や口コミより<b>先に動く「行きたい」の先行指標</b>です。まだ取得していないため、<b>比較 85点の計算には入れていません</b>。<br>※累計の保存数そのものは開店から時間が経つほど積み上がるので、他店とは比べません。見るのは<b>1ヶ月あたり何人増えたか</b>と、<b>閲覧数のうち何%が保存に至ったか</b>の2つです。",
+        "tabelog-note": "6月 4,955PV → 7月 <b>5,339PV（前月比+8%）</b>＝エリア×ジャンル集計値の <b>約2.7〜3.6倍</b>。エリアランキング圏内ラインは 約8,800PV／月（あと約3,500）",
         "visit-value": "19<small>組／75名（7月）</small>",
         "visit-note": "6月 10組27名 → 7月 <b>19組75名（+90%）</b>。施策期間累計 29組102名",
         "cvr-value": "0.36<small>%／7月</small>",
         "cvr-note": "6月 0.20% → 7月 <b>0.36%（+0.16pt）</b>。7月は 19組 ÷ 5,339PV。<br>見てもらえた回数のうち、予約まで進んだ割合です。ここが上がると、閲覧数が同じでも予約が増えます。",
         "action-cvr": "現在0.36%。写真・プラン・予約ボタンの見せ方を見直して、見てもらえた5,339回の閲覧から取りこぼしている予約を拾います",
-        "action-ranking": "月間の閲覧数 5,339 → 圏内ライン 8,816 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ"
+        "action-ranking": "月間の閲覧数 5,339 → 圏内ライン 約8,800 まであと約3,500。予約する割合が0.36%のままでも、閲覧数が1.65倍になれば予約は月19組から31組規模へ"
       }
     };
 
@@ -643,7 +713,8 @@
 
   <footer class="footer">
     ※数値は2026-07-31時点の確定実績。各カードの主要数値はヘッダーで選択した表示月の単月実績（前月比つき）、インフルエンサーのみ施策累計（各媒体の管理画面・API実測）。口コミ評価のみ2026-07時点の累計。インフルエンサー施策は中間報告（集計基準日 2026-07-10）の確定値。<br>
-    食べログ関連は管理画面キャプチャからの手動更新（取得日 2026-08-10）。点数は上記の採点ルールによる社内評価です（比較基準＝提案時KPI比。支援店平均比は参考・整備中）。<br>
+    食べログ関連は管理画面キャプチャからの手動更新（取得日 2026-08-10）。食べログの競合データは<b>エリア×ジャンルの集計値のみ</b>を表示しています（個別店舗の店名・店舗コード・点数は掲載しません）。点数は上記の採点ルールによる社内評価です（比較基準＝提案時KPI比。支援店平均比は参考・整備中）。<br>
+    食べログの保存数は公開ページの表示値を月1回控えたものです（管理画面は使いません）。増加ペースは<b>2回の取得日の差を30日に換算</b>して算出し、取得日が揃わない月は「◯日間で+◯人」と実日数で表示します。初回取得前のため現在は空欄です。<br>
     <a class="demo-back" href="index.html">← デモ一覧に戻る</a>
   </footer>
 </body>
